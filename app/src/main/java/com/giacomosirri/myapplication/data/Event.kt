@@ -28,7 +28,7 @@ class Event {
     val organizer : String = ""
 
     @ColumnInfo(name = "participants")
-    val participants : List<String> = listOf()
+    val participants : List<RelationshipType> = listOf()
 
     @ColumnInfo(name = "dress_code")
     val dressCode : String = ""
