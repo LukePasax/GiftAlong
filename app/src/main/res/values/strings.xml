@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">MyApplication</string>
+    <string name="new_item_page_title">Add New Item</string>
+    <string name="upcoming_events_page_title">Upcoming Events</string>
+    <string name="menu_item1">Go To Wishlist</string>
+    <string name="menu_item2">Create New Event</string>
+    <string name="menu_item3">Manage Relationships</string>
+    <string name="menu_item4">Data Center</string>
+    <string name="menu_item5">Dark Mode</string>
 </resources>
