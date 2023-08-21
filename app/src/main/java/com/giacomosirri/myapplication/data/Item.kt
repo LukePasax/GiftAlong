@@ -27,9 +27,12 @@ class Item {
     @ColumnInfo(name = "price_range")
     val range : Range<Double> = Range(0.0,0.0)
 
-    @ColumnInfo(name = "is_reserved")
-    val isReserved : Boolean = false
-
+    @ColumnInfo(name = "reserved_by")
+    val reservedBy : String? = null
+    
     @ColumnInfo(name = "is_bought")
     val isBought : Boolean = false
+
+    @ColumnInfo(name = "user")
+    val user : String = ""
 }
