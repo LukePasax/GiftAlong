@@ -20,4 +20,11 @@ class User {
 
     @ColumnInfo(name = "birthday")
     val birthday : Date = Date()
+
+    @ColumnInfo(name = "sub date")
+    val subDate : Date = Date()
+
+    @ColumnInfo(name = "password")
+    val password : String = ""
+
 }
