@@ -29,7 +29,7 @@ class Item {
 
     @ColumnInfo(name = "reserved_by")
     val reservedBy : String? = null
-    
+
     @ColumnInfo(name = "is_bought")
     val isBought : Boolean = false
 
