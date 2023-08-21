@@ -21,7 +21,7 @@ class User {
     @ColumnInfo(name = "birthday")
     val birthday : Date = Date()
 
-    @ColumnInfo(name = "sub date")
+    @ColumnInfo(name = "sub_date")
     val subDate : Date = Date()
 
     @ColumnInfo(name = "password")
