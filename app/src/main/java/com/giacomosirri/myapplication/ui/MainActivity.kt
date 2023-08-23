@@ -1,16 +1,21 @@
 package com.giacomosirri.myapplication.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.giacomosirri.myapplication.ui.theme.MyApplicationTheme
+import com.giacomosirri.myapplication.ui.theme.Pink80
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,27 +27,56 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    Menu()
+                    HomeScreen(paddingValues = PaddingValues(horizontal = 0.dp, vertical = 0.dp))
                 }
             }
         }
     }
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Menu() {
-    val elements: List<String> = listOf("ciao", "belo")
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        for (elem in elements) {
-            RadioButton(selected = false, onClick = { /*TODO*/ })
-            Text(text = elem, style = TextStyle.Default)
-        }
+fun HomeScreen(paddingValues: PaddingValues) {
+    Scaffold(
+        modifier = Modifier.padding(paddingValues),
+        topBar = {
+            CenterAlignedTopAppBar(
+                actions = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = "Search event"
+                        )
+                    }
+                },
+                title = {
+                    Text(
+                        text = "Upcoming Events",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            imageVector = Icons.Filled.Menu,
+                            contentDescription = "Main menu"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Pink80)
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Add new event"
+                )
+            }
+        },
+    )
+    {
     }
 }
