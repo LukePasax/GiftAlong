@@ -1,6 +1,5 @@
-package com.giacomosirri.myapplication
+package com.giacomosirri.myapplication.ui
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
