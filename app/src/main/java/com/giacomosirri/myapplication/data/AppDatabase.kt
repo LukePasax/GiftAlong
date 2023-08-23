@@ -2,6 +2,7 @@ package com.giacomosirri.myapplication.data
 
 import android.content.Context
 import androidx.room.Database
+import androidx.room.TypeConverters
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.giacomosirri.myapplication.data.dao.ItemDAO
@@ -11,6 +12,7 @@ import com.giacomosirri.myapplication.data.entity.Relationship
 import com.giacomosirri.myapplication.data.entity.User
 
 @Database(entities = [User::class, Event::class, Item::class, Relationship::class], version = 1)
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun itemDao(): ItemDAO
     //abstract fun userDao(): UserDAO

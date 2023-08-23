@@ -6,6 +6,6 @@ import com.giacomosirri.myapplication.data.entity.Item
 
 @Dao
 interface ItemDAO {
-    @Query("SELECT * FROM items WHERE id = :id")
-    fun getItemSpecifics(id: String) : Item
+    //@Query("SELECT * FROM items WHERE id = :id")
+    //fun getItemSpecifics(id: String) : Item
 }
