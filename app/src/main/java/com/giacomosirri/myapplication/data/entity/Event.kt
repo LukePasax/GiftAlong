@@ -11,7 +11,7 @@ data class Event(
     val name: String,
     val date: Date,
     val location: Location,
-    val organizer: User,
+    val organizer: String,
     val dressCode: String,
     @ColumnInfo("friends_allowed")
     val friendsAllowed: Boolean,

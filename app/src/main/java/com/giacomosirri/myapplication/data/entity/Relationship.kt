@@ -1,9 +1,8 @@
 package com.giacomosirri.myapplication.data.entity
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-@Entity(tableName = "relationships")
+@Entity(tableName = "relationships", primaryKeys = ["follower", "followed", "type"])
 data class Relationship(
     val follower: String,
     val followed: String,
@@ -15,7 +14,4 @@ data class Relationship(
         PARTNER,
         COLLEAGUE
     }
-
-    @PrimaryKey(autoGenerate = true)
-    var id : Int = 0
 }

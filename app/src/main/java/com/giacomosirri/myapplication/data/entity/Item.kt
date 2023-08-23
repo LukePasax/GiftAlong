@@ -2,6 +2,7 @@ package com.giacomosirri.myapplication.data.entity
 
 import android.media.Image
 import android.util.Range
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.net.URL
@@ -13,9 +14,11 @@ data class Item(
     val url: URL,
     val image: Image,
     val range: Range<Double>,
-    val reservedBy: User,
+    @ColumnInfo("reserved_by_user")
+    val reservedBy: String,
     val bought: Boolean,
-    val ownedBy: User
+    @ColumnInfo("listed_by_user")
+    val listedBy: String
 ) {
     @PrimaryKey(autoGenerate = true)
     var id : Int = 0
