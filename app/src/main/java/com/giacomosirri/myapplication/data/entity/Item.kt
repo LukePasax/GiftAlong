@@ -1,4 +1,4 @@
-package com.giacomosirri.myapplication.data
+package com.giacomosirri.myapplication.data.entity
 
 import android.media.Image
 import android.util.Range

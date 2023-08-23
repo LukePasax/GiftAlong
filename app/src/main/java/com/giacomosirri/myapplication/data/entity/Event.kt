@@ -1,9 +1,10 @@
-package com.giacomosirri.myapplication.data
+package com.giacomosirri.myapplication.data.entity
 
 import android.location.Location
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.giacomosirri.myapplication.data.RelationshipType
 import java.util.Date
 
 @Entity(tableName = "events")
