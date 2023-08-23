@@ -5,7 +5,10 @@ import androidx.room.Database
 import androidx.room.TypeConverters
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.giacomosirri.myapplication.data.dao.EventDAO
 import com.giacomosirri.myapplication.data.dao.ItemDAO
+import com.giacomosirri.myapplication.data.dao.RelationshipDAO
+import com.giacomosirri.myapplication.data.dao.UserDAO
 import com.giacomosirri.myapplication.data.entity.Event
 import com.giacomosirri.myapplication.data.entity.Item
 import com.giacomosirri.myapplication.data.entity.Relationship
@@ -15,9 +18,9 @@ import com.giacomosirri.myapplication.data.entity.User
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun itemDao(): ItemDAO
-    //abstract fun userDao(): UserDAO
-    //abstract fun relationshipDao(): RelationshipDAO
-    //abstract fun eventDao(): EventDAO
+    abstract fun userDao(): UserDAO
+    abstract fun relationshipDao(): RelationshipDAO
+    abstract fun eventDao(): EventDAO
 
     companion object {
         @Volatile
