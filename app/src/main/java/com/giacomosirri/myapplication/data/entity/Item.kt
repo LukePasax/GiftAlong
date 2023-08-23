@@ -1,7 +1,6 @@
 package com.giacomosirri.myapplication.data.entity
 
 import android.media.Image
-import android.util.Range
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -13,10 +12,13 @@ data class Item(
     val description: String,
     val url: URL,
     val image: Image,
-    val range: Range<Double>,
+    val bought: Boolean,
+    @ColumnInfo("price_lower")
+    val priceLowerBound: Double,
+    @ColumnInfo("price_upper")
+    val priceUpperBound: Double,
     @ColumnInfo("reserved_by_user")
     val reservedBy: String,
-    val bought: Boolean,
     @ColumnInfo("listed_by_user")
     val listedBy: String
 ) {
