@@ -5,25 +5,15 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.Date
 
-
 @Entity(tableName = "users")
-class User {
+data class User(
+    val password: String,
+    val name: String,
+    val surname: String,
+    val birthday: Date,
+    @ColumnInfo("subscription_date")
+    val subscriptionDate: Date,
+) {
     @PrimaryKey
-    @ColumnInfo(name = "Username")
-    val username : String = ""
-
-    @ColumnInfo(name = "name")
-    val name : String = ""
-
-    @ColumnInfo(name = "surname")
-    val surname : String = ""
-
-    @ColumnInfo(name = "birthday")
-    val birthday : Date = Date()
-
-    @ColumnInfo(name = "sub_date")
-    val subDate : Date = Date()
-
-    @ColumnInfo(name = "password")
-    val password : String = ""
+    var username : String = ""
 }

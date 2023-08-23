@@ -4,33 +4,24 @@ import android.location.Location
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.giacomosirri.myapplication.data.RelationshipType
 import java.util.Date
 
 @Entity(tableName = "events")
-class Event {
-    @PrimaryKey
-    @ColumnInfo(name = "id")
-    val id : Int = 0
-
-    @ColumnInfo(name = "name")
-    val name : String = ""
-
-    @ColumnInfo(name = "description")
-    val description : String = ""
-
-    @ColumnInfo(name = "date")
-    val date : Date = Date()
-
-    @ColumnInfo(name = "location")
-    val location : Location = Location("")
-
-    @ColumnInfo(name = "organizer")
-    val organizer : String = ""
-
-    @ColumnInfo(name = "participants")
-    val participants : List<RelationshipType> = listOf()
-
-    @ColumnInfo(name = "dress_code")
-    val dressCode : String = ""
+data class Event(
+    val name: String,
+    val date: Date,
+    val location: Location,
+    val organizer: User,
+    val dressCode: String,
+    @ColumnInfo("friends_allowed")
+    val friendsAllowed: Boolean,
+    @ColumnInfo("family_allowed")
+    val familyAllowed: Boolean,
+    @ColumnInfo("partner_allowed")
+    val partnerAllowed: Boolean,
+    @ColumnInfo("colleagues_allowed")
+    val colleaguesAllowed: Boolean,
+) {
+    @PrimaryKey(autoGenerate = true)
+    var id : Int = 0
 }
