@@ -1,6 +1,5 @@
 package com.giacomosirri.myapplication.data
 
-import android.util.Range
 import androidx.room.TypeConverter
 import java.net.MalformedURLException
 import java.net.URL
@@ -29,5 +28,4 @@ class Converters {
         }
         return null
     }
-
 }

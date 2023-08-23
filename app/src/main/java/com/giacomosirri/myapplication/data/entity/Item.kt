@@ -8,11 +8,12 @@ import java.net.URL
 
 @Entity(tableName = "Items")
 data class Item(
+    val bought: Boolean,
     val name: String,
     val description: String,
     val url: URL,
-    val image: Image,
-    val bought: Boolean,
+    @ColumnInfo("image")
+    val imageURI: String,  // URI of the pic that points to the remote database.
     @ColumnInfo("price_lower")
     val priceLowerBound: Double,
     @ColumnInfo("price_upper")

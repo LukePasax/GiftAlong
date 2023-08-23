@@ -10,7 +10,7 @@ import java.util.Date
 data class Event(
     val name: String,
     val date: Date,
-    val location: Location,
+    val location: String,
     val organizer: String,
     val dressCode: String,
     @ColumnInfo("friends_allowed")
