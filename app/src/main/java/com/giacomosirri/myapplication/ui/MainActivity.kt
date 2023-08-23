@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -78,5 +79,20 @@ fun HomeScreen(paddingValues: PaddingValues) {
         },
     )
     {
+        Column(
+            modifier = Modifier.padding(it)
+        ) {
+            Card(
+                onClick = { /* Do something */ },
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxWidth()
+                    .fillMaxHeight(.1f)
+            ) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Text("Sergio's Degree", Modifier.align(Alignment.Center))
+                }
+            }
+        }
     }
 }
