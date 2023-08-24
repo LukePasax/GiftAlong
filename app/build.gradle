@@ -47,6 +47,7 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.navigation:navigation-runtime-ktx:2.5.3'
     configurations {
         all {
             exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
