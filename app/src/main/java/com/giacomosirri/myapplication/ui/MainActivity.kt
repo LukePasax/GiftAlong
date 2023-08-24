@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.giacomosirri.myapplication.ui.theme.MyApplicationTheme
-import com.giacomosirri.myapplication.ui.theme.Pink80
+import com.giacomosirri.myapplication.ui.theme.Primary
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +66,7 @@ fun HomeScreen(paddingValues: PaddingValues) {
                         )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Pink80)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Primary)
             )
         },
         floatingActionButton = {
