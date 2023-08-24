@@ -83,7 +83,3 @@ fun SpecialEventCard(date: String, event: String, color: Color = Primary) {
     }
 }
 
-@Composable
-fun WishlistScreen() {
-
-}
