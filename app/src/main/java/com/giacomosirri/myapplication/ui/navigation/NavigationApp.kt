@@ -38,7 +38,14 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
             NavigationAppBar(currentScreenTitle = currentScreen)
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(
+                onClick = {
+                    try {
+                        navController.navigate(NavigationScreen.Wishlist.name)
+                    } catch (e: java.lang.IllegalArgumentException) {
+                        e.printStackTrace()
+                    }
+                }) {
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = "Add new event"
@@ -57,7 +64,10 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
         startDestination = NavigationScreen.Home.name,
     ) {
         composable(route = NavigationScreen.Home.name) {
-            HomeScreen(paddingValues)
+            HomeScreen(paddingValues = paddingValues)
+        }
+        composable(route = NavigationScreen.Wishlist.name) {
+            WishlistScreen(paddingValues = paddingValues)
         }
     }
 }

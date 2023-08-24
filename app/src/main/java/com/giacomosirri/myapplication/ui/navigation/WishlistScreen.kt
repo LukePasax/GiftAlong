@@ -18,11 +18,13 @@ import com.giacomosirri.myapplication.ui.theme.Primary
 @Composable
 fun WishlistScreen(paddingValues: PaddingValues) {
     LazyColumn(modifier = Modifier.padding(paddingValues)) {
+        item { WishlistItem(name = "Ciao") }
+        item { WishlistItem(name = "Caccone", url = "www.cacca.it")}
     }
 }
 
 @Composable
-fun WishlistItem(name: String, url: String? = null, image : ImageBitmap? = null ) {
+fun WishlistItem(name: String, url: String? = null, image: ImageBitmap? = null) {
     if (image == null) {
        ListItem(
            headlineContent = { Text(name) },
