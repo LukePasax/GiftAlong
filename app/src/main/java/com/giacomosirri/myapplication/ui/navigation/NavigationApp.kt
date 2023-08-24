@@ -4,15 +4,19 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.giacomosirri.myapplication.ui.theme.Primary
 
 sealed class NavigationScreen(val name: String) {
     object Home: NavigationScreen("Home")
@@ -77,19 +81,40 @@ fun NavigationAppBar(
     modifier: Modifier = Modifier,
     currentScreenTitle: String,
     canNavigateBack: Boolean,
-    navigateUp: () -> Unit
+    actionOnLeadingNavigationIcon: () -> Unit
 ) {
     CenterAlignedTopAppBar(
-        title = { Text(text = currentScreenTitle) },
         modifier = modifier,
-        navigationIcon = {
-            if (canNavigateBack) {
-                IconButton(onClick = navigateUp) {
-                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back arrow")
-                }
-            } else {
-
+        actions = {
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = "Search event"
+                )
             }
-        }
+        },
+        title = {
+            Text(
+                text = currentScreenTitle,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
+        navigationIcon = {
+            IconButton(onClick = { actionOnLeadingNavigationIcon }) {
+                if (canNavigateBack) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Go back"
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Filled.Menu,
+                        contentDescription = "Main menu"
+                    )
+                }
+            }
+        },
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Primary)
     )
 }
