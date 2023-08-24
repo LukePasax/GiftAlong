@@ -1,9 +1,7 @@
 package com.giacomosirri.myapplication.ui.navigation
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -12,7 +10,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -34,13 +31,14 @@ sealed class NavigationScreen(val name: String) {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NavigationApp(navController: NavHostController = rememberNavController()) {
+fun NavigationApp(navController: NavHostController = rememberNavController(), paddingValues: PaddingValues) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = backStackEntry?.destination?.route ?: NavigationScreen.Home.name
     Scaffold(
         topBar = {
             NavigationAppBar(
                 currentScreenTitle = currentScreen,
+                hasTrailingIcons = true,
                 canNavigateBack = navController.previousBackStackEntry != null,
             )
         },
@@ -53,36 +51,37 @@ fun NavigationApp(navController: NavHostController = rememberNavController()) {
             }
         },
     ) {
-        NavigationGraph(navController = navController)
+        NavigationGraph(navController = navController, paddingValues = paddingValues)
     }
 }
 
 @Composable
-fun NavigationGraph(navController: NavHostController) {
+fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValues) {
     NavHost(
         navController = navController,
         startDestination = NavigationScreen.Home.name,
     ) {
         composable(route = NavigationScreen.Home.name) {
-            HomeScreen()
+            HomeScreen(paddingValues)
         }
     }
 }
 
 @Composable
 fun NavigationAppBar(
-    modifier: Modifier = Modifier,
     currentScreenTitle: String,
+    hasTrailingIcons: Boolean,
     canNavigateBack: Boolean,
 ) {
     CenterAlignedTopAppBar(
-        modifier = modifier,
         actions = {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = "Search event"
-                )
+            if (hasTrailingIcons) {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "Search event"
+                    )
+                }
             }
         },
         title = {
