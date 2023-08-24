@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">GiftAlong</string>
     <string name="new_item_page_title">Add New Item</string>
-    <string name="upcoming_events_page_title">Upcoming Events</string>
+    <string name="main_page_title">Upcoming Events</string>
     <string name="menu_item1">Go To Wishlist</string>
     <string name="menu_item2">Create New Event</string>
     <string name="menu_item3">Manage Relationships</string>

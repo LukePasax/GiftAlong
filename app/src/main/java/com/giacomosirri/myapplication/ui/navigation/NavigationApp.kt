@@ -3,6 +3,7 @@ package com.giacomosirri.myapplication.ui.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
@@ -40,7 +41,15 @@ fun NavigationApp(navController: NavHostController = rememberNavController()) {
                 canNavigateBack = navController.previousBackStackEntry != null,
                 actionOnLeadingNavigationIcon = { navController.navigateUp() }
             )
-        }
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Add new event"
+                )
+            }
+        },
     ) {
             padding -> NavigationGraph(navController = navController, paddingValues = padding)
     }
@@ -54,7 +63,7 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
         modifier = modifier.padding(paddingValues)
     ) {
         composable(route = NavigationScreen.Home.name) {
-            HomeScreen()
+            HomeScreen(paddingValues)
         }
     }
 }
