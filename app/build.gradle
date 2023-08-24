@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace 'com.giacomosirri.myapplication'
-    compileSdk 33
+    compileSdk 34
     defaultConfig {
         applicationId "com.giacomosirri.myapplication"
         minSdk 26
