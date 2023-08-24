@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.giacomosirri.myapplication.ui.theme.MyApplicationTheme
 import com.giacomosirri.myapplication.ui.theme.Primary
@@ -28,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    HomeScreen(paddingValues = PaddingValues(horizontal = 0.dp, vertical = 0.dp))
+                    HomeScreen(/*paddingValues = PaddingValues(horizontal = 0.dp, vertical = 0.dp)*/)
                 }
             }
         }
@@ -37,10 +39,11 @@ class MainActivity : ComponentActivity() {
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
+@Preview
 @Composable
-fun HomeScreen(paddingValues: PaddingValues) {
+fun HomeScreen() {
     Scaffold(
-        modifier = Modifier.padding(paddingValues),
+        modifier = Modifier.padding(1.dp),
         topBar = {
             CenterAlignedTopAppBar(
                 actions = {
@@ -85,9 +88,9 @@ fun HomeScreen(paddingValues: PaddingValues) {
             Card(
                 onClick = { /* Do something */ },
                 modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxWidth()
-                    .fillMaxHeight(.1f)
+                    .padding(15.dp)
+                    .fillMaxHeight(.1f),
+                border = BorderStroke(width = 2.dp, Primary)
             ) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     Text("Sergio's Degree", Modifier.align(Alignment.Center))
