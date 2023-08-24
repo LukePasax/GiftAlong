@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -85,17 +87,48 @@ fun HomeScreen() {
         Column(
             modifier = Modifier.padding(it)
         ) {
-            Card(
-                onClick = { /* Do something */ },
-                modifier = Modifier
-                    .padding(15.dp)
-                    .fillMaxHeight(.1f),
-                border = BorderStroke(width = 2.dp, Primary)
-            ) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Text("Sergio's Degree", Modifier.align(Alignment.Center))
-                }
+            DayCard("Tuesday, December 21, 2023", listOf("Sergio's Degree", "James' Birthday"))
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DayCard(dat : String, events : List<String>) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 5.dp)
+            .padding(top = 10.dp)
+            .defaultMinSize(minHeight = 100.dp)
+    ) {
+        Card(
+            modifier = Modifier
+                .height(35.dp),
+            border = BorderStroke(1.dp, Primary),
+            colors = CardDefaults.cardColors(containerColor = Primary)
+        ) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Text(dat, Modifier.align(Alignment.Center))
             }
+        }
+        for (event in events) {
+            EventCard(event)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EventCard(event: String) {
+    Card(
+        modifier = Modifier
+            .padding(horizontal = 5.dp)
+            .padding(top = 5.dp)
+            .height(50.dp),
+        border = BorderStroke(1.dp, Primary)
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Text(event, Modifier.align(Alignment.Center))
         }
     }
 }
