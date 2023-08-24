@@ -1,6 +1,5 @@
 package com.giacomosirri.myapplication.ui.navigation
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -8,6 +7,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
+import com.giacomosirri.myapplication.R
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.text.style.TextOverflow
@@ -16,10 +16,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Primary
 
 sealed class NavigationScreen(val name: String) {
-    object Home: NavigationScreen("Upcoming Events")
+    object Home: NavigationScreen(AppContext.getContext()?.getString(R.string.main_page_title)!!)
     object Wishlist: NavigationScreen("Wishlist")
     object NewItem: NavigationScreen("New_item")
     object NewEventScreen: NavigationScreen("New_event")
@@ -28,19 +29,13 @@ sealed class NavigationScreen(val name: String) {
     object EventScreen: NavigationScreen("Event")
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationApp(navController: NavHostController = rememberNavController(), paddingValues: PaddingValues) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = backStackEntry?.destination?.route ?: NavigationScreen.Home.name
     Scaffold(
         topBar = {
-            NavigationAppBar(
-                currentScreenTitle = currentScreen,
-                hasTrailingIcons = true,
-                canNavigateBack = navController.previousBackStackEntry != null,
-            )
+            NavigationAppBar(currentScreenTitle = currentScreen)
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { /*TODO*/ }) {
@@ -67,21 +62,16 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NavigationAppBar(
-    currentScreenTitle: String,
-    hasTrailingIcons: Boolean,
-    canNavigateBack: Boolean,
-) {
+fun NavigationAppBar(currentScreenTitle: String) {
     CenterAlignedTopAppBar(
         actions = {
-            if (hasTrailingIcons) {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = "Search event"
-                    )
-                }
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = "Search event"
+                )
             }
         },
         title = {
@@ -92,20 +82,28 @@ fun NavigationAppBar(
             )
         },
         navigationIcon = {
-            IconButton(onClick = { /*TODO*/ }) {
-                if (canNavigateBack) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Go back"
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Filled.Menu,
-                        contentDescription = "Main menu"
-                    )
-                }
-            }
+            LeadingNavigationIcon(screenTitle = currentScreenTitle)
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Primary)
     )
+}
+
+@Composable
+fun LeadingNavigationIcon(screenTitle: String) {
+    when (screenTitle) {
+        AppContext.getContext()?.getString(R.string.main_page_title) ->
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = "Main menu"
+                )
+            }
+        else ->
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Go back"
+                )
+            }
+    }
 }
