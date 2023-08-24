@@ -1,5 +1,7 @@
 package com.giacomosirri.myapplication.ui.navigation
 
+import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -20,7 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import com.giacomosirri.myapplication.ui.theme.Primary
 
 sealed class NavigationScreen(val name: String) {
-    object Home: NavigationScreen("Home")
+    object Home: NavigationScreen("Upcoming Events")
     object Wishlist: NavigationScreen("Wishlist")
     object NewItem: NavigationScreen("New_item")
     object NewEventScreen: NavigationScreen("New_event")
@@ -29,6 +31,7 @@ sealed class NavigationScreen(val name: String) {
     object EventScreen: NavigationScreen("Event")
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationApp(navController: NavHostController = rememberNavController()) {
@@ -39,7 +42,6 @@ fun NavigationApp(navController: NavHostController = rememberNavController()) {
             NavigationAppBar(
                 currentScreenTitle = currentScreen,
                 canNavigateBack = navController.previousBackStackEntry != null,
-                actionOnLeadingNavigationIcon = { navController.navigateUp() }
             )
         },
         floatingActionButton = {
@@ -51,19 +53,18 @@ fun NavigationApp(navController: NavHostController = rememberNavController()) {
             }
         },
     ) {
-            padding -> NavigationGraph(navController = navController, paddingValues = padding)
+        NavigationGraph(navController = navController)
     }
 }
 
 @Composable
-fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modifier, paddingValues: PaddingValues) {
+fun NavigationGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = NavigationScreen.Home.name,
-        modifier = modifier.padding(paddingValues)
     ) {
         composable(route = NavigationScreen.Home.name) {
-            HomeScreen(paddingValues)
+            HomeScreen()
         }
     }
 }
@@ -73,7 +74,6 @@ fun NavigationAppBar(
     modifier: Modifier = Modifier,
     currentScreenTitle: String,
     canNavigateBack: Boolean,
-    actionOnLeadingNavigationIcon: () -> Unit
 ) {
     CenterAlignedTopAppBar(
         modifier = modifier,
@@ -93,7 +93,7 @@ fun NavigationAppBar(
             )
         },
         navigationIcon = {
-            IconButton(onClick = { actionOnLeadingNavigationIcon }) {
+            IconButton(onClick = { /*TODO*/ }) {
                 if (canNavigateBack) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,

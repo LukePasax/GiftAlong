@@ -13,8 +13,8 @@ import androidx.compose.ui.unit.dp
 import com.giacomosirri.myapplication.ui.theme.Primary
 
 @Composable
-fun HomeScreen(paddingValues: PaddingValues) {
-    Column(modifier = Modifier.padding(paddingValues)) {
+fun HomeScreen() {
+    Column() {
         DayCard("Tuesday, December 21, 2023", listOf("Sergio's Degree", "James' Birthday"))
     }
 }
