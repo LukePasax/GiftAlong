@@ -36,9 +36,9 @@ fun NavigationApp(navController: NavHostController = rememberNavController()) {
     Scaffold(
         topBar = {
             NavigationAppBar(
-                currentScreen = currentScreen,
-                navigateBack = navController.previousBackStackEntry != null,
-                navigateUp = { navController.navigateUp() }
+                currentScreenTitle = currentScreen,
+                canNavigateBack = navController.previousBackStackEntry != null,
+                actionOnLeadingNavigationIcon = { navController.navigateUp() }
             )
         }
     ) {
@@ -54,24 +54,7 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
         modifier = modifier.padding(paddingValues)
     ) {
         composable(route = NavigationScreen.Home.name) {
-            HomeScreen(onNextButton = {
-                navController.navigate(NavigationScreen.Second.name)
-            })
-        }
-        composable(route = NavigationScreen.Second.name) {
-            SecondScreen(
-                onNextButton = {
-                    navController.navigate(NavigationScreen.Third.name)
-                },
-                onCancelButton = {
-                    navigateHome(navController)
-                }
-            )
-        }
-        composable(route = NavigationScreen.Third.name) {
-            ThirdScreen(onCancelButton = {
-                navigateHome(navController)
-            })
+            HomeScreen()
         }
     }
 }
