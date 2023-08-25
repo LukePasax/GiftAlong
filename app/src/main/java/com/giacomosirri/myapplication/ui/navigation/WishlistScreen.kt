@@ -73,7 +73,7 @@ fun WishlistItem(name: String, url: String? = null, image: ImageBitmap? = null) 
             }
         )
         HorizontalDivider(
-            thickness = 2.dp,
+            thickness = 1.dp,
             color = Primary
         )
     }

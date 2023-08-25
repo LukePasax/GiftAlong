@@ -28,10 +28,10 @@ sealed class NavigationScreen(val name: String) {
     object Home: NavigationScreen(AppContext.getContext()?.getString(R.string.main_page_title)!!)
     object Wishlist: NavigationScreen("Wishlist")
     object NewItem: NavigationScreen("New_item")
-    object NewEventScreen: NavigationScreen("New_event")
-    object UserProfileScreen: NavigationScreen("User_profile")
-    object ItemScreen: NavigationScreen("Item")
-    object EventScreen: NavigationScreen("Event")
+    object NewEvent: NavigationScreen("New_event")
+    object UserProfile: NavigationScreen("User_profile")
+    object Item: NavigationScreen("Item")
+    object Event: NavigationScreen("Event")
 }
 
 class LeadingNavigationIconStrategy(val onBackArrow: () -> Unit, val onMenuIcon: () -> Unit)
@@ -100,11 +100,26 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
         navController = navController,
         startDestination = NavigationScreen.Home.name,
     ) {
-        composable(route = NavigationScreen.Home.name) {
-            HomeScreen(paddingValues = paddingValues)
+        composable(NavigationScreen.Home.name) {
+            HomeScreen(paddingValues)
         }
-        composable(route = NavigationScreen.Wishlist.name) {
-            WishlistScreen(paddingValues = paddingValues)
+        composable(NavigationScreen.Wishlist.name) {
+            WishlistScreen(paddingValues)
+        }
+        composable(NavigationScreen.NewItem.name) {
+            NewItemScreen(paddingValues)
+        }
+        composable(NavigationScreen.NewEvent.name) {
+            NewEventScreen(paddingValues)
+        }
+        composable(NavigationScreen.UserProfile.name) {
+            UserProfileScreen(paddingValues)
+        }
+        composable(NavigationScreen.Item.name) {
+            ItemScreen(paddingValues)
+        }
+        composable(NavigationScreen.Event.name) {
+            EventScreen(paddingValues)
         }
     }
 }
