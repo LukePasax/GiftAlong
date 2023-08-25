@@ -4,9 +4,14 @@ import com.giacomosirri.myapplication.ui.theme.Background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.DateRange
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
+import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.giacomosirri.myapplication.R
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -42,20 +47,33 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(
-                modifier = Modifier.fillMaxWidth(.75f).fillMaxHeight(),
+                modifier = Modifier
+                    .fillMaxWidth(.75f)
+                    .fillMaxHeight(),
                 drawerContainerColor = Background
             ) {
-                val items = listOf(Icons.Default.Favorite, Icons.Default.Face, Icons.Default.Email)
-                val selectedItem = remember { mutableStateOf(items[0]) }
+                val items = mapOf(
+                    Pair(AppContext.getContext()?.getString(R.string.menu_item1), Icons.Rounded.Person),
+                    Pair(AppContext.getContext()?.getString(R.string.menu_item2), Icons.Rounded.DateRange),
+                    Pair(AppContext.getContext()?.getString(R.string.menu_item3), Icons.Rounded.Favorite),
+                    Pair(AppContext.getContext()?.getString(R.string.menu_item4), Icons.Rounded.FavoriteBorder),
+                    Pair(AppContext.getContext()?.getString(R.string.menu_item5), Icons.Rounded.Person),
+                    )
+                val selectedItem: MutableState<String?> = remember { mutableStateOf(null) }
+                Text(
+                    text = AppContext.getContext()?.getString(R.string.app_name).toString(),
+                    color = Color.Red
+                )
                 Spacer(Modifier.height(12.dp))
                 items.forEach { item ->
                     NavigationDrawerItem(
-                        icon = { Icon(item, contentDescription = null) },
-                        label = { Text(item.name) },
-                        selected = item == selectedItem.value,
+                        icon = { Icon(item.value, contentDescription = null) },
+                        label = { item.key?.let { Text(it) } },
+                        colors = NavigationDrawerItemDefaults.colors(),
+                        selected = item.key == selectedItem.value,
                         onClick = {
                             scope.launch { drawerState.close() }
-                            selectedItem.value = item
+                            selectedItem.value = item.key
                         },
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                     )
