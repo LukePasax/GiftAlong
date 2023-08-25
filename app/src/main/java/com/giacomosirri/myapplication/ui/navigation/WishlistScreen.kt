@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Primary
@@ -36,29 +37,38 @@ fun WishlistItem(name: String, url: String? = null, image: ImageBitmap? = null) 
     if (image != null) {
         //TODO: set icon to image
     }
-    ListItem(
-        headlineContent = { Text(name) },
-        supportingContent = { Text(url.orEmpty()) },
-        trailingContent = {
-            Column(horizontalAlignment = Alignment.End) {
-                Row {
-                    Checkbox(checked = false, onCheckedChange = null)
-                    Text(text = "Mark as received")
+    Column {
+        ListItem(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(70.dp),
+            headlineContent = { Text(name) },
+            supportingContent = { Text(url.orEmpty()) },
+            trailingContent = {
+                Column(horizontalAlignment = Alignment.End) {
+                    Row {
+                        Checkbox(checked = false, onCheckedChange = null)
+                        Text(text = "Mark as received")
+                    }
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Delete",
+                            tint = Primary
+                        )
+                    }
                 }
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        imageVector = Icons.Filled.Delete,
-                        contentDescription = "Delete",
-                        tint = Primary
-                    )
-                }
+            },
+            leadingContent = {
+                Image(
+                    painterResource(id = icon),
+                    contentDescription = "Wishlist item image",
+                )
             }
-        },
-        leadingContent = {
-            Image(
-                painterResource(id = icon),
-                contentDescription = "Wishlist item image",
-            )
-        }
-    )
+        )
+        HorizontalDivider(
+            thickness = 2.dp,
+            color = Primary
+        )
+    }
 }
