@@ -11,6 +11,9 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import com.giacomosirri.myapplication.R
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -33,6 +36,7 @@ fun WishlistScreen(paddingValues: PaddingValues) {
 @SuppressLint("UseCompatLoadingForDrawables")
 @Composable
 fun WishlistItem(name: String, url: String? = null, image: ImageBitmap? = null) {
+    var checked by mutableStateOf(false)
     val icon = R.drawable.placeholder_foreground
     if (image != null) {
         //TODO: set icon to image
@@ -47,7 +51,9 @@ fun WishlistItem(name: String, url: String? = null, image: ImageBitmap? = null) 
             trailingContent = {
                 Column(horizontalAlignment = Alignment.End) {
                     Row {
-                        Checkbox(checked = false, onCheckedChange = null)
+                        Checkbox(checked = checked, onCheckedChange = {
+                            checked = it
+                        })
                         Text(text = "Mark as received")
                     }
                     IconButton(onClick = { /*TODO*/ }) {
