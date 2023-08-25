@@ -1,16 +1,15 @@
 package com.giacomosirri.myapplication.ui.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
+import com.giacomosirri.myapplication.ui.theme.Background
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import com.giacomosirri.myapplication.R
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,6 +17,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Primary
+import kotlinx.coroutines.launch
 
 sealed class NavigationScreen(val name: String) {
     object Home: NavigationScreen(AppContext.getContext()?.getString(R.string.main_page_title)!!)
@@ -29,31 +29,50 @@ sealed class NavigationScreen(val name: String) {
     object EventScreen: NavigationScreen("Event")
 }
 
+class LeadingNavigationIconStrategy(val onBackArrow: () -> Unit, val onMenuIcon: () -> Unit)
+
 @Composable
 fun NavigationApp(navController: NavHostController = rememberNavController(), paddingValues: PaddingValues) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = backStackEntry?.destination?.route ?: NavigationScreen.Home.name
-    Scaffold(
-        topBar = {
-            NavigationAppBar(currentScreenTitle = currentScreen)
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    try {
-                        navController.navigate(NavigationScreen.Wishlist.name)
-                    } catch (e: java.lang.IllegalArgumentException) {
-                        e.printStackTrace()
-                    }
-                }) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "Add new event"
-                )
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+    val strategy = LeadingNavigationIconStrategy({ navController.navigateUp()}, { scope.launch { drawerState.open() } })
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet(
+                modifier = Modifier.fillMaxWidth(.75f).fillMaxHeight(),
+                drawerContainerColor = Background
+            ) {
+                val items = listOf(Icons.Default.Favorite, Icons.Default.Face, Icons.Default.Email)
+                val selectedItem = remember { mutableStateOf(items[0]) }
+                Spacer(Modifier.height(12.dp))
+                items.forEach { item ->
+                    NavigationDrawerItem(
+                        icon = { Icon(item, contentDescription = null) },
+                        label = { Text(item.name) },
+                        selected = item == selectedItem.value,
+                        onClick = {
+                            scope.launch { drawerState.close() }
+                            selectedItem.value = item
+                        },
+                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                    )
+                }
             }
-        },
+        }
     ) {
-        NavigationGraph(navController = navController, paddingValues = paddingValues)
+        Scaffold(
+            topBar = { NavigationAppBar(currentScreen, strategy) },
+            floatingActionButton = {
+                FloatingActionButton(onClick = { /*TODO*/ }) {
+                    Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new event")
+                }
+            },
+        ) {
+            NavigationGraph(navController = navController, paddingValues = paddingValues)
+        }
     }
 }
 
@@ -74,7 +93,7 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NavigationAppBar(currentScreenTitle: String) {
+fun NavigationAppBar(currentScreenTitle: String, strategy: LeadingNavigationIconStrategy) {
     CenterAlignedTopAppBar(
         actions = {
             IconButton(onClick = { /*TODO*/ }) {
@@ -92,28 +111,23 @@ fun NavigationAppBar(currentScreenTitle: String) {
             )
         },
         navigationIcon = {
-            LeadingNavigationIcon(screenTitle = currentScreenTitle)
+            when (currentScreenTitle) {
+                AppContext.getContext()?.getString(R.string.main_page_title) ->
+                    IconButton(onClick = strategy.onMenuIcon) {
+                        Icon(
+                            imageVector = Icons.Filled.Menu,
+                            contentDescription = "Main menu"
+                        )
+                    }
+                else ->
+                    IconButton(onClick = strategy.onBackArrow) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Go back"
+                        )
+                    }
+            }
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Primary)
     )
-}
-
-@Composable
-fun LeadingNavigationIcon(screenTitle: String) {
-    when (screenTitle) {
-        AppContext.getContext()?.getString(R.string.main_page_title) ->
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = Icons.Filled.Menu,
-                    contentDescription = "Main menu"
-                )
-            }
-        else ->
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "Go back"
-                )
-            }
-    }
 }
