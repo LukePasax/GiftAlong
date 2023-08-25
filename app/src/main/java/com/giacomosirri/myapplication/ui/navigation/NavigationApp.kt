@@ -66,7 +66,7 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
         Scaffold(
             topBar = { NavigationAppBar(currentScreen, strategy) },
             floatingActionButton = {
-                FloatingActionButton(onClick = { /*TODO*/ }) {
+                FloatingActionButton(onClick = { navController.navigate(NavigationScreen.Wishlist.name) }) {
                     Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new event")
                 }
             },
