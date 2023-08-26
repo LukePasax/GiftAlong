@@ -25,13 +25,15 @@ import com.giacomosirri.myapplication.ui.theme.Primary
 import kotlinx.coroutines.launch
 
 sealed class NavigationScreen(val name: String) {
-    object Home: NavigationScreen(AppContext.getContext()?.getString(R.string.main_page_title)!!)
+    object Home: NavigationScreen("Home")
     object Wishlist: NavigationScreen("Wishlist")
-    object NewItem: NavigationScreen("New_item")
-    object NewEvent: NavigationScreen("New_event")
-    object UserProfile: NavigationScreen("User_profile")
+    object NewItem: NavigationScreen("New item")
+    object NewEvent: NavigationScreen("New event")
+    object UserProfile: NavigationScreen("User profile")
     object Item: NavigationScreen("Item")
     object Event: NavigationScreen("Event")
+    object Relationships: NavigationScreen("Relationships")
+    object DataCenter: NavigationScreen("Data center")
 }
 
 class LeadingNavigationIconStrategy(val onBackArrow: () -> Unit, val onMenuIcon: () -> Unit)
@@ -120,6 +122,12 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
         }
         composable(NavigationScreen.Event.name) {
             EventScreen(paddingValues)
+        }
+        composable(NavigationScreen.Relationships.name) {
+            RelatioshipsScreen(paddingValues)
+        }
+        composable(NavigationScreen.DataCenter.name) {
+            DataCenterScreen(paddingValues)
         }
     }
 }
