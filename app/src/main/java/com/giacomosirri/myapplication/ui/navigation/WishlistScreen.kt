@@ -50,12 +50,7 @@ fun WishlistItem(name: String, url: String? = null, image: ImageBitmap? = null) 
             supportingContent = { Text(url.orEmpty()) },
             trailingContent = {
                 Column(horizontalAlignment = Alignment.End) {
-                    Row {
-                        Checkbox(checked = checked, onCheckedChange = {
-                            checked = it
-                        })
-                        Text(text = "Mark as received")
-                    }
+                    CheckboxRow(text = "Mark as received")
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             imageVector = Icons.Filled.Delete,

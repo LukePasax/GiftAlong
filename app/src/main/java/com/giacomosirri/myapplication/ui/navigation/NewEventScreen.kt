@@ -57,7 +57,7 @@ fun NewEventScreen(paddingValues: PaddingValues) {
 
 @Composable
 fun CheckboxRow(text: String) {
-    val (checkedState, onStateChange) = remember { mutableStateOf(true) }
+    val (checkedState, onStateChange) = remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
             .defaultMinSize(minWidth = 80.dp)

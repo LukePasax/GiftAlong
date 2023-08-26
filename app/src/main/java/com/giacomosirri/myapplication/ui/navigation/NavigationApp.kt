@@ -4,10 +4,7 @@ import com.giacomosirri.myapplication.ui.theme.Background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.rounded.DateRange
-import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.material.icons.rounded.FavoriteBorder
-import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -66,6 +63,7 @@ sealed class NavigationScreen(val name: String, val title: String?) {
 
 class LeadingNavigationIconStrategy(val onBackArrow: () -> Unit, val onMenuIcon: () -> Unit)
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationApp(navController: NavHostController = rememberNavController(), paddingValues: PaddingValues) {
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -84,14 +82,14 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
             ) {
                 val items = mapOf(
                     Pair(AppContext.getContext()?.getString(R.string.menu_item1), Icons.Rounded.Person),
-                    Pair(AppContext.getContext()?.getString(R.string.menu_item2), Icons.Rounded.DateRange),
-                    Pair(AppContext.getContext()?.getString(R.string.menu_item3), Icons.Rounded.Favorite),
-                    Pair(AppContext.getContext()?.getString(R.string.menu_item4), Icons.Rounded.FavoriteBorder),
-                    Pair(AppContext.getContext()?.getString(R.string.menu_item5), Icons.Rounded.Person),
-                    )
+                    Pair(AppContext.getContext()?.getString(R.string.menu_item2), Icons.Rounded.Favorite),
+                    Pair(AppContext.getContext()?.getString(R.string.menu_item3), Icons.Rounded.FavoriteBorder),
+                )
                 val selectedItem: MutableState<String?> = remember { mutableStateOf(null) }
                 Box(
-                    modifier = Modifier.fillMaxWidth().fillMaxHeight(.08f),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(.08f),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -113,6 +111,16 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
                         },
                         modifier = Modifier.padding(bottom = 6.dp)
                     )
+                }
+                Spacer(Modifier.fillMaxHeight(.85f))
+                var darkMode by remember { mutableStateOf(false) }
+                Row(
+                    modifier = Modifier.padding(start = 20.dp, end = 25.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Dark Mode")
+                    Spacer(modifier = Modifier.fillMaxWidth(.8f))
+                    Switch(checked = darkMode, onCheckedChange = { darkMode = it })
                 }
             }
         }
