@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.giacomosirri.myapplication.ui.theme.Primary
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -18,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
+import com.giacomosirri.myapplication.ui.theme.*
 
 @Composable
 fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit) {
@@ -30,8 +30,8 @@ fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit) {
     ) {
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
             items(1) {
-                DayCard("Tuesday, December 21, 2023", listOf("Sergio's Degree", "James' Birthday"))
-                SpecialEventCard(date = "25 December", event = "Christmas", color = Color.Red)
+                DayCard(date = "Tuesday, December 21, 2023", events = listOf("Sergio's Degree", "James' Birthday"))
+                SpecialEventCard(date = "25 December", event = "Christmas")
             }
         }
     }
@@ -49,7 +49,7 @@ fun DayCard(date: String, events: List<String>) {
             modifier = Modifier
                 .height(35.dp),
             border = BorderStroke(1.dp, Primary),
-            colors = CardDefaults.cardColors(containerColor = Primary)
+            colors = CardDefaults.cardColors(containerColor = DayCardBackground)
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 Text(date, Modifier.align(Alignment.Center), fontWeight = FontWeight.Bold)
@@ -61,7 +61,6 @@ fun DayCard(date: String, events: List<String>) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EventCard(event: String) {
     Card(
@@ -69,7 +68,8 @@ fun EventCard(event: String) {
             .padding(horizontal = 5.dp)
             .padding(top = 5.dp)
             .height(50.dp),
-        border = BorderStroke(1.dp, Primary)
+        border = BorderStroke(1.dp, Primary),
+        colors = CardDefaults.cardColors(containerColor = EventCardBackground)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Text(event, Modifier.align(Alignment.Center))
@@ -77,19 +77,28 @@ fun EventCard(event: String) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SpecialEventCard(date: String, event: String, color: Color = Primary) {
+fun SpecialEventCard(date: String, event: String) {
     Card(
         modifier = Modifier
             .padding(horizontal = 5.dp, vertical = 10.dp)
             .height(75.dp),
         border = BorderStroke(1.dp, Primary),
-        colors = CardDefaults.cardColors(containerColor = color)
+        colors = CardDefaults.cardColors(containerColor = SpecialEventCardBackground)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            Text(event, Modifier.align(Alignment.Center), fontSize = 25.sp, fontWeight = FontWeight.Bold)
-            Text(date, Modifier.align(Alignment.BottomCenter), color = Color.DarkGray)
+            Text(
+                text = event,
+                modifier = Modifier.align(Alignment.Center),
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = date,
+                modifier = Modifier.align(Alignment.BottomCenter),
+                color = Color.White,
+                fontSize = 13.sp,
+            )
         }
     }
 }
