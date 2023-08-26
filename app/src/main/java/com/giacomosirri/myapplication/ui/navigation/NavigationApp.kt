@@ -24,46 +24,45 @@ import kotlinx.coroutines.launch
 
 sealed class NavigationScreen(val name: String, val title: String?) {
     object Home: NavigationScreen(
-        name = "Home",
+        name = AppContext.getContext()?.getString(R.string.home)!!,
         title = AppContext.getContext()?.getString(R.string.main_page_title)
     )
     object Wishlist: NavigationScreen(
-        name = "Wishlist",
+        name = AppContext.getContext()?.getString(R.string.wishlist)!!,
         title = null
     )
     object NewItem: NavigationScreen(
-        name = "New item",
+        name = AppContext.getContext()?.getString(R.string.new_item)!!,
         title = AppContext.getContext()?.getString(R.string.new_item_page_title)
     )
     object NewEvent: NavigationScreen(
-        name = "New event",
+        name = AppContext.getContext()?.getString(R.string.new_event)!!,
         title = AppContext.getContext()?.getString(R.string.new_item_page_title)
     )
     object UserProfile: NavigationScreen(
-        name = "User profile",
+        name = AppContext.getContext()?.getString(R.string.user_profile)!!,
         title = null
     )
     object Item: NavigationScreen(
-        name = "Item",
+        name = AppContext.getContext()?.getString(R.string.specific_item)!!,
         title = null
     )
     object Event: NavigationScreen(
-        name = "Event",
+        name = AppContext.getContext()?.getString(R.string.new_event)!!,
         title = null
     )
     object Relationships: NavigationScreen(
-        name = "Relationships",
+        name = AppContext.getContext()?.getString(R.string.relationships)!!,
         title = AppContext.getContext()?.getString(R.string.relationships_page_title)
     )
     object DataCenter: NavigationScreen(
-        name = "Data center",
+        name = AppContext.getContext()?.getString(R.string.data_center)!!,
         title = AppContext.getContext()?.getString(R.string.datacenter_page_title)
     )
 }
 
 class LeadingNavigationIconStrategy(val onBackArrow: () -> Unit, val onMenuIcon: () -> Unit)
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationApp(navController: NavHostController = rememberNavController(), paddingValues: PaddingValues) {
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -85,7 +84,6 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
                     Pair(AppContext.getContext()?.getString(R.string.menu_item2), Icons.Rounded.Favorite),
                     Pair(AppContext.getContext()?.getString(R.string.menu_item3), Icons.Rounded.FavoriteBorder),
                 )
-                val selectedItem: MutableState<String?> = remember { mutableStateOf(null) }
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -99,6 +97,7 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
                     )
                 }
                 Spacer(Modifier.height(12.dp))
+                val selectedItem: MutableState<String?> = remember { mutableStateOf(null) }
                 items.forEach { item ->
                     NavigationDrawerItem(
                         icon = { Icon(item.value, contentDescription = null) },
@@ -108,6 +107,7 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
                         onClick = {
                             scope.launch { drawerState.close() }
                             selectedItem.value = item.key
+                            navigateFromDrawer(selectedItem.value, navController)
                         },
                         modifier = Modifier.padding(bottom = 6.dp)
                     )
@@ -130,6 +130,17 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
         ) {
             NavigationGraph(navController = navController, paddingValues = paddingValues)
         }
+    }
+}
+
+fun navigateFromDrawer(menuItem: String?, navController: NavHostController) {
+    when(menuItem) {
+        AppContext.getContext()?.getString(R.string.menu_item1) ->
+            navController.navigate(NavigationScreen.Wishlist.name)
+        AppContext.getContext()?.getString(R.string.menu_item2) ->
+            navController.navigate(NavigationScreen.Relationships.name)
+        AppContext.getContext()?.getString(R.string.menu_item3) ->
+            navController.navigate(NavigationScreen.DataCenter.name)
     }
 }
 
