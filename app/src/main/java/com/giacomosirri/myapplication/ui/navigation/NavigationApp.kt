@@ -10,8 +10,8 @@ import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import com.giacomosirri.myapplication.R
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -22,6 +22,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Primary
+import com.giacomosirri.myapplication.ui.theme.Typography
 import kotlinx.coroutines.launch
 
 sealed class NavigationScreen(val name: String, val title: String?) {
@@ -77,7 +78,7 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
         drawerContent = {
             ModalDrawerSheet(
                 modifier = Modifier
-                    .fillMaxWidth(.75f)
+                    .fillMaxWidth(.8f)
                     .fillMaxHeight(),
                 drawerContainerColor = Background
             ) {
@@ -89,10 +90,16 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
                     Pair(AppContext.getContext()?.getString(R.string.menu_item5), Icons.Rounded.Person),
                     )
                 val selectedItem: MutableState<String?> = remember { mutableStateOf(null) }
-                Text(
-                    text = AppContext.getContext()?.getString(R.string.app_name).toString(),
-                    color = Color.Red
-                )
+                Box(
+                    modifier = Modifier.fillMaxWidth().fillMaxHeight(.08f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = AppContext.getContext()?.getString(R.string.app_name).toString(),
+                        color = Primary,
+                        style = Typography.headlineLarge
+                    )
+                }
                 Spacer(Modifier.height(12.dp))
                 items.forEach { item ->
                     NavigationDrawerItem(
@@ -104,7 +111,7 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
                             scope.launch { drawerState.close() }
                             selectedItem.value = item.key
                         },
-                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                        modifier = Modifier.padding(bottom = 6.dp)
                     )
                 }
             }
