@@ -22,43 +22,27 @@ import com.giacomosirri.myapplication.ui.theme.Primary
 import com.giacomosirri.myapplication.ui.theme.Typography
 import kotlinx.coroutines.launch
 
-sealed class NavigationScreen(val name: String, val title: String?) {
-    object Home: NavigationScreen(
-        name = AppContext.getContext()?.getString(R.string.home)!!,
-        title = AppContext.getContext()?.getString(R.string.main_page_title)
-    )
-    object Wishlist: NavigationScreen(
-        name = AppContext.getContext()?.getString(R.string.wishlist)!!,
-        title = null
-    )
-    object NewItem: NavigationScreen(
-        name = AppContext.getContext()?.getString(R.string.new_item)!!,
-        title = AppContext.getContext()?.getString(R.string.new_item_page_title)
-    )
-    object NewEvent: NavigationScreen(
-        name = AppContext.getContext()?.getString(R.string.new_event)!!,
-        title = AppContext.getContext()?.getString(R.string.new_item_page_title)
-    )
-    object UserProfile: NavigationScreen(
-        name = AppContext.getContext()?.getString(R.string.user_profile)!!,
-        title = null
-    )
-    object Item: NavigationScreen(
-        name = AppContext.getContext()?.getString(R.string.specific_item)!!,
-        title = null
-    )
-    object Event: NavigationScreen(
-        name = AppContext.getContext()?.getString(R.string.new_event)!!,
-        title = null
-    )
-    object Relationships: NavigationScreen(
-        name = AppContext.getContext()?.getString(R.string.relationships)!!,
-        title = AppContext.getContext()?.getString(R.string.relationships_page_title)
-    )
-    object DataCenter: NavigationScreen(
-        name = AppContext.getContext()?.getString(R.string.data_center)!!,
-        title = AppContext.getContext()?.getString(R.string.datacenter_page_title)
-    )
+val fromScreenNameToTitle = mapOf(
+    Pair(AppContext.getContext()?.getString(R.string.home)!!, AppContext.getContext()?.getString(R.string.main_page_title)),
+    Pair(AppContext.getContext()?.getString(R.string.wishlist)!!, null),
+    Pair(AppContext.getContext()?.getString(R.string.new_item)!!, AppContext.getContext()?.getString(R.string.new_item_page_title)),
+    Pair(AppContext.getContext()?.getString(R.string.new_event)!!, AppContext.getContext()?.getString(R.string.new_item_page_title)),
+    Pair(AppContext.getContext()?.getString(R.string.specific_item)!!, null),
+    Pair(AppContext.getContext()?.getString(R.string.specific_event)!!, null),
+    Pair(AppContext.getContext()?.getString(R.string.relationships)!!, AppContext.getContext()?.getString(R.string.relationships_page_title)),
+    Pair(AppContext.getContext()?.getString(R.string.data_center)!!, AppContext.getContext()?.getString(R.string.datacenter_page_title))
+)
+
+sealed class NavigationScreen(val name: String) {
+    object Home: NavigationScreen(AppContext.getContext()?.getString(R.string.home)!!)
+    object Wishlist: NavigationScreen(AppContext.getContext()?.getString(R.string.wishlist)!!)
+    object NewItem: NavigationScreen(AppContext.getContext()?.getString(R.string.new_item)!!)
+    object NewEvent: NavigationScreen(AppContext.getContext()?.getString(R.string.new_event)!!)
+    object UserProfile: NavigationScreen(AppContext.getContext()?.getString(R.string.user_profile)!!)
+    object Item: NavigationScreen(AppContext.getContext()?.getString(R.string.specific_item)!!)
+    object Event: NavigationScreen(AppContext.getContext()?.getString(R.string.new_event)!!)
+    object Relationships: NavigationScreen(AppContext.getContext()?.getString(R.string.relationships)!!)
+    object DataCenter: NavigationScreen(AppContext.getContext()?.getString(R.string.data_center)!!)
 }
 
 class LeadingNavigationIconStrategy(val onBackArrow: () -> Unit, val onMenuIcon: () -> Unit)
@@ -185,7 +169,7 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NavigationAppBar(currentScreenTitle: String, strategy: LeadingNavigationIconStrategy) {
+fun NavigationAppBar(currentScreenName: String, strategy: LeadingNavigationIconStrategy) {
     CenterAlignedTopAppBar(
         actions = {
             IconButton(onClick = { /*TODO*/ }) {
@@ -197,14 +181,14 @@ fun NavigationAppBar(currentScreenTitle: String, strategy: LeadingNavigationIcon
         },
         title = {
             Text(
-                text = currentScreenTitle,
+                text = fromScreenNameToTitle[currentScreenName] ?: "This page has no title",
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
         },
         navigationIcon = {
-            when (currentScreenTitle) {
-                "Home" ->
+            when (currentScreenName) {
+                AppContext.getContext()?.getString(R.string.home) ->
                     IconButton(onClick = strategy.onMenuIcon) {
                         Icon(
                             imageVector = Icons.Filled.Menu,
