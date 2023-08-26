@@ -24,16 +24,43 @@ import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Primary
 import kotlinx.coroutines.launch
 
-sealed class NavigationScreen(val name: String) {
-    object Home: NavigationScreen("Home")
-    object Wishlist: NavigationScreen("Wishlist")
-    object NewItem: NavigationScreen("New item")
-    object NewEvent: NavigationScreen("New event")
-    object UserProfile: NavigationScreen("User profile")
-    object Item: NavigationScreen("Item")
-    object Event: NavigationScreen("Event")
-    object Relationships: NavigationScreen("Relationships")
-    object DataCenter: NavigationScreen("Data center")
+sealed class NavigationScreen(val name: String, val title: String?) {
+    object Home: NavigationScreen(
+        name = "Home",
+        title = AppContext.getContext()?.getString(R.string.main_page_title)
+    )
+    object Wishlist: NavigationScreen(
+        name = "Wishlist",
+        title = null
+    )
+    object NewItem: NavigationScreen(
+        name = "New item",
+        title = AppContext.getContext()?.getString(R.string.new_item_page_title)
+    )
+    object NewEvent: NavigationScreen(
+        name = "New event",
+        title = AppContext.getContext()?.getString(R.string.new_item_page_title)
+    )
+    object UserProfile: NavigationScreen(
+        name = "User profile",
+        title = null
+    )
+    object Item: NavigationScreen(
+        name = "Item",
+        title = null
+    )
+    object Event: NavigationScreen(
+        name = "Event",
+        title = null
+    )
+    object Relationships: NavigationScreen(
+        name = "Relationships",
+        title = AppContext.getContext()?.getString(R.string.relationships_page_title)
+    )
+    object DataCenter: NavigationScreen(
+        name = "Data center",
+        title = AppContext.getContext()?.getString(R.string.datacenter_page_title)
+    )
 }
 
 class LeadingNavigationIconStrategy(val onBackArrow: () -> Unit, val onMenuIcon: () -> Unit)
@@ -84,12 +111,7 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
         }
     ) {
         Scaffold(
-            topBar = { NavigationAppBar(currentScreen, strategy) },
-            floatingActionButton = {
-                FloatingActionButton(onClick = { navController.navigate(NavigationScreen.Wishlist.name) }) {
-                    Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new event")
-                }
-            },
+            topBar = { NavigationAppBar(currentScreen, strategy) }
         ) {
             NavigationGraph(navController = navController, paddingValues = paddingValues)
         }
@@ -103,7 +125,10 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
         startDestination = NavigationScreen.Home.name,
     ) {
         composable(NavigationScreen.Home.name) {
-            HomeScreen(paddingValues)
+            HomeScreen(
+                paddingValues = paddingValues,
+                onFabClick = { navController.navigate(NavigationScreen.NewEvent.name) }
+            )
         }
         composable(NavigationScreen.Wishlist.name) {
             WishlistScreen(paddingValues)
@@ -153,7 +178,7 @@ fun NavigationAppBar(currentScreenTitle: String, strategy: LeadingNavigationIcon
         },
         navigationIcon = {
             when (currentScreenTitle) {
-                AppContext.getContext()?.getString(R.string.main_page_title) ->
+                "Home" ->
                     IconButton(onClick = strategy.onMenuIcon) {
                         Icon(
                             imageVector = Icons.Filled.Menu,

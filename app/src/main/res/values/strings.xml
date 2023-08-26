@@ -4,6 +4,7 @@
     <string name="new_item_page_title">Add New Item</string>
     <string name="new_event_page_title">Add New Event</string>
     <string name="relationships_page_title">Manage Relationships</string>
+    <string name="datacenter_page_title">Data Center</string>
     <string name="menu_item1">Go To Wishlist</string>
     <string name="menu_item2">Create New Event</string>
     <string name="menu_item3">Manage Relationships</string>

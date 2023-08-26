@@ -15,14 +15,24 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 
 @Composable
-fun HomeScreen(paddingValues: PaddingValues) {
-    LazyColumn(modifier = Modifier.padding(paddingValues)) {
-        items(1) {
-            DayCard("Tuesday, December 21, 2023", listOf("Sergio's Degree", "James' Birthday"))
-            SpecialEventCard(date = "25 December", event = "Christmas", color = Color.Red)
+fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit) {
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = onFabClick) {
+                Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new event")
+            }
+        }
+    ) {
+        LazyColumn(modifier = Modifier.padding(paddingValues)) {
+            items(1) {
+                DayCard("Tuesday, December 21, 2023", listOf("Sergio's Degree", "James' Birthday"))
+                SpecialEventCard(date = "25 December", event = "Christmas", color = Color.Red)
+            }
         }
     }
 }
