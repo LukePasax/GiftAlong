@@ -1,9 +1,7 @@
 package com.giacomosirri.myapplication.ui.navigation
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -16,20 +14,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Primary
 
 @Composable
 fun WishlistScreen(paddingValues: PaddingValues) {
     LazyColumn(modifier = Modifier.padding(paddingValues)) {
         item { WishlistItem(name = "Ciao") }
-        item { WishlistItem(name = "Caccone", url = "www.cacca.it")}
+        item { WishlistItem(name = "Caccone", url = "www.cacca.it") }
     }
 }
 
@@ -45,12 +40,13 @@ fun WishlistItem(name: String, url: String? = null, image: ImageBitmap? = null) 
         ListItem(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(70.dp),
+                .height(80.dp),
             headlineContent = { Text(name) },
             supportingContent = { Text(url.orEmpty()) },
             trailingContent = {
                 Column(horizontalAlignment = Alignment.End) {
-                    CheckboxRow(text = "Mark as received")
+                    Spacer(modifier = Modifier.height(5.dp))
+                    CheckboxRow(text = "Received", paddingValues = PaddingValues(end = 0.dp))
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
@@ -69,7 +65,7 @@ fun WishlistItem(name: String, url: String? = null, image: ImageBitmap? = null) 
         )
         HorizontalDivider(
             thickness = 1.dp,
-            color = Primary
+            color = Color.DarkGray
         )
     }
 }

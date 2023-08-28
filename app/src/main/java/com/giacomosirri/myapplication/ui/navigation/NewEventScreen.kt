@@ -47,21 +47,22 @@ fun NewEventScreen(paddingValues: PaddingValues) {
                     .height(56.dp)
                     .fillMaxWidth()
             ) {
-                CheckboxRow("Friends")
-                CheckboxRow("Partner")
-                CheckboxRow("Family")
+                val pv = PaddingValues(end = 30.dp)
+                CheckboxRow("Friends", pv)
+                CheckboxRow("Partner", pv)
+                CheckboxRow("Family", pv)
             }
         }
     }
 }
 
 @Composable
-fun CheckboxRow(text: String) {
+fun CheckboxRow(text: String, paddingValues: PaddingValues) {
     val (checkedState, onStateChange) = remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
             .defaultMinSize(minWidth = 80.dp)
-            .padding(end = 30.dp)
+            .padding(paddingValues)
             .toggleable(
                 value = checkedState,
                 onValueChange = { onStateChange(!checkedState) },

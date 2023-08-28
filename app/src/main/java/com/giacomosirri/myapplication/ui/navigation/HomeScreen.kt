@@ -37,7 +37,6 @@ fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DayCard(date: String, events: List<String>) {
     Column(

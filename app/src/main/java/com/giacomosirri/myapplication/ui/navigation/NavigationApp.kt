@@ -26,7 +26,7 @@ val fromScreenNameToTitle = mapOf(
     Pair(AppContext.getContext()?.getString(R.string.home)!!, AppContext.getContext()?.getString(R.string.main_page_title)),
     Pair(AppContext.getContext()?.getString(R.string.wishlist)!!, null),
     Pair(AppContext.getContext()?.getString(R.string.new_item)!!, AppContext.getContext()?.getString(R.string.new_item_page_title)),
-    Pair(AppContext.getContext()?.getString(R.string.new_event)!!, AppContext.getContext()?.getString(R.string.new_item_page_title)),
+    Pair(AppContext.getContext()?.getString(R.string.new_event)!!, AppContext.getContext()?.getString(R.string.new_event_page_title)),
     Pair(AppContext.getContext()?.getString(R.string.specific_item)!!, null),
     Pair(AppContext.getContext()?.getString(R.string.specific_event)!!, null),
     Pair(AppContext.getContext()?.getString(R.string.relationships)!!, AppContext.getContext()?.getString(R.string.relationships_page_title)),
@@ -93,7 +93,7 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
                             selectedItem.value = item.key
                             navigateFromDrawer(selectedItem.value, navController)
                         },
-                        modifier = Modifier.padding(bottom = 6.dp)
+                        modifier = Modifier.padding(bottom = 6.dp, start = 6.dp, end = 6.dp)
                     )
                 }
                 Spacer(Modifier.fillMaxHeight(.85f))
