@@ -19,11 +19,11 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.giacomosirri.myapplication.ui.theme.Primary
+import com.giacomosirri.myapplication.ui.theme.Typography
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(onLoginClick: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         ClickableText(
             text = AnnotatedString("Sign up here"),
@@ -44,18 +44,14 @@ fun LoginScreen(navController: NavHostController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         val username = remember { mutableStateOf(TextFieldValue()) }
         val password = remember { mutableStateOf(TextFieldValue()) }
-
-        Text(text = "GiftAlong", style = TextStyle(fontSize = 40.sp, fontFamily = FontFamily.Cursive))
-
+        Text(text = "GiftAlong", style = Typography.headlineLarge)
         Spacer(modifier = Modifier.height(20.dp))
         TextField(
             label = { Text(text = "Username") },
             value = username.value,
             onValueChange = { username.value = it })
-
         Spacer(modifier = Modifier.height(20.dp))
         TextField(
             label = { Text(text = "Password") },
@@ -63,11 +59,10 @@ fun LoginScreen(navController: NavHostController) {
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             onValueChange = { password.value = it })
-
         Spacer(modifier = Modifier.height(20.dp))
         Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
             Button(
-                onClick = { },
+                onClick = onLoginClick,
                 shape = RoundedCornerShape(50.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -76,7 +71,6 @@ fun LoginScreen(navController: NavHostController) {
                 Text(text = "Login")
             }
         }
-
         Spacer(modifier = Modifier.height(20.dp))
         ClickableText(
             text = AnnotatedString("Forgot password?"),

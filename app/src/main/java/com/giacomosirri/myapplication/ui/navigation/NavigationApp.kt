@@ -43,6 +43,7 @@ sealed class NavigationScreen(val name: String) {
     object Event: NavigationScreen(AppContext.getContext()?.getString(R.string.specific_event)!!)
     object Relationships: NavigationScreen(AppContext.getContext()?.getString(R.string.relationships)!!)
     object DataCenter: NavigationScreen(AppContext.getContext()?.getString(R.string.data_center)!!)
+    object Login: NavigationScreen(AppContext.getContext()?.getString(R.string.login)!!)
 }
 
 class LeadingNavigationIconStrategy(val onBackArrow: () -> Unit, val onMenuIcon: () -> Unit)
@@ -50,70 +51,83 @@ class LeadingNavigationIconStrategy(val onBackArrow: () -> Unit, val onMenuIcon:
 @Composable
 fun NavigationApp(navController: NavHostController = rememberNavController(), paddingValues: PaddingValues) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = backStackEntry?.destination?.route ?: NavigationScreen.Home.name
+    val currentScreen = backStackEntry?.destination?.route ?: NavigationScreen.Login.name
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val strategy = LeadingNavigationIconStrategy({ navController.navigateUp()}, { scope.launch { drawerState.open() } })
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet(
-                modifier = Modifier
-                    .fillMaxWidth(.8f)
-                    .fillMaxHeight(),
-                drawerContainerColor = Background
-            ) {
-                val items = mapOf(
-                    Pair(AppContext.getContext()?.getString(R.string.menu_item1), Icons.Rounded.Person),
-                    Pair(AppContext.getContext()?.getString(R.string.menu_item2), Icons.Rounded.Favorite),
-                    Pair(AppContext.getContext()?.getString(R.string.menu_item3), Icons.Rounded.FavoriteBorder),
-                )
-                Box(
+    val strategy = LeadingNavigationIconStrategy({ navController.navigateUp() }, { scope.launch { drawerState.open() } })
+    if (currentScreen != NavigationScreen.Login.name) {
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                ModalDrawerSheet(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(.08f),
-                    contentAlignment = Alignment.Center
+                        .fillMaxWidth(.8f)
+                        .fillMaxHeight(),
+                    drawerContainerColor = Background
                 ) {
-                    Text(
-                        text = AppContext.getContext()?.getString(R.string.app_name).toString(),
-                        color = Primary,
-                        style = Typography.headlineLarge
+                    val items = mapOf(
+                        Pair(
+                            AppContext.getContext()?.getString(R.string.menu_item1),
+                            Icons.Rounded.Person
+                        ),
+                        Pair(
+                            AppContext.getContext()?.getString(R.string.menu_item2),
+                            Icons.Rounded.Favorite
+                        ),
+                        Pair(
+                            AppContext.getContext()?.getString(R.string.menu_item3),
+                            Icons.Rounded.FavoriteBorder
+                        ),
                     )
-                }
-                Spacer(Modifier.height(12.dp))
-                val selectedItem: MutableState<String?> = remember { mutableStateOf(null) }
-                items.forEach { item ->
-                    NavigationDrawerItem(
-                        icon = { Icon(item.value, contentDescription = null) },
-                        label = { item.key?.let { Text(it) } },
-                        colors = NavigationDrawerItemDefaults.colors(),
-                        selected = item.key == selectedItem.value,
-                        onClick = {
-                            scope.launch { drawerState.close() }
-                            selectedItem.value = item.key
-                            navigateFromDrawer(selectedItem.value, navController)
-                        },
-                        modifier = Modifier.padding(bottom = 6.dp, start = 6.dp, end = 6.dp)
-                    )
-                }
-                Spacer(Modifier.fillMaxHeight(.85f))
-                var darkMode by remember { mutableStateOf(false) }
-                Row(
-                    modifier = Modifier.padding(start = 20.dp, end = 25.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("Dark Mode")
-                    Spacer(modifier = Modifier.fillMaxWidth(.8f))
-                    Switch(checked = darkMode, onCheckedChange = { darkMode = it })
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(.08f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = AppContext.getContext()?.getString(R.string.app_name).toString(),
+                            color = Primary,
+                            style = Typography.headlineLarge
+                        )
+                    }
+                    Spacer(Modifier.height(12.dp))
+                    val selectedItem: MutableState<String?> = remember { mutableStateOf(null) }
+                    items.forEach { item ->
+                        NavigationDrawerItem(
+                            icon = { Icon(item.value, contentDescription = null) },
+                            label = { item.key?.let { Text(it) } },
+                            colors = NavigationDrawerItemDefaults.colors(),
+                            selected = item.key == selectedItem.value,
+                            onClick = {
+                                scope.launch { drawerState.close() }
+                                selectedItem.value = item.key
+                                navigateFromDrawer(selectedItem.value, navController)
+                            },
+                            modifier = Modifier.padding(bottom = 6.dp, start = 6.dp, end = 6.dp)
+                        )
+                    }
+                    Spacer(Modifier.fillMaxHeight(.85f))
+                    var darkMode by remember { mutableStateOf(false) }
+                    Row(
+                        modifier = Modifier.padding(start = 20.dp, end = 25.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("Dark Mode")
+                        Spacer(modifier = Modifier.fillMaxWidth(.8f))
+                        Switch(checked = darkMode, onCheckedChange = { darkMode = it })
+                    }
                 }
             }
-        }
-    ) {
-        Scaffold(
-            topBar = { NavigationAppBar(currentScreen, strategy) }
         ) {
-            NavigationGraph(navController = navController, paddingValues = paddingValues)
+            Scaffold(
+                topBar = { NavigationAppBar(currentScreen, strategy) }
+            ) {
+                NavigationGraph(navController = navController, paddingValues = paddingValues)
+            }
         }
+    } else {
+        NavigationGraph(navController = navController, paddingValues = paddingValues)
     }
 }
 
@@ -132,8 +146,15 @@ fun navigateFromDrawer(menuItem: String?, navController: NavHostController) {
 fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValues) {
     NavHost(
         navController = navController,
-        startDestination = NavigationScreen.Home.name,
+        startDestination = NavigationScreen.Login.name,
     ) {
+        composable(NavigationScreen.Login.name) {
+            LoginScreen(
+                onLoginClick = {
+                    navController.navigate(NavigationScreen.Home.name)
+                }
+            )
+        }
         composable(NavigationScreen.Home.name) {
             HomeScreen(
                 paddingValues = paddingValues,

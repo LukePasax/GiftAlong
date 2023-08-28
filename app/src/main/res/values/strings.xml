@@ -11,6 +11,7 @@
     <string name="specific_event">7</string>
     <string name="relationships">8</string>
     <string name="data_center">9</string>
+    <string name="login">10</string>
 
     <!-- title that appears on the top app bar of some screens; other screens' titles depend on
      the username of the user that screen refers to -->
