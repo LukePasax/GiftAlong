@@ -1,5 +1,8 @@
 package com.giacomosirri.myapplication.ui.navigation
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
@@ -12,16 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.core.content.ContextCompat.startActivity
+import com.giacomosirri.myapplication.ui.AppContext
 import java.text.DateFormat
 import java.util.*
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,7 +48,10 @@ fun NewEventScreen(paddingValues: PaddingValues) {
             Box(modifier = Modifier
                 .padding(lateralPadding)
                 .align(Alignment.CenterHorizontally)) {
-                FilledTonalButton(onClick = { /*TODO*/ }) {
+                FilledTonalButton(
+                    enabled = canShowMap(),
+                    onClick = { showMap() }
+                ) {
                     Icon(
                         modifier = Modifier.padding(end = 2.dp),
                         imageVector = Icons.Rounded.LocationOn,
@@ -130,9 +131,9 @@ fun NewEventScreen(paddingValues: PaddingValues) {
                         .fillMaxWidth()
                 ) {
                     val pv = PaddingValues(end = 30.dp)
-                    CheckboxRow("Friends", pv)
-                    CheckboxRow("Partner", pv)
-                    CheckboxRow("Family", pv)
+                    CheckboxItem("Friends", pv)
+                    CheckboxItem("Partner", pv)
+                    CheckboxItem("Family", pv)
                 }
             }
             // Dress code
@@ -175,8 +176,26 @@ fun NewEventScreen(paddingValues: PaddingValues) {
     }
 }
 
+fun canShowMap(): Boolean {
+    val intent = Intent(Intent.ACTION_VIEW)
+    val context: Context = AppContext.getContext()!!
+    return intent.resolveActivity(context.packageManager) != null
+}
+
+fun showMap() {
+    val geoLocation = Uri.parse("geo:44.1391, 12.24315")
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        data = geoLocation
+    }
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    val chooserIntent = Intent.createChooser(intent, "Open With")
+    chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    val context: Context = AppContext.getContext()!!
+    startActivity(context, chooserIntent, null)
+}
+
 @Composable
-fun CheckboxRow(text: String, paddingValues: PaddingValues) {
+fun CheckboxItem(text: String, paddingValues: PaddingValues) {
     val (checkedState, onStateChange) = remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
