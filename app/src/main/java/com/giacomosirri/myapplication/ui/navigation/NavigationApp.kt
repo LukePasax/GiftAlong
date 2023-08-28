@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import com.giacomosirri.myapplication.R
 import androidx.compose.ui.text.style.TextOverflow
@@ -18,6 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.room.util.query
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Primary
 import com.giacomosirri.myapplication.ui.theme.Secondary
@@ -125,11 +127,17 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
             Scaffold(
                 topBar = { NavigationAppBar(currentScreen, strategy) }
             ) {
-                NavigationGraph(navController = navController, paddingValues = paddingValues)
+                NavigationGraph(
+                    navController = navController,
+                    paddingValues = paddingValues,
+                )
             }
         }
     } else {
-        NavigationGraph(navController = navController, paddingValues = paddingValues)
+        NavigationGraph(
+            navController = navController,
+            paddingValues = paddingValues,
+        )
     }
 }
 
@@ -202,15 +210,16 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
 @Composable
 fun NavigationAppBar(currentScreenName: String, strategy: LeadingNavigationIconStrategy) {
     var searchedEvent by remember { mutableStateOf("") }
+    var searched by remember { mutableStateOf(false) }
     var isSearchBarVisible by remember { mutableStateOf(false) }
     val isNavigationBarVisible by derivedStateOf { !isSearchBarVisible }
     if (isSearchBarVisible) {
         SearchBar(
-            modifier = Modifier.fillMaxWidth().requiredHeight(70.dp),
+            modifier = Modifier.fillMaxSize(),
             query = searchedEvent,
             onQueryChange = { searchedEvent = it },
             placeholder = { Text("Search an event") },
-            onSearch = { /* TODO */ },
+            onSearch = { searched = true },
             trailingIcon = {
                 IconButton(onClick = { isSearchBarVisible = false }) {
                     Icon(Icons.Rounded.Close, "Close search bar")
@@ -218,9 +227,13 @@ fun NavigationAppBar(currentScreenName: String, strategy: LeadingNavigationIconS
             },
             active = true,
             onActiveChange = {},
-            colors = SearchBarDefaults.colors(containerColor = Secondary),
+            colors = SearchBarDefaults.colors(containerColor = Background),
             shape = ShapeDefaults.ExtraSmall
-        ) {}
+        ) {
+            if (searched) {
+                HomeScreen(searchedEvent)
+            }
+        }
     }
     if (isNavigationBarVisible) {
         CenterAlignedTopAppBar(

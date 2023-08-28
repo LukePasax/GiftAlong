@@ -38,6 +38,16 @@ fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit) {
 }
 
 @Composable
+fun HomeScreen(searchedEvent: String) {
+    LazyColumn(modifier = Modifier.padding(PaddingValues(top = 10.dp))) {
+        items(1) {
+            DayCard(date = "Tuesday, December 21, 2023", events = listOf("Sergio's Degree", "James' Birthday"))
+        }
+    }
+}
+
+
+@Composable
 fun DayCard(date: String, events: List<String>) {
     Column(
         modifier = Modifier
