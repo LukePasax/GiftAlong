@@ -32,7 +32,7 @@ fun NewEventScreen(paddingValues: PaddingValues) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
             var eventTitle by remember { mutableStateOf("") }
             var eventDescription by remember { mutableStateOf("") }
@@ -88,9 +88,11 @@ fun NewEventScreen(paddingValues: PaddingValues) {
                     DatePicker(state = datePickerState)
                 }
             }
-            Row(modifier = Modifier
-                .padding(lateralPadding)
-                .align(Alignment.CenterHorizontally)
+            Row(
+                modifier = Modifier
+                    .padding(lateralPadding)
+                    .align(Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     modifier = Modifier.padding(end = 8.dp),
@@ -110,7 +112,7 @@ fun NewEventScreen(paddingValues: PaddingValues) {
                 modifier = Modifier
                     .padding(lateralPadding)
                     .fillMaxWidth()
-                    .fillMaxHeight(.25f),
+                    .height(120.dp),
                 value = eventDescription,
                 onValueChange = { eventDescription = it },
                 label = { Text("Description") },
@@ -118,7 +120,7 @@ fun NewEventScreen(paddingValues: PaddingValues) {
             // Invite
             Column(modifier = Modifier.padding(lateralPadding)) {
                 Text(
-                    modifier = Modifier.padding(bottom = 3.dp),
+                    modifier = Modifier.padding(bottom = 4.dp),
                     text = "Invite:",
                     style = MaterialTheme.typography.bodyLarge,
                 )
@@ -142,12 +144,12 @@ fun NewEventScreen(paddingValues: PaddingValues) {
                 onValueChange = { dressCode = it },
                 label = { Text("Dress code") },
             )
-            Spacer(modifier = Modifier.fillMaxHeight(.7f))
             // Buttons
+            Spacer(Modifier.fillMaxHeight(.6f))
             Row(
                 modifier = Modifier
+                    .padding(lateralPadding)
                     .height(40.dp)
-                    .padding(horizontal = 10.dp)
                     .fillMaxWidth()
             ) {
                 Button(
