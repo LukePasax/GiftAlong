@@ -2,6 +2,7 @@ package com.giacomosirri.myapplication.ui.navigation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.*
@@ -26,7 +27,8 @@ fun UserProfileScreen(paddingValues: PaddingValues, username: String) {
         modifier = Modifier
             .padding(paddingValues)
             .fillMaxHeight(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly
     ) {
         TextButton(onClick = { /*TODO*/ }) {
             Text(text = "See $username's wishlist")
@@ -37,11 +39,19 @@ fun UserProfileScreen(paddingValues: PaddingValues, username: String) {
             modifier = Modifier
                 .padding(10.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "Select relationship status: ")
             OutlinedButton(onClick = { openDialog.value = true }) {
                 Text(text = selected)
+            }
+        }
+        Text(text = "Common upcoming events: ")
+        LazyColumn(modifier = Modifier.padding(10.dp)) {
+            items(1) {
+                EventCard("Sergio's Degree")
+                EventCard("James' Birthday")
             }
         }
     }
