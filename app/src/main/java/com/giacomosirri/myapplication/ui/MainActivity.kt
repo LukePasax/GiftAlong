@@ -15,14 +15,19 @@ import java.lang.ref.WeakReference
 class AppContext private constructor() {
     companion object {
         private lateinit var context: WeakReference<Context>
+        private lateinit var username: String
 
         fun setContext(context: Context) {
             this.context = WeakReference(context.applicationContext)
         }
 
-        fun getContext(): Context? {
-            return context.get()
+        fun getContext(): Context? = context.get()
+
+        fun setCurrentUser(username: String) {
+            this.username = username
         }
+
+        fun getCurrentUser() = this.username
     }
 }
 

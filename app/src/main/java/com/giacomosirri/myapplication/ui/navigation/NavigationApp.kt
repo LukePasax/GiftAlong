@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import com.giacomosirri.myapplication.R
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -149,9 +150,14 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
         startDestination = NavigationScreen.Login.name,
     ) {
         composable(NavigationScreen.Login.name) {
+            val username = remember { mutableStateOf(TextFieldValue()) }
+            val password = remember { mutableStateOf(TextFieldValue()) }
             LoginScreen(
+                username = username,
+                password = password,
                 onLoginClick = {
                     navController.navigate(NavigationScreen.Home.name)
+                    AppContext.setCurrentUser(username = username.value.text)
                 }
             )
         }

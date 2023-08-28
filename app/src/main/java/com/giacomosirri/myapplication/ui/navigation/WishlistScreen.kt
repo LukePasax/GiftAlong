@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Primary
 
 @Composable
@@ -32,7 +33,7 @@ fun WishlistScreen(paddingValues: PaddingValues, onFabClick: () -> Unit) {
     ) {
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
             item { WishlistItem(name = "Ciao") }
-            item { WishlistItem(name = "Caccone", url = "www.cacca.it") }
+            item { WishlistItem(name = AppContext.getCurrentUser(), url = "www.cacca.it") }
         }
     }
 }
