@@ -139,7 +139,7 @@ fun navigateFromDrawer(menuItem: String?, navController: NavHostController) {
         AppContext.getContext()?.getString(R.string.menu_item2) ->
             navController.navigate(NavigationScreen.Relationships.name)
         AppContext.getContext()?.getString(R.string.menu_item3) ->
-            navController.navigate(NavigationScreen.DataCenter.name)
+            navController.navigate(NavigationScreen.UserProfile.name)
     }
 }
 
@@ -180,7 +180,7 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
             NewEventScreen(paddingValues)
         }
         composable(NavigationScreen.UserProfile.name) {
-            UserProfileScreen(paddingValues)
+            UserProfileScreen(paddingValues, AppContext.getCurrentUser())
         }
         composable(NavigationScreen.Item.name) {
             ItemScreen(paddingValues)
