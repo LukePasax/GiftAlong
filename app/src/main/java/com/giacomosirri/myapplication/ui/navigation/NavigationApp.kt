@@ -220,9 +220,14 @@ fun NavigationAppBar(currentScreenName: String, strategy: LeadingNavigationIconS
             onQueryChange = { searchedEvent = it },
             placeholder = { Text("Search an event") },
             onSearch = { searched = true },
-            trailingIcon = {
+            leadingIcon = {
                 IconButton(onClick = { isSearchBarVisible = false }) {
-                    Icon(Icons.Rounded.Close, "Close search bar")
+                    Icon(Icons.Rounded.ArrowBack, "Close search bar")
+                }
+            },
+            trailingIcon = {
+                IconButton(onClick = { searchedEvent = "" }) {
+                    Icon(Icons.Rounded.Clear, "Clear searched text")
                 }
             },
             active = true,
