@@ -48,9 +48,9 @@ fun NewItemScreen(paddingValues: PaddingValues) {
                     .fillMaxWidth()
             ) {
                 val pv = PaddingValues(end = 30.dp)
-                CheckboxRow("Friends", pv)
-                CheckboxRow("Partner", pv)
-                CheckboxRow("Family", pv)
+                CheckboxItem("Friends", pv)
+                CheckboxItem("Partner", pv)
+                CheckboxItem("Family", pv)
             }
         }
     }

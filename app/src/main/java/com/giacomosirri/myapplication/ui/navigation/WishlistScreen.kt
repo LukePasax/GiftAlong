@@ -56,7 +56,7 @@ fun WishlistItem(name: String, url: String? = null, image: ImageBitmap? = null) 
             trailingContent = {
                 Column(horizontalAlignment = Alignment.End) {
                     Spacer(modifier = Modifier.height(5.dp))
-                    CheckboxRow(text = "Received", paddingValues = PaddingValues(end = 0.dp))
+                    CheckboxItem(text = "Received", paddingValues = PaddingValues(end = 0.dp))
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
