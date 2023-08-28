@@ -18,7 +18,7 @@ import com.giacomosirri.myapplication.R
 @Composable
 fun RelationshipsScreen(paddingValues: PaddingValues) {
     Scaffold(modifier = Modifier.padding(paddingValues)) {
-        LazyColumn(modifier = Modifier.padding(paddingValues)) {
+        LazyColumn {
             item { RelationshipListItem(username = "chiaaara", image = null, type = "Friend") }
             item { RelationshipListItem(username = "lukepasax", image = null, type = "Friend") }
             item { RelationshipListItem(username = "erzava", image = null, type = "Friend") }
@@ -37,9 +37,12 @@ fun RelationshipListItem(username: String, image: ImageBitmap?, type: String) {
         ListItem(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(80.dp),
+                .height(65.dp),
             headlineContent = { Text(username) },
             trailingContent = {
+                TextButton(onClick = { /*TODO*/ }) {
+                    Text(text = type)
+                }
             },
             leadingContent = {
                 Image(
