@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import com.giacomosirri.myapplication.R
@@ -21,10 +22,18 @@ import androidx.compose.ui.unit.dp
 import com.giacomosirri.myapplication.ui.theme.Primary
 
 @Composable
-fun WishlistScreen(paddingValues: PaddingValues) {
-    LazyColumn(modifier = Modifier.padding(paddingValues)) {
-        item { WishlistItem(name = "Ciao") }
-        item { WishlistItem(name = "Caccone", url = "www.cacca.it") }
+fun WishlistScreen(paddingValues: PaddingValues, onFabClick: () -> Unit) {
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = onFabClick) {
+                Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new item")
+            }
+        }
+    ) {
+        LazyColumn(modifier = Modifier.padding(paddingValues)) {
+            item { WishlistItem(name = "Ciao") }
+            item { WishlistItem(name = "Caccone", url = "www.cacca.it") }
+        }
     }
 }
 

@@ -40,7 +40,7 @@ sealed class NavigationScreen(val name: String) {
     object NewEvent: NavigationScreen(AppContext.getContext()?.getString(R.string.new_event)!!)
     object UserProfile: NavigationScreen(AppContext.getContext()?.getString(R.string.user_profile)!!)
     object Item: NavigationScreen(AppContext.getContext()?.getString(R.string.specific_item)!!)
-    object Event: NavigationScreen(AppContext.getContext()?.getString(R.string.new_event)!!)
+    object Event: NavigationScreen(AppContext.getContext()?.getString(R.string.specific_event)!!)
     object Relationships: NavigationScreen(AppContext.getContext()?.getString(R.string.relationships)!!)
     object DataCenter: NavigationScreen(AppContext.getContext()?.getString(R.string.data_center)!!)
 }
@@ -141,7 +141,10 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
             )
         }
         composable(NavigationScreen.Wishlist.name) {
-            WishlistScreen(paddingValues)
+            WishlistScreen(
+                paddingValues = paddingValues,
+                onFabClick = { navController.navigate(NavigationScreen.NewItem.name) }
+            )
         }
         composable(NavigationScreen.NewItem.name) {
             NewItemScreen(paddingValues)
@@ -159,7 +162,7 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
             EventScreen(paddingValues)
         }
         composable(NavigationScreen.Relationships.name) {
-            RelatioshipsScreen(paddingValues)
+            RelationshipsScreen(paddingValues)
         }
         composable(NavigationScreen.DataCenter.name) {
             DataCenterScreen(paddingValues)
