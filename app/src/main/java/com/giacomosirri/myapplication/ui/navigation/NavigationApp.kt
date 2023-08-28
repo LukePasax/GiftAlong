@@ -1,6 +1,5 @@
 package com.giacomosirri.myapplication.ui.navigation
 
-import com.giacomosirri.myapplication.ui.theme.Background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -9,9 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
-import com.giacomosirri.myapplication.R
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -19,10 +16,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.room.util.query
+import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
+import com.giacomosirri.myapplication.ui.theme.Background
 import com.giacomosirri.myapplication.ui.theme.Primary
-import com.giacomosirri.myapplication.ui.theme.Secondary
 import com.giacomosirri.myapplication.ui.theme.Typography
 import kotlinx.coroutines.launch
 
@@ -35,6 +32,12 @@ val fromScreenNameToTitle = mapOf(
     Pair(AppContext.getContext()?.getString(R.string.specific_event)!!, null),
     Pair(AppContext.getContext()?.getString(R.string.relationships)!!, AppContext.getContext()?.getString(R.string.relationships_page_title)),
     Pair(AppContext.getContext()?.getString(R.string.data_center)!!, AppContext.getContext()?.getString(R.string.datacenter_page_title))
+)
+
+val screensWithSearchBars = listOf(
+    AppContext.getContext()?.getString(R.string.home)!!,
+    AppContext.getContext()?.getString(R.string.wishlist)!!,
+    AppContext.getContext()?.getString(R.string.relationships)!!
 )
 
 sealed class NavigationScreen(val name: String) {
@@ -243,11 +246,14 @@ fun NavigationAppBar(currentScreenName: String, strategy: LeadingNavigationIconS
     if (isNavigationBarVisible) {
         CenterAlignedTopAppBar(
             actions = {
-                IconButton(onClick = { isSearchBarVisible = true }) {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = "Search event"
-                    )
+                // Only a handful of screens should have the search icon in the top app bar.
+                if (screensWithSearchBars.contains(currentScreenName)) {
+                    IconButton(onClick = { isSearchBarVisible = true }) {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = "Search event"
+                        )
+                    }
                 }
             },
             title = {
