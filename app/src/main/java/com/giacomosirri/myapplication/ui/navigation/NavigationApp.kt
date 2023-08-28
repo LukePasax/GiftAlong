@@ -20,6 +20,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Primary
+import com.giacomosirri.myapplication.ui.theme.Secondary
 import com.giacomosirri.myapplication.ui.theme.Typography
 import kotlinx.coroutines.launch
 
@@ -200,40 +201,63 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationAppBar(currentScreenName: String, strategy: LeadingNavigationIconStrategy) {
-    CenterAlignedTopAppBar(
-        actions = {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = "Search event"
+    var searchedEvent by remember { mutableStateOf("") }
+    var isSearchBarVisible by remember { mutableStateOf(false) }
+    val isNavigationBarVisible by derivedStateOf { !isSearchBarVisible }
+    if (isSearchBarVisible) {
+        SearchBar(
+            modifier = Modifier.fillMaxWidth().requiredHeight(70.dp),
+            query = searchedEvent,
+            onQueryChange = { searchedEvent = it },
+            placeholder = { Text("Search an event") },
+            onSearch = { /* TODO */ },
+            trailingIcon = {
+                IconButton(onClick = { isSearchBarVisible = false }) {
+                    Icon(Icons.Rounded.Close, "Close search bar")
+                }
+            },
+            active = true,
+            onActiveChange = {},
+            colors = SearchBarDefaults.colors(containerColor = Secondary),
+            shape = ShapeDefaults.ExtraSmall
+        ) {}
+    }
+    if (isNavigationBarVisible) {
+        CenterAlignedTopAppBar(
+            actions = {
+                IconButton(onClick = { isSearchBarVisible = true }) {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "Search event"
+                    )
+                }
+            },
+            title = {
+                Text(
+                    text = fromScreenNameToTitle[currentScreenName] ?: "This page has no title",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
-            }
-        },
-        title = {
-            Text(
-                text = fromScreenNameToTitle[currentScreenName] ?: "This page has no title",
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        },
-        navigationIcon = {
-            when (currentScreenName) {
-                AppContext.getContext()?.getString(R.string.home) ->
-                    IconButton(onClick = strategy.onMenuIcon) {
-                        Icon(
-                            imageVector = Icons.Filled.Menu,
-                            contentDescription = "Main menu"
-                        )
-                    }
-                else ->
-                    IconButton(onClick = strategy.onBackArrow) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Go back"
-                        )
-                    }
-            }
-        },
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Primary)
-    )
+            },
+            navigationIcon = {
+                when (currentScreenName) {
+                    AppContext.getContext()?.getString(R.string.home) ->
+                        IconButton(onClick = strategy.onMenuIcon) {
+                            Icon(
+                                imageVector = Icons.Filled.Menu,
+                                contentDescription = "Main menu"
+                            )
+                        }
+                    else ->
+                        IconButton(onClick = strategy.onBackArrow) {
+                            Icon(
+                                imageVector = Icons.Filled.ArrowBack,
+                                contentDescription = "Go back"
+                            )
+                        }
+                }
+            },
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Primary)
+        )
+    }
 }

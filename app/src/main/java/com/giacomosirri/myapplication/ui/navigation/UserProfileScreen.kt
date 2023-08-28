@@ -9,7 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
@@ -85,6 +84,7 @@ fun RelationshipDialog(relationshipTypes: List<String>, selected: String, onSele
                             )
                     ) {
                         RadioButton(
+                            modifier = Modifier.padding(end = 6.dp),
                             selected = (relationshipType == selected),
                             onClick = null
                         )
@@ -93,7 +93,7 @@ fun RelationshipDialog(relationshipTypes: List<String>, selected: String, onSele
                 }
                 Row(
                     modifier = Modifier
-                        .padding(10.dp)
+                        .padding(vertical = 5.dp, horizontal = 10.dp)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
