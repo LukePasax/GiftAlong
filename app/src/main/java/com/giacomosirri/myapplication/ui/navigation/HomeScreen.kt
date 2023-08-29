@@ -17,11 +17,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
+import com.giacomosirri.myapplication.R
+import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.*
 
 @Composable
 fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit) {
     Scaffold(
+        topBar = {
+            NavigationAppBar(
+                currentScreenName = AppContext.getContext()?.getString(R.string.home)!!,
+                hasSearchBar = true,
+                searchBarPlaceholder = "Search an event by its title",
+                isLeadingIconMenu = true
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = onFabClick) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new event")
