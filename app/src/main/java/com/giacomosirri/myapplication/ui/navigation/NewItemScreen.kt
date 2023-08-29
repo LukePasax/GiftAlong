@@ -1,5 +1,6 @@
 package com.giacomosirri.myapplication.ui.navigation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -7,8 +8,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.giacomosirri.myapplication.R
 
 @Composable
 fun NewItemScreen(paddingValues: PaddingValues) {
@@ -18,7 +21,8 @@ fun NewItemScreen(paddingValues: PaddingValues) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(18.dp)
+            verticalArrangement = Arrangement.spacedBy(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             var itemName by remember { mutableStateOf("") }
             var itemDescription by remember { mutableStateOf("") }
@@ -40,6 +44,23 @@ fun NewItemScreen(paddingValues: PaddingValues) {
                     focusedLabelColor = Color.Red,
                 )
             )
+            // Photo
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    modifier = Modifier
+                        .defaultMinSize(minHeight = 120.dp)
+                        .padding(end = 20.dp),
+                    painter = painterResource(id = R.drawable.placeholder_foreground),
+                    contentDescription = "item image"
+                )
+                TextButton(onClick = { /*TODO*/ }) {
+                    Text(text = "Select a new photo")
+                }
+            }
             // Link
             OutlinedTextField(
                 modifier = Modifier
@@ -100,10 +121,10 @@ fun NewItemScreen(paddingValues: PaddingValues) {
                 label = { Text("Description") },
             )
             // Buttons
-            Spacer(Modifier.fillMaxHeight(.6f))
             Row(
                 modifier = Modifier
                     .padding(lateralPadding)
+                    .padding(top = 50.dp)
                     .height(40.dp)
                     .fillMaxWidth()
             ) {
