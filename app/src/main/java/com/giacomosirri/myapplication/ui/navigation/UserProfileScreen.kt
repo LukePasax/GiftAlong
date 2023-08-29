@@ -57,50 +57,55 @@ fun UserProfileScreen(paddingValues: PaddingValues, username: String, navControl
         }
     }
     if (openDialog.value) {
-        RelationshipDialog(relationshipTypes, selected, onSelected, openDialog)
+        RadioButtonDialog(relationshipTypes, selected, onSelected, openDialog)
     }
 }
 
 
 @Composable
-fun RelationshipDialog(relationshipTypes: List<String>, selected: String, onSelected: (String) -> Unit, openDialog: MutableState<Boolean>) {
+fun RadioButtonDialog(
+    items: List<String>,
+    selected: String,
+    onSelected: (String) -> Unit,
+    openDialog: MutableState<Boolean>
+) {
     Dialog(
         onDismissRequest = { openDialog.value = false },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
     ) {
         Card(
             modifier = Modifier
-                .padding(20.dp)
+                .padding(top = 20.dp, start = 20.dp, end = 20.dp)
                 .fillMaxWidth()
         ) {
             Column(Modifier.selectableGroup()) {
-                for (relationshipType in relationshipTypes) {
+                for (item in items) {
                     Row(
                         modifier = Modifier
                             .padding(10.dp)
                             .fillMaxWidth()
                             .selectable(
-                                selected = (relationshipType == selected),
-                                onClick = { onSelected(relationshipType) },
+                                selected = (item == selected),
+                                onClick = { onSelected(item) },
                                 role = Role.RadioButton
                             )
                     ) {
                         RadioButton(
                             modifier = Modifier.padding(end = 6.dp),
-                            selected = (relationshipType == selected),
+                            selected = (item == selected),
                             onClick = null
                         )
-                        Text(text = relationshipType)
+                        Text(text = item)
                     }
                 }
                 Row(
                     modifier = Modifier
-                        .padding(vertical = 5.dp, horizontal = 10.dp)
+                        .padding(end = 10.dp, bottom = 5.dp)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(onClick = { openDialog.value = false }) {
-                        Text(text = "Confirm")
+                        Text(text = "OK")
                     }
                 }
             }
