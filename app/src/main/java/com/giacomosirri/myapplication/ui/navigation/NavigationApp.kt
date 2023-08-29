@@ -169,7 +169,6 @@ fun navigateFromDrawer(menuItem: String?, navController: NavHostController) {
 
 @Composable
 fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValues) {
-    val selectedItem by remember { mutableStateOf("") }
     NavHost(
         navController = navController,
         startDestination = NavigationScreen.Login.name,
@@ -198,7 +197,8 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
                 username = username,
                 paddingValues = paddingValues,
                 onFabClick = { navController.navigate(NavigationScreen.NewItem.name) },
-                navController = navController)
+                navController = navController
+            )
         }
         composable(NavigationScreen.NewItem.name) {
             NewItemScreen(paddingValues)
@@ -207,13 +207,20 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
             NewEventScreen(paddingValues)
         }
         composable(NavigationScreen.UserProfile.name) {
-            UserProfileScreen(paddingValues, AppContext.getCurrentUser(),
-                navController = navController,)
+            UserProfileScreen(
+                paddingValues = paddingValues,
+                username = AppContext.getCurrentUser(),
+                navController = navController
+            )
         }
-        composable(NavigationScreen.Item.name + "{item}/{username}") {
+        composable("${NavigationScreen.Item.name}{item}/{username}") {
             val item = it.arguments?.getString("item") ?: ""
             val username = it.arguments?.getString("username") ?: ""
-            ItemScreen(paddingValues, item, username)
+            ItemScreen(
+                paddingValues = paddingValues,
+                item = item,
+                username = username
+            )
         }
         composable(NavigationScreen.Event.name) {
             EventScreen(paddingValues)

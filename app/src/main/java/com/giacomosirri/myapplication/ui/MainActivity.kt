@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    NavigationApp(paddingValues = PaddingValues(top = 80.dp))
+                    NavigationApp(paddingValues = PaddingValues(top = 65.dp))
                 }
             }
         }
