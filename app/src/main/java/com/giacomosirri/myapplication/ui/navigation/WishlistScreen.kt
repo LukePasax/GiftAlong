@@ -9,32 +9,42 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import com.giacomosirri.myapplication.R
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.giacomosirri.myapplication.ui.AppContext
-import com.giacomosirri.myapplication.ui.theme.Primary
 
 @Composable
-fun WishlistScreen(username : String,paddingValues: PaddingValues, onFabClick: () -> Unit, navController: NavController) {
+fun WishlistScreen(
+    username: String,
+    paddingValues: PaddingValues,
+    onFabClick: () -> Unit,
+    navController: NavController
+) {
     Scaffold(
+        topBar = {
+            NavigationAppBar(
+                currentScreenName =
+                    if (username == AppContext.getCurrentUser()) {
+                        "Your Wishlist"
+                    } else {
+                        "$username's Wishlist"
+                    },
+                hasSearchBar = true,
+                searchBarPlaceholder = "Search an item by its name",
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = onFabClick) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new item")
@@ -42,8 +52,8 @@ fun WishlistScreen(username : String,paddingValues: PaddingValues, onFabClick: (
         }
     ) {
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
-            item { WishlistItem(name = "Ciao", username  = username, navController = navController) }
-            item { WishlistItem(name = AppContext.getCurrentUser(), username = username, navController = navController, url = "www.cacca.it") }
+            item { WishlistItem(itemName = "Ciao", username  = username, navController = navController) }
+            item { WishlistItem(itemName = AppContext.getCurrentUser(), username = username, navController = navController, url = "www.cacca.it") }
         }
     }
 }
@@ -55,21 +65,27 @@ fun WishlistScreen(searchedItems: String) {
 
 @SuppressLint("UseCompatLoadingForDrawables")
 @Composable
-fun WishlistItem(name: String, username: String, navController: NavController, url: String? = null, image: Int = R.drawable.placeholder_foreground) {
+fun WishlistItem(
+    itemName: String,
+    username: String,
+    navController: NavController,
+    url: String? = null,
+    image: Int = R.drawable.placeholder_foreground
+) {
     Column {
         ListItem(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(80.dp)
+                .height(90.dp)
                 .clickable {
-                    navController.navigate(NavigationScreen.Item.name + name + "/" + username)
+                    navController.navigate(NavigationScreen.Item.name + itemName + "/" + username)
                 },
-            headlineContent = { Text(name) },
+            headlineContent = { Text(itemName) },
             supportingContent = { Text(url.orEmpty()) },
             trailingContent = {
                 if (username == AppContext.getCurrentUser()) {
                     IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = ImageVector.vectorResource(id = R.drawable.baseline_more_horiz_24), contentDescription = "Item Menu")
+                        Icon(ImageVector.vectorResource(id = R.drawable.baseline_more_horiz_24), "Item Menu")
                     }
                 } else {
                     Column(horizontalAlignment = Alignment.Start) {
@@ -86,14 +102,16 @@ fun WishlistItem(name: String, username: String, navController: NavController, u
                     contentDescription = "Wishlist item image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .clip(RoundedCornerShape(16.dp))
-                        .border(1.dp, Color.Black, shape = RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(1.dp))
+                        .border(1.dp, Color.Gray, shape = RoundedCornerShape(4.dp))
+                        .fillMaxHeight(.85f)
                 )
             }
         )
         HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 15.dp),
             thickness = 1.dp,
-            color = Color.DarkGray
+            color = Color.Gray
         )
     }
 }
