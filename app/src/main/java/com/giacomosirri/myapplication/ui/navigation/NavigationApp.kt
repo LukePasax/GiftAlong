@@ -210,9 +210,10 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
             UserProfileScreen(paddingValues, AppContext.getCurrentUser(),
                 navController = navController,)
         }
-        composable(NavigationScreen.Item.name + "{item}") {
+        composable(NavigationScreen.Item.name + "{item}/{username}") {
             val item = it.arguments?.getString("item") ?: ""
-            ItemScreen(paddingValues, item)
+            val username = it.arguments?.getString("username") ?: ""
+            ItemScreen(paddingValues, item, username)
         }
         composable(NavigationScreen.Event.name) {
             EventScreen(paddingValues)
