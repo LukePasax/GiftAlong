@@ -43,18 +43,20 @@ fun LoginScreen(
         )
     }
     Column(
-        modifier = Modifier.padding(20.dp).fillMaxHeight(),
+        modifier = Modifier
+            .padding(20.dp)
+            .fillMaxHeight(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "GiftAlong", style = Typography.headlineLarge)
+        Text(text = "GiftAlong", style = Typography.headlineLarge, color = Primary)
         Spacer(modifier = Modifier.height(20.dp))
-        TextField(
+        OutlinedTextField(
             label = { Text(text = "Username") },
             value = username.value,
             onValueChange = { username.value = it })
         Spacer(modifier = Modifier.height(20.dp))
-        TextField(
+        OutlinedTextField(
             label = { Text(text = "Password") },
             value = password.value,
             visualTransformation = PasswordVisualTransformation(),
@@ -65,6 +67,7 @@ fun LoginScreen(
             Button(
                 onClick = onLoginClick,
                 shape = RoundedCornerShape(50.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Primary),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
