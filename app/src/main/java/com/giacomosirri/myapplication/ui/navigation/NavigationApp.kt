@@ -91,6 +91,10 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
                         ),
                         Pair(
                             AppContext.getContext()?.getString(R.string.menu_item4),
+                            ImageVector.vectorResource(R.drawable.round_camera_alt_24)
+                        ),
+                        Pair(
+                            AppContext.getContext()?.getString(R.string.menu_item5),
                             ImageVector.vectorResource(R.drawable.round_query_stats_24)
                         )
                     )
