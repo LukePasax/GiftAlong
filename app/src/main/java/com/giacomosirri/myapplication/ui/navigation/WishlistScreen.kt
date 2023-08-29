@@ -2,6 +2,7 @@ package com.giacomosirri.myapplication.ui.navigation
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -19,11 +20,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Primary
 
 @Composable
-fun WishlistScreen(paddingValues: PaddingValues, onFabClick: () -> Unit) {
+fun WishlistScreen(username : String,paddingValues: PaddingValues, onFabClick: () -> Unit, navController: NavController) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = onFabClick) {
@@ -32,8 +34,8 @@ fun WishlistScreen(paddingValues: PaddingValues, onFabClick: () -> Unit) {
         }
     ) {
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
-            item { WishlistItem(name = "Ciao") }
-            item { WishlistItem(name = AppContext.getCurrentUser(), url = "www.cacca.it") }
+            item { WishlistItem(name = "Ciao", username  = username, navController = navController) }
+            item { WishlistItem(name = AppContext.getCurrentUser(), username = username, navController = navController, url = "www.cacca.it") }
         }
     }
 }
@@ -45,7 +47,7 @@ fun WishlistScreen(searchedItems: String) {
 
 @SuppressLint("UseCompatLoadingForDrawables")
 @Composable
-fun WishlistItem(name: String, url: String? = null, image: ImageBitmap? = null) {
+fun WishlistItem(name: String, username: String, navController: NavController, url: String? = null, image: ImageBitmap? = null) {
     var checked by mutableStateOf(false)
     val icon = R.drawable.placeholder_foreground
     if (image != null) {
@@ -55,26 +57,38 @@ fun WishlistItem(name: String, url: String? = null, image: ImageBitmap? = null) 
         ListItem(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(80.dp),
+                .height(80.dp)
+                .clickable {
+                    navController.navigate(NavigationScreen.Item.name + "{item}".replace("{item}", name))
+                           },
             headlineContent = { Text(name) },
             supportingContent = { Text(url.orEmpty()) },
             trailingContent = {
-                Column(horizontalAlignment = Alignment.End) {
-                    Spacer(modifier = Modifier.height(5.dp))
-                    CheckboxItem(text = "Received", paddingValues = PaddingValues(end = 0.dp))
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            imageVector = Icons.Filled.Delete,
-                            contentDescription = "Delete",
-                            tint = Primary
-                        )
+                if (username == AppContext.getCurrentUser()) {
+                    Column(horizontalAlignment = Alignment.End) {
+                        Spacer(modifier = Modifier.height(5.dp))
+                        CheckboxItem(text = "Received", paddingValues = PaddingValues(end = 0.dp))
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(
+                                imageVector = Icons.Filled.Delete,
+                                contentDescription = "Delete",
+                                tint = Primary
+                            )
+                        }
+                    }
+                } else {
+                    Column(horizontalAlignment = Alignment.Start) {
+                        Spacer(modifier = Modifier.height(5.dp))
+                        CheckboxItem(text = "Reserve it", paddingValues = PaddingValues(end = 0.dp))
+                        CheckboxItem(text = "Bought", paddingValues = PaddingValues(end = 0.dp))
                     }
                 }
+
             },
             leadingContent = {
                 Image(
                     painterResource(id = icon),
-                    contentDescription = "Wishlist item image",
+                    contentDescription = "Wishlist item image"
                 )
             }
         )

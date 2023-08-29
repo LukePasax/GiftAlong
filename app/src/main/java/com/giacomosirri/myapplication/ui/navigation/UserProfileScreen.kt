@@ -18,7 +18,7 @@ import com.giacomosirri.myapplication.R
 
 
 @Composable
-fun UserProfileScreen(paddingValues: PaddingValues, username: String) {
+fun UserProfileScreen(paddingValues: PaddingValues, username: String, onWishlistClick: () -> Unit) {
     val openDialog = remember { mutableStateOf(false) }
     val relationshipTypes = listOf("Friend", "Family", "Partner", "Colleague")
     val (selected, onSelected) = remember { mutableStateOf(relationshipTypes[0]) }
@@ -29,7 +29,7 @@ fun UserProfileScreen(paddingValues: PaddingValues, username: String) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        TextButton(onClick = { /*TODO*/ }) {
+        TextButton(onClick = onWishlistClick) {
             Text(text = "See $username's wishlist")
         }
         Image(painterResource(id = R.drawable.placeholder_foreground), contentDescription = "Profile picture", modifier = Modifier.size(100.dp))
