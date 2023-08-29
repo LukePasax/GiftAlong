@@ -212,24 +212,27 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationAppBar(currentScreenName: String, strategy: LeadingNavigationIconStrategy) {
-    var searchedEvent by remember { mutableStateOf("") }
-    var searched by remember { mutableStateOf(false) }
+    var query by remember { mutableStateOf("") }
+    var displayQueriedEvents by remember { mutableStateOf(false) }
     var isSearchBarVisible by remember { mutableStateOf(false) }
     val isNavigationBarVisible by derivedStateOf { !isSearchBarVisible }
     if (isSearchBarVisible) {
         SearchBar(
             modifier = Modifier.fillMaxSize(),
-            query = searchedEvent,
-            onQueryChange = { searchedEvent = it },
+            query = query,
+            onQueryChange = { query = it },
             placeholder = { Text("Search an event") },
-            onSearch = { searched = true },
+            onSearch = { displayQueriedEvents = true },
             leadingIcon = {
                 IconButton(onClick = { isSearchBarVisible = false }) {
                     Icon(Icons.Rounded.ArrowBack, "Close search bar")
                 }
             },
             trailingIcon = {
-                IconButton(onClick = { searchedEvent = "" }) {
+                IconButton(onClick = {
+                    query = ""
+                    displayQueriedEvents = false
+                }) {
                     Icon(Icons.Rounded.Clear, "Clear searched text")
                 }
             },
@@ -238,8 +241,8 @@ fun NavigationAppBar(currentScreenName: String, strategy: LeadingNavigationIconS
             colors = SearchBarDefaults.colors(containerColor = Background),
             shape = ShapeDefaults.ExtraSmall
         ) {
-            if (searched) {
-                HomeScreen(searchedEvent)
+            if (displayQueriedEvents) {
+                HomeScreen(query)
             }
         }
     }
