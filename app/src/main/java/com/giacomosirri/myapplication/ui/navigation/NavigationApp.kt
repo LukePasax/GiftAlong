@@ -34,10 +34,10 @@ val fromScreenNameToTitle = mapOf(
     Pair(AppContext.getContext()?.getString(R.string.data_center)!!, AppContext.getContext()?.getString(R.string.datacenter_page_title))
 )
 
-val screensWithSearchBars = listOf(
-    AppContext.getContext()?.getString(R.string.home)!!,
-    AppContext.getContext()?.getString(R.string.wishlist)!!,
-    AppContext.getContext()?.getString(R.string.relationships)!!
+val screensWithSearchBars = mapOf(
+    Pair(AppContext.getContext()?.getString(R.string.home)!!, "Search an event by its title"),
+    Pair(AppContext.getContext()?.getString(R.string.wishlist)!!, "Search an item by its name"),
+    Pair(AppContext.getContext()?.getString(R.string.relationships)!!, "Search any user of this app")
 )
 
 sealed class NavigationScreen(val name: String) {
@@ -221,7 +221,7 @@ fun NavigationAppBar(currentScreenName: String, strategy: LeadingNavigationIconS
             modifier = Modifier.fillMaxSize(),
             query = query,
             onQueryChange = { query = it },
-            placeholder = { Text("Search an event") },
+            placeholder = { screensWithSearchBars[currentScreenName]?.let { Text(it) } },
             onSearch = { displayQueriedEvents = true },
             leadingIcon = {
                 IconButton(onClick = { isSearchBarVisible = false }) {
@@ -242,7 +242,11 @@ fun NavigationAppBar(currentScreenName: String, strategy: LeadingNavigationIconS
             shape = ShapeDefaults.ExtraSmall
         ) {
             if (displayQueriedEvents) {
-                HomeScreen(query)
+                when (currentScreenName) {
+                    AppContext.getContext()?.getString(R.string.home) -> HomeScreen(query)
+                    AppContext.getContext()?.getString(R.string.wishlist) -> WishlistScreen(query)
+                    AppContext.getContext()?.getString(R.string.relationships) -> RelationshipsScreen(query)
+                }
             }
         }
     }

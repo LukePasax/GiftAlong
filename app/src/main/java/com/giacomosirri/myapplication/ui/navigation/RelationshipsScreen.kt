@@ -27,6 +27,10 @@ fun RelationshipsScreen(paddingValues: PaddingValues) {
 }
 
 @Composable
+fun RelationshipsScreen(searchedUsers: String) {
+}
+
+@Composable
 fun RelationshipListItem(username: String, image: ImageBitmap?, type: String) {
     var checked by mutableStateOf(false)
     val icon = R.drawable.placeholder_foreground

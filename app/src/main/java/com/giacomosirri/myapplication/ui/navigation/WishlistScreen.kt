@@ -38,6 +38,11 @@ fun WishlistScreen(paddingValues: PaddingValues, onFabClick: () -> Unit) {
     }
 }
 
+@Composable
+fun WishlistScreen(searchedItems: String) {
+
+}
+
 @SuppressLint("UseCompatLoadingForDrawables")
 @Composable
 fun WishlistItem(name: String, url: String? = null, image: ImageBitmap? = null) {
@@ -79,3 +84,4 @@ fun WishlistItem(name: String, url: String? = null, image: ImageBitmap? = null) 
         )
     }
 }
+
