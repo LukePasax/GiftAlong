@@ -158,7 +158,7 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
 fun navigateFromDrawer(menuItem: String?, navController: NavHostController) {
     when(menuItem) {
         AppContext.getContext()?.getString(R.string.menu_item1) ->
-            navController.navigate(NavigationScreen.Wishlist.name)
+            navController.navigate(NavigationScreen.Wishlist.name + AppContext.getCurrentUser())
         AppContext.getContext()?.getString(R.string.menu_item2),
         AppContext.getContext()?.getString(R.string.menu_item3) ->
             navController.navigate(NavigationScreen.Relationships.name)
@@ -192,13 +192,13 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
                 onFabClick = { navController.navigate(NavigationScreen.NewEvent.name) }
             )
         }
-        composable(NavigationScreen.Wishlist.name) {
+        composable(NavigationScreen.Wishlist.name + "{username}") {
+            val username = it.arguments?.getString("username") ?: ""
             WishlistScreen(
-                username = AppContext.getCurrentUser(),
+                username = username,
                 paddingValues = paddingValues,
                 onFabClick = { navController.navigate(NavigationScreen.NewItem.name) },
-                navController = navController,
-            )
+                navController = navController)
         }
         composable(NavigationScreen.NewItem.name) {
             NewItemScreen(paddingValues)
@@ -208,14 +208,11 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
         }
         composable(NavigationScreen.UserProfile.name) {
             UserProfileScreen(paddingValues, AppContext.getCurrentUser(),
-                onWishlistClick =  {navController.navigate(NavigationScreen.Wishlist.name)
-                })
+                navController = navController,)
         }
         composable(NavigationScreen.Item.name + "{item}") {
             val item = it.arguments?.getString("item") ?: ""
-            item?.let {
-                    item -> ItemScreen(paddingValues, item)
-            }
+            ItemScreen(paddingValues, item)
         }
         composable(NavigationScreen.Event.name) {
             EventScreen(paddingValues)

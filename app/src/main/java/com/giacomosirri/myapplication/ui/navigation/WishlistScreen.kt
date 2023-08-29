@@ -59,7 +59,7 @@ fun WishlistItem(name: String, username: String, navController: NavController, u
                 .fillMaxWidth()
                 .height(80.dp)
                 .clickable {
-                    navController.navigate(NavigationScreen.Item.name + "{item}".replace("{item}", name))
+                    navController.navigate(NavigationScreen.Item.name + name)
                            },
             headlineContent = { Text(name) },
             supportingContent = { Text(url.orEmpty()) },

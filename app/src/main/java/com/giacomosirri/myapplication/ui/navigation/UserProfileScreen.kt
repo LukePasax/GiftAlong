@@ -14,14 +14,16 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.navigation.NavController
 import com.giacomosirri.myapplication.R
 
 
 @Composable
-fun UserProfileScreen(paddingValues: PaddingValues, username: String, onWishlistClick: () -> Unit) {
+fun UserProfileScreen(paddingValues: PaddingValues, username: String, navController: NavController) {
     val openDialog = remember { mutableStateOf(false) }
     val relationshipTypes = listOf("Friend", "Family", "Partner", "Colleague")
     val (selected, onSelected) = remember { mutableStateOf(relationshipTypes[0]) }
+    var username = "Sergio"
     Column(
         modifier = Modifier
             .padding(paddingValues)
@@ -29,7 +31,7 @@ fun UserProfileScreen(paddingValues: PaddingValues, username: String, onWishlist
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        TextButton(onClick = onWishlistClick) {
+        TextButton(onClick = { navController.navigate(NavigationScreen.Wishlist.name + username) }) {
             Text(text = "See $username's wishlist")
         }
         Image(painterResource(id = R.drawable.placeholder_foreground), contentDescription = "Profile picture", modifier = Modifier.size(100.dp))
