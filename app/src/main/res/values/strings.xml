@@ -22,7 +22,8 @@
     <string name="datacenter_page_title">Data Center</string>
 
     <!-- drawer menu items -->
-    <string name="menu_item1">Go To Wishlist</string>
+    <string name="menu_item1">Your Wishlist</string>
     <string name="menu_item2">Manage Relationships</string>
-    <string name="menu_item3">Data Center</string>
+    <string name="menu_item3">Find Users</string>
+    <string name="menu_item4">Data Center</string>
 </resources>

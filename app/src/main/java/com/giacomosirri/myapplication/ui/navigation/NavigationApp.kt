@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
@@ -62,6 +63,7 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val strategy = LeadingNavigationIconStrategy({ navController.navigateUp() }, { scope.launch { drawerState.open() } })
+    val isSearchBarOpen = rememberSaveable { mutableStateOf(false) }
     if (currentScreen != NavigationScreen.Login.name) {
         ModalNavigationDrawer(
             drawerState = drawerState,
@@ -85,6 +87,10 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
                             AppContext.getContext()?.getString(R.string.menu_item3),
                             Icons.Rounded.FavoriteBorder
                         ),
+                        Pair(
+                            AppContext.getContext()?.getString(R.string.menu_item4),
+                            Icons.Rounded.LocationOn
+                        )
                     )
                     Box(
                         modifier = Modifier
@@ -109,6 +115,9 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
                             onClick = {
                                 scope.launch { drawerState.close() }
                                 selectedItem.value = item.key
+                                // Open the search bar only when the user selects the third option from the drawer,
+                                // which navigates to the find new users screen.
+                                isSearchBarOpen.value = selectedItem.value == AppContext.getContext()?.getString(R.string.menu_item3)
                                 navigateFromDrawer(selectedItem.value, navController)
                             },
                             modifier = Modifier.padding(bottom = 6.dp, start = 6.dp, end = 6.dp)
@@ -128,7 +137,7 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
             }
         ) {
             Scaffold(
-                topBar = { NavigationAppBar(currentScreen, strategy) }
+                topBar = { NavigationAppBar(currentScreen, strategy, isSearchBarOpen) }
             ) {
                 NavigationGraph(
                     navController = navController,
@@ -148,9 +157,10 @@ fun navigateFromDrawer(menuItem: String?, navController: NavHostController) {
     when(menuItem) {
         AppContext.getContext()?.getString(R.string.menu_item1) ->
             navController.navigate(NavigationScreen.Wishlist.name)
-        AppContext.getContext()?.getString(R.string.menu_item2) ->
-            navController.navigate(NavigationScreen.Relationships.name)
+        AppContext.getContext()?.getString(R.string.menu_item2),
         AppContext.getContext()?.getString(R.string.menu_item3) ->
+            navController.navigate(NavigationScreen.Relationships.name)
+        AppContext.getContext()?.getString(R.string.menu_item4) ->
             navController.navigate(NavigationScreen.UserProfile.name)
     }
 }
@@ -211,12 +221,15 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NavigationAppBar(currentScreenName: String, strategy: LeadingNavigationIconStrategy) {
+fun NavigationAppBar(
+    currentScreenName: String,
+    strategy: LeadingNavigationIconStrategy,
+    isSearchBarVisible: MutableState<Boolean>
+) {
     var query by remember { mutableStateOf("") }
     var displayQueriedEvents by remember { mutableStateOf(false) }
-    var isSearchBarVisible by remember { mutableStateOf(false) }
-    val isNavigationBarVisible by derivedStateOf { !isSearchBarVisible }
-    if (isSearchBarVisible) {
+    val isNavigationBarVisible by derivedStateOf { !isSearchBarVisible.value }
+    if (isSearchBarVisible.value) {
         SearchBar(
             modifier = Modifier.fillMaxSize(),
             query = query,
@@ -224,7 +237,7 @@ fun NavigationAppBar(currentScreenName: String, strategy: LeadingNavigationIconS
             placeholder = { screensWithSearchBars[currentScreenName]?.let { Text(it) } },
             onSearch = { displayQueriedEvents = true },
             leadingIcon = {
-                IconButton(onClick = { isSearchBarVisible = false }) {
+                IconButton(onClick = { isSearchBarVisible.value = false }) {
                     Icon(Icons.Rounded.ArrowBack, "Close search bar")
                 }
             },
@@ -255,7 +268,7 @@ fun NavigationAppBar(currentScreenName: String, strategy: LeadingNavigationIconS
             actions = {
                 // Only a handful of screens should have the search icon in the top app bar.
                 if (screensWithSearchBars.contains(currentScreenName)) {
-                    IconButton(onClick = { isSearchBarVisible = true }) {
+                    IconButton(onClick = { isSearchBarVisible.value = true }) {
                         Icon(
                             imageVector = Icons.Filled.Search,
                             contentDescription = "Search event"
