@@ -9,8 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,7 +23,7 @@ import com.giacomosirri.myapplication.ui.theme.Primary
 import com.giacomosirri.myapplication.ui.theme.Secondary
 
 @Composable
-fun ItemScreen(paddingValues: PaddingValues, item : String, username : String) {
+fun ItemScreen(paddingValues: PaddingValues, item: String, username: String) {
     val url = "www.url.it"
     val description = "This is a description"
     Scaffold(
