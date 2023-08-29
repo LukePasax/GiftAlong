@@ -26,16 +26,22 @@ fun NewItemScreen(paddingValues: PaddingValues) {
             var lowerBoundPrice by remember { mutableStateOf(0) }
             var upperBoundPrice by remember { mutableStateOf(0) }
             // Title
-            TextField(
+            OutlinedTextField(
                 modifier = Modifier
                     .padding(lateralPadding)
                     .fillMaxWidth(),
                 value = itemName,
                 onValueChange = { itemName = it },
                 label = { Text("Title") },
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedLabelColor = Color.Red,
+                    unfocusedBorderColor = Color.Red,
+                    focusedBorderColor = Color.Red,
+                    focusedLabelColor = Color.Red,
+                )
             )
             // Link
-            TextField(
+            OutlinedTextField(
                 modifier = Modifier
                     .padding(lateralPadding)
                     .fillMaxWidth(),
@@ -44,6 +50,9 @@ fun NewItemScreen(paddingValues: PaddingValues) {
                 label = { Text("Link") },
             )
             // Price range
+            val openDialog = remember { mutableStateOf(false) }
+            val currencies = listOf("$", "€", "£")
+            val (selected, onSelected) = remember { mutableStateOf(currencies[0]) }
             Row(
                 modifier = Modifier
                     .padding(lateralPadding)
@@ -51,7 +60,7 @@ fun NewItemScreen(paddingValues: PaddingValues) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = "Price range:")
-                TextField(
+                OutlinedTextField(
                     modifier = Modifier
                         .requiredWidth(100.dp)
                         .padding(PaddingValues(horizontal = 10.dp)),
@@ -61,7 +70,7 @@ fun NewItemScreen(paddingValues: PaddingValues) {
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
                 Text(text = "-")
-                TextField(
+                OutlinedTextField(
                     modifier = Modifier
                         .requiredWidth(100.dp)
                         .padding(PaddingValues(horizontal = 10.dp)),
@@ -71,14 +80,17 @@ fun NewItemScreen(paddingValues: PaddingValues) {
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
                 OutlinedButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { openDialog.value = true },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("$")
                 }
             }
+            if (openDialog.value) {
+                RadioButtonDialog(currencies, selected, onSelected, openDialog)
+            }
             // Description
-            TextField(
+            OutlinedTextField(
                 modifier = Modifier
                     .padding(lateralPadding)
                     .fillMaxWidth()
