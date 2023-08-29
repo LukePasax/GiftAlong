@@ -9,6 +9,8 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -77,7 +79,7 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
                     val items = mapOf(
                         Pair(
                             AppContext.getContext()?.getString(R.string.menu_item1),
-                            Icons.Rounded.Person
+                            ImageVector.vectorResource(R.drawable.round_card_giftcard_24)
                         ),
                         Pair(
                             AppContext.getContext()?.getString(R.string.menu_item2),
@@ -85,11 +87,11 @@ fun NavigationApp(navController: NavHostController = rememberNavController(), pa
                         ),
                         Pair(
                             AppContext.getContext()?.getString(R.string.menu_item3),
-                            Icons.Rounded.FavoriteBorder
+                            ImageVector.vectorResource(R.drawable.round_group_24)
                         ),
                         Pair(
                             AppContext.getContext()?.getString(R.string.menu_item4),
-                            Icons.Rounded.LocationOn
+                            ImageVector.vectorResource(R.drawable.round_query_stats_24)
                         )
                     )
                     Box(
