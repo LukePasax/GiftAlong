@@ -2,6 +2,7 @@ package com.giacomosirri.myapplication.ui.navigation
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -47,12 +48,7 @@ fun WishlistScreen(searchedItems: String) {
 
 @SuppressLint("UseCompatLoadingForDrawables")
 @Composable
-fun WishlistItem(name: String, username: String, navController: NavController, url: String? = null, image: ImageBitmap? = null) {
-    var checked by mutableStateOf(false)
-    val icon = R.drawable.placeholder_foreground
-    if (image != null) {
-        //TODO: set icon to image
-    }
+fun WishlistItem(name: String, username: String, navController: NavController, url: String? = null, image: Int = R.drawable.placeholder_foreground) {
     Column {
         ListItem(
             modifier = Modifier
@@ -87,8 +83,10 @@ fun WishlistItem(name: String, username: String, navController: NavController, u
             },
             leadingContent = {
                 Image(
-                    painterResource(id = icon),
-                    contentDescription = "Wishlist item image"
+                    painterResource(id = image),
+                    contentDescription = "Wishlist item image",
+                    modifier = Modifier
+                        .border(1.dp, Color.Black)
                 )
             }
         )

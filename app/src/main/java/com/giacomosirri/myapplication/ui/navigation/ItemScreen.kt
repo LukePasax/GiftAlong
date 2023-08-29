@@ -4,6 +4,8 @@ import android.graphics.Outline
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -23,60 +25,71 @@ import com.giacomosirri.myapplication.ui.AppContext
 fun ItemScreen(paddingValues: PaddingValues, item : String, username : String) {
     val url = "www.url.it"
     val description = "This is a description"
-    Column(
-        modifier = Modifier
-            .padding(paddingValues)
-            .padding(horizontal = 20.dp)
-            .padding(bottom = 50.dp)
-            .fillMaxHeight(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
+    Scaffold(
+        floatingActionButton = {
+            if (AppContext.getCurrentUser() == username) {
+                FloatingActionButton(onClick = { /*TODO*/ }) {
+                    Icon(imageVector = Icons.Filled.Edit, contentDescription = "Edit item")
+                }
+            }
+        }
     ) {
-        Text(
-            text = item,
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
-                .border(1.dp, Color.Red),
-            color = Color.Red,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold
-        )
-        Image(
-            painterResource(id = R.drawable.placeholder_foreground),
-            contentDescription = "Item picture",
-            modifier = Modifier
-                .size(100.dp)
-                .border(1.dp, Color.Red))
-        Row(
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .padding(paddingValues)
+                .padding(horizontal = 20.dp)
+                .padding(bottom = 50.dp)
+                .fillMaxHeight(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = "Link: ", fontWeight = FontWeight.Bold)
-            Text(text = url)
-        }
-        Row(
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Price Range: ", fontWeight = FontWeight.Bold)
-            Text(text = "€ 10 - € 20")
-        }
-        Row(
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Description: ", fontWeight = FontWeight.Bold)
-            Text(text = description)
+            Text(
+                text = item,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+                    .border(1.dp, Color.Red),
+                color = Color.Red,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold
+            )
+            Image(
+                painterResource(id = R.drawable.placeholder_foreground),
+                contentDescription = "Item picture",
+                modifier = Modifier
+                    .size(100.dp)
+                    .border(1.dp, Color.Red)
+            )
+            Row(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "Link: ", fontWeight = FontWeight.Bold)
+                Text(text = url)
+            }
+            Row(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "Price Range: ", fontWeight = FontWeight.Bold)
+                Text(text = "€ 10 - € 20")
+            }
+            Row(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "Description: ", fontWeight = FontWeight.Bold)
+                Text(text = description)
+            }
         }
     }
 }
