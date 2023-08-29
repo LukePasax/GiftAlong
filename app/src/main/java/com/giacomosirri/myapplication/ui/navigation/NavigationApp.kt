@@ -26,17 +26,6 @@ import com.giacomosirri.myapplication.ui.theme.Primary
 import com.giacomosirri.myapplication.ui.theme.Typography
 import kotlinx.coroutines.launch
 
-val fromScreenNameToTitle = mapOf(
-    Pair(AppContext.getContext()?.getString(R.string.home)!!, AppContext.getContext()?.getString(R.string.main_page_title)),
-    Pair(AppContext.getContext()?.getString(R.string.wishlist)!!, null),
-    Pair(AppContext.getContext()?.getString(R.string.new_item)!!, AppContext.getContext()?.getString(R.string.new_item_page_title)),
-    Pair(AppContext.getContext()?.getString(R.string.new_event)!!, AppContext.getContext()?.getString(R.string.new_event_page_title)),
-    Pair(AppContext.getContext()?.getString(R.string.specific_item)!!, null),
-    Pair(AppContext.getContext()?.getString(R.string.specific_event)!!, null),
-    Pair(AppContext.getContext()?.getString(R.string.relationships)!!, AppContext.getContext()?.getString(R.string.relationships_page_title)),
-    Pair(AppContext.getContext()?.getString(R.string.data_center)!!, AppContext.getContext()?.getString(R.string.datacenter_page_title))
-)
-
 val screensWithSearchBars = mapOf(
     Pair(AppContext.getContext()?.getString(R.string.home)!!, "Search an event by its title"),
     Pair(AppContext.getContext()?.getString(R.string.wishlist)!!, "Search an item by its name"),
@@ -297,7 +286,7 @@ fun NavigationAppBar(
             },
             title = {
                 Text(
-                    text = fromScreenNameToTitle[currentScreenName] ?: "This page has no title",
+                    text = currentScreenName,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
