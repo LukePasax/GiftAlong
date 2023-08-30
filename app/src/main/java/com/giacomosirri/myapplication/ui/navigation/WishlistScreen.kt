@@ -140,13 +140,12 @@ fun WishlistItem(
         )
     }
     if (openDialog.value) {
-        ItemDialog(itemName, openDialog, username)
+        ItemDialog(itemName, openDialog, username, url.orEmpty())
     }
 }
 
 @Composable
-fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: String) {
-    val url = "www.url.it"
+fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: String, url: String) {
     val description = "This is a description"
     Dialog(
         onDismissRequest = { openDialog.value = false },
@@ -154,9 +153,7 @@ fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: St
     ) {
         Card(
             modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .padding(bottom = 50.dp, top = 20.dp)
-                .fillMaxHeight(),
+                .size(300.dp, 400.dp),
             border = BorderStroke(1.dp, Primary),
             shape = MaterialTheme.shapes.medium,
             elevation = CardDefaults.cardElevation(
@@ -177,23 +174,22 @@ fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: St
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
+                Image(
+                    painterResource(id = R.drawable.landscape),
+                    contentDescription = "Item picture",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(.4f)
+                )
                 Text(
                     text = itemName,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(10.dp)
-                        .border(1.dp, Color.Red),
-                    color = Color.Red,
+                        .padding(10.dp),
                     textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 50.sp
-                )
-                Image(
-                    painterResource(id = R.drawable.placeholder_foreground),
-                    contentDescription = "Item picture",
-                    modifier = Modifier
-                        .size(100.dp)
-                        .border(1.dp, Color.Black)
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
                 )
                 Row(
                     modifier = Modifier
