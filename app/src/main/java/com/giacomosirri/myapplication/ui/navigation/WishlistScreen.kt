@@ -172,88 +172,42 @@ fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: St
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
-                Image(
-                    painterResource(id = R.drawable.landscape),
-                    contentDescription = "Item picture",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(.4f)
-                )
-                Text(
-                    text = itemName,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-                    textAlign = TextAlign.Center,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Row(
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = "Link: ", fontWeight = FontWeight.Bold)
-                    Text(text = url)
-                }
-                Row(
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = "Price Range: ", fontWeight = FontWeight.Bold)
-                    Text(text = "€ 10 - € 20")
-                }
-                Row(
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = "Description: ", fontWeight = FontWeight.Bold)
-                    Text(text = description)
+                DialogImage(imageDescription = "Item Image", imageId = R.drawable.landscape)
+                DialogText(text = itemName)
+                DialogEntry(text = "Link: ", value = url)
+                DialogEntry(text = "Price Range: ", value = "10-20€")
+                DialogEntry(text = "Description", value = description)
                 }
                 if (username != AppContext.getCurrentUser()) {
-                    Row(
-                        modifier = Modifier
-                            .padding(10.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = "Reserved by: ", fontWeight = FontWeight.Bold)
-                        TextButton(onClick = { /*TODO*/ }) {
-                            Text(text = reservingUser)
+                    DialogEntry(
+                        text = "Reserved by: ",
+                        value = {
+                            TextButton(
+                                onClick = { /*TODO*/ }
+                            ) {
+                                Text(text = reservingUser)
+                            }
                         }
-                    }
-                    Row(
-                        modifier = Modifier
-                            .padding(10.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        OutlinedButton(
-                            onClick = {reserved.value = !reserved.value},
-                            enabled = !bought.value
-                        ) {
-                            Text(text = reserveButtonText)
+                    )
+                    DialogEntry(
+                        composable1 = {
+                            OutlinedButton(
+                                onClick = {reserved.value = !reserved.value},
+                                enabled = !bought.value
+                            ) {
+                                Text(text = reserveButtonText)
+                            }
+                        },
+                        composable2 = {
+                            OutlinedButton(
+                                onClick = { bought.value = !bought.value },
+                                enabled = reserved.value
+                            ) {
+                                Text(text = buyButtonText)
+                            }
                         }
-                        OutlinedButton(
-                            onClick = { bought.value = !bought.value },
-                            enabled = reserved.value
-                        ) {
-                            Text(text = buyButtonText)
-                        }
-                    }
+                    )
                 }
-            }
         }
     }
 }
