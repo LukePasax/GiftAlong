@@ -191,17 +191,21 @@ fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: St
                     )
                     DialogEntry(
                         composable1 = {
-                            OutlinedButton(
+                            Button(
                                 onClick = {reserved.value = !reserved.value},
-                                enabled = !bought.value
+                                enabled = !bought.value,
+                                modifier = Modifier
+                                    .size(110.dp, 50.dp)
                             ) {
                                 Text(text = reserveButtonText)
                             }
                         },
                         composable2 = {
-                            OutlinedButton(
+                            Button(
                                 onClick = { bought.value = !bought.value },
-                                enabled = reserved.value
+                                enabled = reserved.value,
+                                modifier = Modifier
+                                    .size(110.dp, 50.dp)
                             ) {
                                 Text(text = buyButtonText)
                             }
