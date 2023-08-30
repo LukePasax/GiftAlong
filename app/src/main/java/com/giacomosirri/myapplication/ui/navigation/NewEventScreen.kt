@@ -3,6 +3,7 @@ package com.giacomosirri.myapplication.ui.navigation
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
@@ -16,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
+import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 import java.text.DateFormat
 import java.util.*
@@ -23,20 +25,33 @@ import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewEventScreen(paddingValues: PaddingValues) {
+fun NewEventScreen(paddingValues: PaddingValues, isInEditMode: Boolean, eventName: String? = null) {
     val lateralPadding = PaddingValues(horizontal = 20.dp)
-    Scaffold(modifier = Modifier.padding(paddingValues)) {
+    Scaffold(
+        topBar = {
+            NavigationAppBar(
+                currentScreenName =
+                if (isInEditMode) {
+                    "Edit $eventName"
+                } else {
+                    AppContext.getContext()?.getString(R.string.new_event)!!
+                },
+                hasSearchBar = false
+            )
+        }
+    ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp),
+                .padding(paddingValues)
+                .padding(top = 15.dp)
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
             var eventTitle by remember { mutableStateOf("") }
             var eventDescription by remember { mutableStateOf("") }
             var dressCode by remember { mutableStateOf("") }
             // Title
-            TextField(
+            OutlinedTextField(
                 modifier = Modifier
                     .padding(lateralPadding)
                     .fillMaxWidth(),
@@ -46,8 +61,13 @@ fun NewEventScreen(paddingValues: PaddingValues) {
             )
             // Location
             Box(modifier = Modifier
-                .padding(lateralPadding)
-                .align(Alignment.CenterHorizontally)) {
+                    .requiredHeight(120.dp)
+                    .requiredWidth(220.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .border(width = 1.dp, shape = ShapeDefaults.Small, color = Color.Gray)
+                    .padding(lateralPadding),
+                contentAlignment = Alignment.Center
+            ) {
                 FilledTonalButton(
                     enabled = canShowMap(),
                     onClick = { showMap() }
@@ -101,7 +121,7 @@ fun NewEventScreen(paddingValues: PaddingValues) {
                 )
                 FilledTonalButton(onClick = { openDialog.value = true }) {
                     Icon(
-                        modifier = Modifier.padding(end = 2.dp),
+                        modifier = Modifier.padding(end = 5.dp),
                         imageVector = Icons.Rounded.DateRange,
                         contentDescription = null
                     )
@@ -109,7 +129,7 @@ fun NewEventScreen(paddingValues: PaddingValues) {
                 }
             }
             // Description
-            TextField(
+            OutlinedTextField(
                 modifier = Modifier
                     .padding(lateralPadding)
                     .fillMaxWidth()
@@ -137,7 +157,7 @@ fun NewEventScreen(paddingValues: PaddingValues) {
                 }
             }
             // Dress code
-            TextField(
+            OutlinedTextField(
                 modifier = Modifier
                     .padding(lateralPadding)
                     .fillMaxWidth(),
@@ -146,10 +166,10 @@ fun NewEventScreen(paddingValues: PaddingValues) {
                 label = { Text("Dress code") },
             )
             // Buttons
-            Spacer(Modifier.fillMaxHeight(.6f))
             Row(
                 modifier = Modifier
                     .padding(lateralPadding)
+                    .padding(top = 16.dp)
                     .height(40.dp)
                     .fillMaxWidth()
             ) {
