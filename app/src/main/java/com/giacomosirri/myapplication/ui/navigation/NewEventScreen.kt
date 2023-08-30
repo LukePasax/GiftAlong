@@ -199,7 +199,7 @@ fun NewEventScreen(
             FormButtons(
                 paddingValues = PaddingValues(
                     start = lateralPadding.calculateStartPadding(LayoutDirection.Ltr),
-                    top = 18.dp,
+                    top = 20.dp,
                     end = lateralPadding.calculateEndPadding(LayoutDirection.Ltr)
                 ),
                 onSubmitClick = {},

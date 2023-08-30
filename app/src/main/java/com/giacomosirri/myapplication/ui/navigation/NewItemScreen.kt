@@ -2,26 +2,52 @@ package com.giacomosirri.myapplication.ui.navigation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.giacomosirri.myapplication.R
+import com.giacomosirri.myapplication.ui.AppContext
 
 @Composable
-fun NewItemScreen(paddingValues: PaddingValues) {
+fun NewItemScreen(
+    paddingValues: PaddingValues,
+    onQuit: () -> Unit,
+    isInEditMode: Boolean,
+    name: String? = null
+) {
     val lateralPadding = PaddingValues(horizontal = 20.dp)
-    Scaffold(modifier = Modifier.padding(paddingValues)) {
+    Scaffold(
+        topBar = {
+            NavigationAppBar(
+                currentScreenName =
+                if (isInEditMode) {
+                    "Edit $name"
+                } else {
+                    AppContext.getContext()?.getString(R.string.new_item)!!
+                },
+                hasSearchBar = false,
+                isLeadingIconMenu = false,
+                isLeadingIconBackArrow = false
+            )
+        }
+    ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
+                .padding(paddingValues)
+                .padding(top = 8.dp)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(27.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             var itemName by remember { mutableStateOf("") }
@@ -36,13 +62,7 @@ fun NewItemScreen(paddingValues: PaddingValues) {
                     .fillMaxWidth(),
                 value = itemName,
                 onValueChange = { itemName = it },
-                label = { Text("Title") },
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedLabelColor = Color.Red,
-                    unfocusedBorderColor = Color.Red,
-                    focusedBorderColor = Color.Red,
-                    focusedLabelColor = Color.Red,
-                )
+                label = { Text("Title *") }
             )
             // Photo
             Row(
@@ -51,14 +71,23 @@ fun NewItemScreen(paddingValues: PaddingValues) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
+                    painterResource(id = R.drawable.placeholder),
+                    contentDescription = "Item image",
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .defaultMinSize(minHeight = 120.dp)
-                        .padding(end = 20.dp),
-                    painter = painterResource(id = R.drawable.placeholder),
-                    contentDescription = "item image"
+                        .requiredSize(width = 170.dp, height = 140.dp)
+                        .clip(RoundedCornerShape(5.dp))
                 )
-                TextButton(onClick = { /*TODO*/ }) {
-                    Text(text = "Select a new photo")
+                FilledTonalButton(
+                    modifier = Modifier.padding(start = 15.dp),
+                    onClick = { /* TODO select an image from the gallery */ }
+                ) {
+                    Icon(
+                        modifier = Modifier.padding(end = 5.dp),
+                        imageVector = ImageVector.vectorResource(R.drawable.round_camera_alt_24),
+                        contentDescription = null
+                    )
+                    Text("Select a date")
                 }
             }
             // Link
@@ -115,38 +144,21 @@ fun NewItemScreen(paddingValues: PaddingValues) {
                 modifier = Modifier
                     .padding(lateralPadding)
                     .fillMaxWidth()
-                    .height(120.dp),
+                    .height(130.dp),
                 value = itemDescription,
                 onValueChange = { itemDescription = it },
                 label = { Text("Description") },
             )
             // Buttons
-            Row(
-                modifier = Modifier
-                    .padding(lateralPadding)
-                    .padding(top = 50.dp)
-                    .height(40.dp)
-                    .fillMaxWidth()
-            ) {
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth(.5f)
-                        .padding(end = 5.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red, contentColor = Color.White),
-                    onClick = { /*TODO*/ }
-                ) {
-                    Text(text = "Cancel")
-                }
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 5.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Blue, contentColor = Color.White),
-                    onClick = { /*TODO*/ }
-                ) {
-                    Text(text = "Done")
-                }
-            }
+            FormButtons(
+                paddingValues = PaddingValues(
+                    start = lateralPadding.calculateStartPadding(LayoutDirection.Ltr),
+                    top = 17.dp,
+                    end = lateralPadding.calculateEndPadding(LayoutDirection.Ltr)
+                ),
+                onSubmitClick = {},
+                onCancelClick = onQuit
+            )
         }
     }
 }

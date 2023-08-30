@@ -4,8 +4,8 @@
     <!-- screen name, which works as a screen identifier (as it's unique) -->
     <string name="home">Upcoming Events</string>
     <string name="wishlist">Wishlist</string>
-    <string name="new_item">Item Form</string>
-    <string name="new_event">Event Form</string>
+    <string name="new_item">Add New Item</string>
+    <string name="new_event">Add New Event</string>
     <string name="user_profile">User Profile</string>
     <string name="relationships">Manage Relationships</string>
     <string name="data_center">Data Center</string>
