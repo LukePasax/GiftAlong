@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import com.giacomosirri.myapplication.R
 import androidx.compose.runtime.Composable
@@ -27,16 +26,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.navigation.NavController
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Primary
 import com.giacomosirri.myapplication.ui.theme.Secondary
-import org.w3c.dom.Text
 
 @Composable
 fun WishlistScreen(
@@ -99,7 +95,8 @@ fun WishlistItem(
                     text = itemName,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
-                ) },
+                )
+            },
             trailingContent = {
                 if (username == AppContext.getCurrentUser()) {
                     IconButton(onClick = { /*TODO*/ }) {
@@ -124,7 +121,6 @@ fun WishlistItem(
                         Text(text = price ?: "No price", fontSize = 17.sp)
                     }
                 }
-
             },
             leadingContent = {
                 Image(
@@ -138,11 +134,7 @@ fun WishlistItem(
                 )
             }
         )
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 15.dp),
-            thickness = 1.dp,
-            color = Color.Gray
-        )
+        ListItemDivider()
     }
     if (openDialog.value) {
         ItemDialog(itemName, openDialog, username, reserved, bought)
@@ -161,8 +153,7 @@ fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: St
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
     ) {
         Card(
-            modifier = Modifier
-                .heightIn(max = 600.dp, min = 300.dp),
+            modifier = Modifier.heightIn(max = 600.dp, min = 300.dp),
             border = BorderStroke(1.dp, Primary),
             shape = MaterialTheme.shapes.medium,
             elevation = CardDefaults.cardElevation(
@@ -265,6 +256,5 @@ fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: St
             }
         }
     }
-
 }
 

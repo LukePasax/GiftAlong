@@ -21,7 +21,7 @@ import com.giacomosirri.myapplication.R
 @Composable
 fun UserProfileScreen(paddingValues: PaddingValues, username: String, navController: NavController) {
     val openDialog = remember { mutableStateOf(false) }
-    val relationshipTypes = listOf("Friend", "Family", "Partner", "Colleague")
+    val relationshipTypes = listOf("Friend", "Family", "Partner", "Colleague", "None")
     val (selected, onSelected) = remember { mutableStateOf(relationshipTypes[0]) }
     var username = "Sergio"
     Column(
