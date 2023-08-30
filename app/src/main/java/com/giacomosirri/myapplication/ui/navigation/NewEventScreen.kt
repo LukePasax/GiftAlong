@@ -23,6 +23,8 @@ import androidx.core.content.ContextCompat.startActivity
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.data.entity.Relationship
 import com.giacomosirri.myapplication.ui.AppContext
+import com.giacomosirri.myapplication.ui.theme.Error
+import com.giacomosirri.myapplication.ui.theme.ErrorBackground
 import java.text.DateFormat
 import java.util.*
 
@@ -234,9 +236,16 @@ fun CancelDialog(isCancelDialogOpen: MutableState<Boolean>, onQuit: () -> Unit) 
         onDismissRequest = { isCancelDialogOpen.value = false },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
     ) {
-        Card(modifier = Modifier.fillMaxWidth()) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+                .height(130.dp),
+            colors = CardDefaults.cardColors(containerColor = ErrorBackground)
+        ) {
             Column(modifier = Modifier.padding(start = 20.dp, top = 20.dp, end = 10.dp, bottom = 10.dp)) {
-                Text("Are you sure you want to quit this page? All your inputs will be lost.")
+                Text("Are you sure you want to quit? All your inputs will be lost.")
+                Spacer(modifier = Modifier.height(12.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
@@ -245,13 +254,15 @@ fun CancelDialog(isCancelDialogOpen: MutableState<Boolean>, onQuit: () -> Unit) 
                         onClick = { isCancelDialogOpen.value = false },
                         modifier = Modifier.padding(end = 10.dp)
                     ) {
-                        Text(text = "Cancel")
+                        Text(text = "Cancel", color = Error)
                     }
-                    TextButton(onClick = {
-                        isCancelDialogOpen.value = false
-                        onQuit.invoke()
-                    }) {
-                        Text(text = "Quit anyway")
+                    TextButton(
+                        onClick = {
+                            isCancelDialogOpen.value = false
+                            onQuit.invoke()
+                        }
+                    ) {
+                        Text(text = "Quit anyway", color = Error)
                     }
                 }
             }

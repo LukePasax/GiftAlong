@@ -29,7 +29,8 @@ fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit) {
                 currentScreenName = AppContext.getContext()?.getString(R.string.home)!!,
                 hasSearchBar = true,
                 searchBarPlaceholder = "Search an event by its title",
-                isLeadingIconMenu = true
+                isLeadingIconMenu = true,
+                isLeadingIconBackArrow = false
             )
         },
         floatingActionButton = {

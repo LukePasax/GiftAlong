@@ -14,6 +14,7 @@ val OnTertiary = Color.White
 val OnBackground = Color(0xFF1C1B1F)
 val OnSurface = Color(0xFF1C1B1F)
 val Error = Color.Red
+val ErrorBackground = Color(0xFFFCDEDE)
 val DayCardBackground = Primary
 val EventCardBackground = Color(0xFFF1F1F3)
 val SpecialEventCardBackground = Color(0xFFF12A1B)
