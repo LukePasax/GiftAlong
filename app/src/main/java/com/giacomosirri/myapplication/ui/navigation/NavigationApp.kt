@@ -209,7 +209,7 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
             NewItemScreen(paddingValues)
         }
         composable(NavigationScreen.NewEvent.name) {
-            NewEventScreen(paddingValues)
+            NewEventScreen(paddingValues, isInEditMode = false)
         }
         composable(NavigationScreen.UserProfile.name) {
             UserProfileScreen(

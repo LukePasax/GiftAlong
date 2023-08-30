@@ -45,7 +45,7 @@ fun NewEventScreen(paddingValues: PaddingValues, isInEditMode: Boolean, eventNam
                 .padding(paddingValues)
                 .padding(top = 15.dp)
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(18.dp)
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             var eventTitle by remember { mutableStateOf("") }
             var eventDescription by remember { mutableStateOf("") }
@@ -57,7 +57,7 @@ fun NewEventScreen(paddingValues: PaddingValues, isInEditMode: Boolean, eventNam
                     .fillMaxWidth(),
                 value = eventTitle,
                 onValueChange = { eventTitle = it },
-                label = { Text("Title") },
+                label = { Text("Title *") },
             )
             // Location
             Box(modifier = Modifier
@@ -65,7 +65,8 @@ fun NewEventScreen(paddingValues: PaddingValues, isInEditMode: Boolean, eventNam
                     .requiredWidth(220.dp)
                     .align(Alignment.CenterHorizontally)
                     .border(width = 1.dp, shape = ShapeDefaults.Small, color = Color.Gray)
-                    .padding(lateralPadding),
+                    .padding(lateralPadding)
+                    .padding(top = 4.dp),
                 contentAlignment = Alignment.Center
             ) {
                 FilledTonalButton(
@@ -80,7 +81,7 @@ fun NewEventScreen(paddingValues: PaddingValues, isInEditMode: Boolean, eventNam
                     Text("Add location")
                 }
             }
-            // Date
+            // Date dialog
             val openDialog = remember { mutableStateOf(false) }
             val datePickerState = rememberDatePickerState(initialSelectedDateMillis = Date().time)
             val confirmEnabled = derivedStateOf { datePickerState.selectedDateMillis != null }
@@ -109,6 +110,7 @@ fun NewEventScreen(paddingValues: PaddingValues, isInEditMode: Boolean, eventNam
                     DatePicker(state = datePickerState)
                 }
             }
+            // Date picker
             Row(
                 modifier = Modifier
                     .padding(lateralPadding)
@@ -125,7 +127,7 @@ fun NewEventScreen(paddingValues: PaddingValues, isInEditMode: Boolean, eventNam
                         imageVector = Icons.Rounded.DateRange,
                         contentDescription = null
                     )
-                    Text("Select a date")
+                    Text("Select a date *")
                 }
             }
             // Description
@@ -139,17 +141,18 @@ fun NewEventScreen(paddingValues: PaddingValues, isInEditMode: Boolean, eventNam
                 label = { Text("Description") },
             )
             // Invite
-            Column(modifier = Modifier.padding(lateralPadding)) {
+            Column(
+                modifier = Modifier
+                    .padding(lateralPadding)
+                    .padding(top = 2.dp)
+                    .fillMaxWidth()
+            ) {
                 Text(
                     modifier = Modifier.padding(bottom = 4.dp),
-                    text = "Invite:",
+                    text = "Invite *",
                     style = MaterialTheme.typography.bodyLarge,
                 )
-                Row(
-                    modifier = Modifier
-                        .height(36.dp)
-                        .fillMaxWidth()
-                ) {
+                Row {
                     val pv = PaddingValues(end = 30.dp)
                     CheckboxItem("Friends", pv)
                     CheckboxItem("Partner", pv)
@@ -169,7 +172,7 @@ fun NewEventScreen(paddingValues: PaddingValues, isInEditMode: Boolean, eventNam
             Row(
                 modifier = Modifier
                     .padding(lateralPadding)
-                    .padding(top = 16.dp)
+                    .padding(top = 18.dp)
                     .height(40.dp)
                     .fillMaxWidth()
             ) {
