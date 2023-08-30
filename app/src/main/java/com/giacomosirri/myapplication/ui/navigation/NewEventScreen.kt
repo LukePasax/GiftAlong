@@ -55,9 +55,9 @@ fun NewEventScreen(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(top = 15.dp)
+                .padding(top = 8.dp)
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            verticalArrangement = Arrangement.spacedBy(17.dp)
         ) {
             var eventTitle by remember { mutableStateOf("") }
             var eventDescription by remember { mutableStateOf("") }
@@ -164,11 +164,25 @@ fun NewEventScreen(
                     text = "Invite *",
                     style = MaterialTheme.typography.bodyLarge,
                 )
-                Row {
+                Row(
+                    modifier = Modifier
+                        .padding(lateralPadding)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
                     val pv = PaddingValues(end = 30.dp)
-                    CheckboxItem("Friends", pv)
-                    CheckboxItem("Partner", pv)
-                    CheckboxItem("Family", pv)
+                    Column(
+                        modifier = Modifier.requiredWidth(150.dp),
+                    ) {
+                        CheckboxItem("Friends", pv)
+                        CheckboxItem("Partner", pv)
+                    }
+                    Column(
+                        modifier = Modifier.requiredWidth(150.dp),
+                    ) {
+                        CheckboxItem("Family", pv)
+                        CheckboxItem("Colleagues", pv)
+                    }
                 }
             }
             // Dress code
