@@ -3,16 +3,17 @@ package com.giacomosirri.myapplication.ui.navigation
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 
@@ -28,9 +29,9 @@ fun RelationshipsScreen(paddingValues: PaddingValues) {
         }
     ) {
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
-            item { RelationshipListItem(username = "chiaaara", image = null, type = "Friend") }
-            item { RelationshipListItem(username = "lukepasax", image = null, type = "Friend") }
-            item { RelationshipListItem(username = "erzava", image = null, type = "Friend") }
+            item { RelationshipListItem(username = "chiaaara", relationshipType = "Friend") }
+            item { RelationshipListItem(username = "lukepasax", relationshipType = "None") }
+            item { RelationshipListItem(username = "erzava", relationshipType = "Friend") }
         }
     }
 }
@@ -40,33 +41,63 @@ fun RelationshipsScreen(searchedUsers: String) {
 }
 
 @Composable
-fun RelationshipListItem(username: String, image: ImageBitmap?, type: String) {
-    var checked by mutableStateOf(false)
-    val icon = R.drawable.placeholder_foreground
-    if (image != null) {
-        //TODO: set icon to image
+fun RelationshipListItem(
+    username: String,
+    image: Int = R.drawable.landscape,
+    relationshipType: String
+) {
+    val isDialogOpen = remember { mutableStateOf(false) }
+    val relationshipTypes = listOf("Friend", "Family", "Partner", "Colleague", "None")
+    val (selected, onSelected) = remember { mutableStateOf(relationshipType) }
+    if (isDialogOpen.value) {
+        RadioButtonDialog(relationshipTypes, selected, onSelected, isDialogOpen)
     }
     Column {
         ListItem(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(65.dp),
-            headlineContent = { Text(username) },
+                .height(90.dp),
+            headlineContent = {
+                Text(
+                    text = username,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            },
             trailingContent = {
-                TextButton(onClick = { /*TODO*/ }) {
-                    Text(text = type)
+                OutlinedButton(onClick = { isDialogOpen.value = true }) {
+                    Text(
+                        text = relationshipType,
+                        color =
+                            if (relationshipType == "None") {
+                                Color.Red
+                            } else {
+                                Color.Blue
+                            }
+                    )
                 }
             },
             leadingContent = {
                 Image(
-                    painterResource(id = icon),
+                    painterResource(id = image),
                     contentDescription = "Wishlist item image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxHeight(.85f)
+                        .fillMaxWidth(.2f)
+                        .clip(RoundedCornerShape(5.dp))
                 )
             }
         )
-        HorizontalDivider(
-            thickness = 1.dp,
-            color = Color.DarkGray
-        )
+        ListItemDivider()
     }
+}
+
+@Composable
+fun ListItemDivider() {
+    HorizontalDivider(
+        modifier = Modifier.padding(horizontal = 15.dp),
+        thickness = 1.dp,
+        color = Color.Gray
+    )
 }
