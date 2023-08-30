@@ -82,7 +82,7 @@ fun WishlistItem(
     username: String,
     url: String? = null,
     price: String?= null,
-    image: Int = R.drawable.placeholder_foreground
+    image: Int = R.drawable.landscape
 ) {
     val openDialog = remember { mutableStateOf(false) }
     val reserved = true
@@ -127,9 +127,9 @@ fun WishlistItem(
                     contentDescription = "Wishlist item image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .clip(RoundedCornerShape(1.dp))
-                        .border(1.dp, Color.Gray, shape = RoundedCornerShape(4.dp))
                         .fillMaxHeight(.85f)
+                        .fillMaxWidth(.2f)
+                        .clip(RoundedCornerShape(5.dp))
                 )
             }
         )
@@ -153,7 +153,7 @@ fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: St
     ) {
         Card(
             modifier = Modifier
-                .size(300.dp, 400.dp),
+                .heightIn(max = 600.dp, min = 300.dp),
             border = BorderStroke(1.dp, Primary),
             shape = MaterialTheme.shapes.medium,
             elevation = CardDefaults.cardElevation(
@@ -169,8 +169,6 @@ fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: St
             )
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxHeight(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
