@@ -203,7 +203,11 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
             )
         }
         composable(NavigationScreen.NewItem.name) {
-            NewItemScreen(paddingValues)
+            NewItemScreen(
+                paddingValues = paddingValues,
+                onQuit = { navController.navigateUp() },
+                isInEditMode = false
+            )
         }
         composable(NavigationScreen.NewEvent.name) {
             NewEventScreen(

@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -195,36 +196,52 @@ fun NewEventScreen(
                 label = { Text("Dress code") },
             )
             // Buttons
-            Row(
-                modifier = Modifier
-                    .padding(lateralPadding)
-                    .padding(top = 18.dp)
-                    .height(40.dp)
-                    .fillMaxWidth()
-            ) {
-                val isCancelDialogOpen = remember { mutableStateOf(false) }
-                if (isCancelDialogOpen.value) {
-                    CancelDialog(isCancelDialogOpen, onQuit)
-                }
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth(.5f)
-                        .padding(end = 5.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red, contentColor = Color.White),
-                    onClick = { isCancelDialogOpen.value = true }
-                ) {
-                    Text(text = "Cancel")
-                }
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 5.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Blue, contentColor = Color.White),
-                    onClick = { /*TODO*/ }
-                ) {
-                    Text(text = "Done")
-                }
-            }
+            FormButtons(
+                paddingValues = PaddingValues(
+                    start = lateralPadding.calculateStartPadding(LayoutDirection.Ltr),
+                    top = 18.dp,
+                    end = lateralPadding.calculateEndPadding(LayoutDirection.Ltr)
+                ),
+                onSubmitClick = {},
+                onCancelClick = onQuit
+            )
+        }
+    }
+}
+
+@Composable
+fun FormButtons(
+    paddingValues: PaddingValues,
+    onSubmitClick: () -> Unit,
+    onCancelClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .padding(paddingValues)
+            .height(40.dp)
+            .fillMaxWidth()
+    ) {
+        val isCancelDialogOpen = remember { mutableStateOf(false) }
+        if (isCancelDialogOpen.value) {
+            CancelDialog(isCancelDialogOpen, onCancelClick)
+        }
+        Button(
+            modifier = Modifier
+                .fillMaxWidth(.5f)
+                .padding(end = 5.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Red, contentColor = Color.White),
+            onClick = { isCancelDialogOpen.value = true }
+        ) {
+            Text(text = "Cancel")
+        }
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 5.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Blue, contentColor = Color.White),
+            onClick = onSubmitClick
+        ) {
+            Text(text = "Done")
         }
     }
 }
