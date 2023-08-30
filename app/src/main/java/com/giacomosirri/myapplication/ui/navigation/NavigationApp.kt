@@ -33,7 +33,6 @@ sealed class NavigationScreen(val name: String) {
     object NewItem: NavigationScreen(AppContext.getContext()?.getString(R.string.new_item)!!)
     object NewEvent: NavigationScreen(AppContext.getContext()?.getString(R.string.new_event)!!)
     object UserProfile: NavigationScreen(AppContext.getContext()?.getString(R.string.user_profile)!!)
-    object Event: NavigationScreen(AppContext.getContext()?.getString(R.string.specific_event)!!)
     object Relationships: NavigationScreen(AppContext.getContext()?.getString(R.string.relationships)!!)
     object DataCenter: NavigationScreen(AppContext.getContext()?.getString(R.string.data_center)!!)
     object Login: NavigationScreen(AppContext.getContext()?.getString(R.string.login)!!)
@@ -219,9 +218,6 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
                 username = AppContext.getCurrentUser(),
                 navController = navController
             )
-        }
-        composable(NavigationScreen.Event.name) {
-            EventScreen(paddingValues)
         }
         composable(NavigationScreen.Relationships.name) {
             RelationshipsScreen(paddingValues)
