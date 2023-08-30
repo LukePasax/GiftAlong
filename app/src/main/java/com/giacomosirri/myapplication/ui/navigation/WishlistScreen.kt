@@ -65,7 +65,7 @@ fun WishlistScreen(
     ) {
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
             item { WishlistItem(itemName = "Ciao", username  = username) }
-            item { WishlistItem(itemName = AppContext.getCurrentUser(), username = username, url = "www.cacca.it") }
+            item { WishlistItem(itemName = AppContext.getCurrentUser(), username = username) }
         }
     }
 }
@@ -80,13 +80,12 @@ fun WishlistScreen(searchedItems: String) {
 fun WishlistItem(
     itemName: String,
     username: String,
-    url: String? = null,
     price: String?= null,
     image: Int = R.drawable.landscape
 ) {
     val openDialog = remember { mutableStateOf(false) }
-    val reserved = true
-    val bought = false
+    val reserved = remember { mutableStateOf(false) }
+    val bought = remember { mutableStateOf(false) }
     Column {
         ListItem(
             modifier = Modifier
@@ -95,28 +94,34 @@ fun WishlistItem(
                 .clickable {
                     openDialog.value = true
                 },
-            headlineContent = { Text(itemName) },
-            supportingContent = { Text(price.orEmpty()) },
+            headlineContent = {
+                Text(
+                    text = itemName,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                ) },
             trailingContent = {
                 if (username == AppContext.getCurrentUser()) {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(ImageVector.vectorResource(id = R.drawable.baseline_more_horiz_24), "Item Menu")
                     }
                 } else {
-                    if (reserved) {
+                    if (reserved.value && !bought.value) {
                         Text(
                             text = "Reserved",
                             fontSize = 17.sp,
                             modifier = Modifier
                                 .border(1.dp, Color.Gray, shape = RoundedCornerShape(4.dp))
                                 .padding(10.dp))
-                    } else if (bought) {
+                    } else if (bought.value) {
                         Text(
                             text = "Bought",
                             fontSize = 17.sp,
                             modifier = Modifier
                                 .border(1.dp, Color.Gray, shape = RoundedCornerShape(4.dp))
                                 .padding(10.dp))
+                    } else {
+                        Text(text = price ?: "No price", fontSize = 17.sp)
                     }
                 }
 
@@ -140,13 +145,17 @@ fun WishlistItem(
         )
     }
     if (openDialog.value) {
-        ItemDialog(itemName, openDialog, username, url.orEmpty())
+        ItemDialog(itemName, openDialog, username, reserved, bought)
     }
 }
 
 @Composable
-fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: String, url: String) {
+fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: String, reserved: MutableState<Boolean>, bought: MutableState<Boolean>) {
     val description = "This is a description"
+    val reservingUser = "Sergio"
+    val url = "www.url.it"
+    val buyButtonText = if (reserved.value && bought.value) "Bought" else "Buy"
+    val reserveButtonText = if (reserved.value) "Reserved" else "Reserve"
     Dialog(
         onDismissRequest = { openDialog.value = false },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
@@ -218,6 +227,40 @@ fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: St
                 ) {
                     Text(text = "Description: ", fontWeight = FontWeight.Bold)
                     Text(text = description)
+                }
+                if (username != AppContext.getCurrentUser()) {
+                    Row(
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "Reserved by: ", fontWeight = FontWeight.Bold)
+                        TextButton(onClick = { /*TODO*/ }) {
+                            Text(text = reservingUser)
+                        }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        OutlinedButton(
+                            onClick = {reserved.value = !reserved.value},
+                            enabled = !bought.value
+                        ) {
+                            Text(text = reserveButtonText)
+                        }
+                        OutlinedButton(
+                            onClick = { bought.value = !bought.value },
+                            enabled = reserved.value
+                        ) {
+                            Text(text = buyButtonText)
+                        }
+                    }
                 }
             }
         }
