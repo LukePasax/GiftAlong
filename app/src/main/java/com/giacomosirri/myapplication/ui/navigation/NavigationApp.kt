@@ -256,7 +256,7 @@ fun NavigationAppBar(
             modifier = Modifier.fillMaxSize(),
             query = query,
             onQueryChange = { query = it },
-            placeholder = { searchBarPlaceholder!! },
+            placeholder = { Text(searchBarPlaceholder!!) },
             onSearch = { displayQueriedEvents = true },
             leadingIcon = {
                 IconButton(onClick = { navigation.isSearchBarOpen.value = false }) {
