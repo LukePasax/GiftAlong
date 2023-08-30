@@ -33,7 +33,6 @@ sealed class NavigationScreen(val name: String) {
     object NewItem: NavigationScreen(AppContext.getContext()?.getString(R.string.new_item)!!)
     object NewEvent: NavigationScreen(AppContext.getContext()?.getString(R.string.new_event)!!)
     object UserProfile: NavigationScreen(AppContext.getContext()?.getString(R.string.user_profile)!!)
-    object Item: NavigationScreen(AppContext.getContext()?.getString(R.string.specific_item)!!)
     object Event: NavigationScreen(AppContext.getContext()?.getString(R.string.specific_event)!!)
     object Relationships: NavigationScreen(AppContext.getContext()?.getString(R.string.relationships)!!)
     object DataCenter: NavigationScreen(AppContext.getContext()?.getString(R.string.data_center)!!)
@@ -201,8 +200,7 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
             WishlistScreen(
                 username = username,
                 paddingValues = paddingValues,
-                onFabClick = { navController.navigate(NavigationScreen.NewItem.name) },
-                navController = navController
+                onFabClick = { navController.navigate(NavigationScreen.NewItem.name) }
             )
         }
         composable(NavigationScreen.NewItem.name) {
@@ -220,15 +218,6 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
                 paddingValues = paddingValues,
                 username = AppContext.getCurrentUser(),
                 navController = navController
-            )
-        }
-        composable("${NavigationScreen.Item.name}{item}/{username}") {
-            val item = it.arguments?.getString("item") ?: ""
-            val username = it.arguments?.getString("username") ?: ""
-            ItemScreen(
-                paddingValues = paddingValues,
-                item = item,
-                username = username
             )
         }
         composable(NavigationScreen.Event.name) {
