@@ -2,7 +2,9 @@ package com.giacomosirri.myapplication.ui.navigation
 
 import android.content.Context
 import android.content.Intent
+import android.location.Location
 import android.net.Uri
+import androidx.annotation.NonNull
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.toggleable
@@ -16,8 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat.startActivity
 import com.giacomosirri.myapplication.R
+import com.giacomosirri.myapplication.data.entity.Relationship
 import com.giacomosirri.myapplication.ui.AppContext
 import java.text.DateFormat
 import java.util.*
@@ -25,7 +29,12 @@ import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewEventScreen(paddingValues: PaddingValues, isInEditMode: Boolean, eventName: String? = null) {
+fun NewEventScreen(
+    paddingValues: PaddingValues,
+    onQuit: () -> Unit,
+    isInEditMode: Boolean,
+    eventName: String? = null
+) {
     val lateralPadding = PaddingValues(horizontal = 20.dp)
     Scaffold(
         topBar = {
@@ -61,12 +70,12 @@ fun NewEventScreen(paddingValues: PaddingValues, isInEditMode: Boolean, eventNam
             )
             // Location
             Box(modifier = Modifier
-                    .requiredHeight(120.dp)
-                    .requiredWidth(220.dp)
-                    .align(Alignment.CenterHorizontally)
-                    .border(width = 1.dp, shape = ShapeDefaults.Small, color = Color.Gray)
-                    .padding(lateralPadding)
-                    .padding(top = 4.dp),
+                .requiredHeight(120.dp)
+                .requiredWidth(220.dp)
+                .align(Alignment.CenterHorizontally)
+                .border(width = 1.dp, shape = ShapeDefaults.Small, color = Color.Gray)
+                .padding(lateralPadding)
+                .padding(top = 4.dp),
                 contentAlignment = Alignment.Center
             ) {
                 FilledTonalButton(
@@ -194,6 +203,44 @@ fun NewEventScreen(paddingValues: PaddingValues, isInEditMode: Boolean, eventNam
                 ) {
                     Text(text = "Done")
                 }
+            }
+        }
+    }
+}
+
+fun onSubmit(
+    title: String?,
+    location: Location?,
+    date: Date?,
+    description: String?,
+    invitees: List<Relationship.RelationshipType>?,
+    dressCode: String?
+) {
+    if (title == null || (invitees != null && invitees.isEmpty())) {
+        /* TODO show error dialog */
+    } else {
+        /* TODO launch database insertion query */
+    }
+}
+
+@Composable
+fun onCancel(onQuit: () -> Unit) {
+    Dialog(onDismissRequest = { /*TODO*/ }) {
+        Text("Are you sure you want to quit this page? All your inputs will be lost.")
+        Row(
+            modifier = Modifier
+                .padding(end = 10.dp, bottom = 5.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            TextButton(
+                onClick = onQuit,
+                modifier = Modifier.padding(end = 10.dp)
+            ) {
+                Text(text = "Cancel")
+            }
+            TextButton(onClick = onQuit) {
+                Text(text = "Quit anyway")
             }
         }
     }
