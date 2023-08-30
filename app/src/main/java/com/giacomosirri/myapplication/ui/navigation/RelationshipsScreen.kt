@@ -14,11 +14,20 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.giacomosirri.myapplication.R
+import com.giacomosirri.myapplication.ui.AppContext
 
 @Composable
 fun RelationshipsScreen(paddingValues: PaddingValues) {
-    Scaffold(modifier = Modifier.padding(paddingValues)) {
-        LazyColumn {
+    Scaffold(
+        topBar = {
+            NavigationAppBar(
+                currentScreenName = AppContext.getContext()?.getString(R.string.relationships)!!,
+                hasSearchBar = true,
+                searchBarPlaceholder = "Search any user of this app"
+            )
+        }
+    ) {
+        LazyColumn(modifier = Modifier.padding(paddingValues)) {
             item { RelationshipListItem(username = "chiaaara", image = null, type = "Friend") }
             item { RelationshipListItem(username = "lukepasax", image = null, type = "Friend") }
             item { RelationshipListItem(username = "erzava", image = null, type = "Friend") }
