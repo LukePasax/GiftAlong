@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.net.Uri
-import androidx.annotation.NonNull
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.toggleable
@@ -19,13 +18,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat.startActivity
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.data.entity.Relationship
 import com.giacomosirri.myapplication.ui.AppContext
 import java.text.DateFormat
 import java.util.*
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +44,9 @@ fun NewEventScreen(
                 } else {
                     AppContext.getContext()?.getString(R.string.new_event)!!
                 },
-                hasSearchBar = false
+                hasSearchBar = false,
+                isLeadingIconMenu = false,
+                isLeadingIconBackArrow = false
             )
         }
     ) {
@@ -91,27 +92,27 @@ fun NewEventScreen(
                 }
             }
             // Date dialog
-            val openDialog = remember { mutableStateOf(false) }
+            val isDateDialogOpen = remember { mutableStateOf(false) }
             val datePickerState = rememberDatePickerState(initialSelectedDateMillis = Date().time)
             val confirmEnabled = derivedStateOf { datePickerState.selectedDateMillis != null }
-            if (openDialog.value) {
+            if (isDateDialogOpen.value) {
                 DatePickerDialog(
                     onDismissRequest = {
                         // Dismiss the dialog when the user clicks outside the dialog or on the back
                         // button. If you want to disable that functionality, simply use an empty
                         // onDismissRequest.
-                        openDialog.value = false
+                        isDateDialogOpen.value = false
                     },
                     confirmButton = {
                         TextButton(
-                            onClick = { openDialog.value = false },
+                            onClick = { isDateDialogOpen.value = false },
                             enabled = confirmEnabled.value
                         ) {
                             Text("OK")
                         }
                     },
                     dismissButton = {
-                        TextButton(onClick = { openDialog.value = false }) {
+                        TextButton(onClick = { isDateDialogOpen.value = false }) {
                             Text("Cancel")
                         }
                     }
@@ -130,7 +131,7 @@ fun NewEventScreen(
                     modifier = Modifier.padding(end = 8.dp),
                     text = DateFormat.getDateInstance().format(Date(datePickerState.selectedDateMillis!!))
                 )
-                FilledTonalButton(onClick = { openDialog.value = true }) {
+                FilledTonalButton(onClick = { isDateDialogOpen.value = true }) {
                     Icon(
                         modifier = Modifier.padding(end = 5.dp),
                         imageVector = Icons.Rounded.DateRange,
@@ -185,12 +186,16 @@ fun NewEventScreen(
                     .height(40.dp)
                     .fillMaxWidth()
             ) {
+                val isCancelDialogOpen = remember { mutableStateOf(false) }
+                if (isCancelDialogOpen.value) {
+                    CancelDialog(isCancelDialogOpen, onQuit)
+                }
                 Button(
                     modifier = Modifier
                         .fillMaxWidth(.5f)
                         .padding(end = 5.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red, contentColor = Color.White),
-                    onClick = { /*TODO*/ }
+                    onClick = { isCancelDialogOpen.value = true }
                 ) {
                     Text(text = "Cancel")
                 }
@@ -224,23 +229,31 @@ fun onSubmit(
 }
 
 @Composable
-fun onCancel(onQuit: () -> Unit) {
-    Dialog(onDismissRequest = { /*TODO*/ }) {
-        Text("Are you sure you want to quit this page? All your inputs will be lost.")
-        Row(
-            modifier = Modifier
-                .padding(end = 10.dp, bottom = 5.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
-        ) {
-            TextButton(
-                onClick = onQuit,
-                modifier = Modifier.padding(end = 10.dp)
-            ) {
-                Text(text = "Cancel")
-            }
-            TextButton(onClick = onQuit) {
-                Text(text = "Quit anyway")
+fun CancelDialog(isCancelDialogOpen: MutableState<Boolean>, onQuit: () -> Unit) {
+    Dialog(
+        onDismissRequest = { isCancelDialogOpen.value = false },
+        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
+    ) {
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.padding(start = 20.dp, top = 20.dp, end = 10.dp, bottom = 10.dp)) {
+                Text("Are you sure you want to quit this page? All your inputs will be lost.")
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(
+                        onClick = { isCancelDialogOpen.value = false },
+                        modifier = Modifier.padding(end = 10.dp)
+                    ) {
+                        Text(text = "Cancel")
+                    }
+                    TextButton(onClick = {
+                        isCancelDialogOpen.value = false
+                        onQuit.invoke()
+                    }) {
+                        Text(text = "Quit anyway")
+                    }
+                }
             }
         }
     }

@@ -238,7 +238,8 @@ fun NavigationAppBar(
     currentScreenName: String,
     hasSearchBar: Boolean,
     searchBarPlaceholder: String? = null,
-    isLeadingIconMenu: Boolean = false
+    isLeadingIconMenu: Boolean = false,
+    isLeadingIconBackArrow: Boolean = true
 ) {
     val navigation = Navigator.getNavigation()
     var query by remember { mutableStateOf("") }
@@ -300,7 +301,8 @@ fun NavigationAppBar(
                     IconButton(onClick = navIconStrategy.onMenuIcon) {
                         Icon(Icons.Filled.Menu, "Main menu icon")
                     }
-                } else {
+                }
+                if(isLeadingIconBackArrow) {
                     IconButton(onClick = navIconStrategy.onBackArrow) {
                         Icon(Icons.Filled.ArrowBack, "Go back icon")
                     }
