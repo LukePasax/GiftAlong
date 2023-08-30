@@ -77,7 +77,7 @@ fun WishlistItem(
     itemName: String,
     username: String,
     price: String?= null,
-    image: Int = R.drawable.landscape
+    image: Int = R.drawable.placeholder
 ) {
     val openDialog = remember { mutableStateOf(false) }
     val reserved = remember { mutableStateOf(false) }
@@ -172,7 +172,7 @@ fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: St
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
-                DialogImage(imageDescription = "Item Image", imageId = R.drawable.landscape)
+                DialogImage(imageDescription = "Item Image", imageId = R.drawable.placeholder)
                 DialogText(text = itemName)
                 DialogEntry(text = "Link: ", value = url)
                 DialogEntry(text = "Price Range: ", value = "10-20€")

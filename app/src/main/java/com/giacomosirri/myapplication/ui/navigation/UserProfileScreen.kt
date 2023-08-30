@@ -34,7 +34,7 @@ fun UserProfileScreen(paddingValues: PaddingValues, username: String, navControl
         TextButton(onClick = { navController.navigate(NavigationScreen.Wishlist.name + username) }) {
             Text(text = "See $username's wishlist")
         }
-        Image(painterResource(id = R.drawable.placeholder_foreground), contentDescription = "Profile picture", modifier = Modifier.size(100.dp))
+        Image(painterResource(id = R.drawable.placeholder), contentDescription = "Profile picture", modifier = Modifier.size(100.dp))
         Text(text = "Registered since 2023")
         Row(
             modifier = Modifier

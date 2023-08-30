@@ -43,7 +43,7 @@ fun RelationshipsScreen(searchedUsers: String) {
 @Composable
 fun RelationshipListItem(
     username: String,
-    image: Int = R.drawable.landscape,
+    image: Int = R.drawable.placeholder,
     relationshipType: String
 ) {
     val isDialogOpen = remember { mutableStateOf(false) }

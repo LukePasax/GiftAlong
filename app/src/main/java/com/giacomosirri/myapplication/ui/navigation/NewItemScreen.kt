@@ -54,7 +54,7 @@ fun NewItemScreen(paddingValues: PaddingValues) {
                     modifier = Modifier
                         .defaultMinSize(minHeight = 120.dp)
                         .padding(end = 20.dp),
-                    painter = painterResource(id = R.drawable.placeholder_foreground),
+                    painter = painterResource(id = R.drawable.placeholder),
                     contentDescription = "item image"
                 )
                 TextButton(onClick = { /*TODO*/ }) {

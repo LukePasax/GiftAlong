@@ -143,7 +143,7 @@ fun EventDialog(eventName: String, openDialog: MutableState<Boolean>) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
-                DialogImage(imageDescription = "Event Position", imageId = R.drawable.landscape)
+                DialogImage(imageDescription = "Event Position", imageId = R.drawable.placeholder)
                 DialogText(text = eventName)
                 if (username != AppContext.getCurrentUser()) {
                     DialogEntry(
