@@ -75,7 +75,7 @@ fun NewItemScreen(
                     contentDescription = "Item image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .requiredSize(width = 170.dp, height = 140.dp)
+                        .requiredSize(width = 165.dp, height = 140.dp)
                         .clip(RoundedCornerShape(5.dp))
                 )
                 FilledTonalButton(
@@ -87,7 +87,7 @@ fun NewItemScreen(
                         imageVector = ImageVector.vectorResource(R.drawable.round_camera_alt_24),
                         contentDescription = null
                     )
-                    Text("Select a date")
+                    Text("Select a photo")
                 }
             }
             // Link
