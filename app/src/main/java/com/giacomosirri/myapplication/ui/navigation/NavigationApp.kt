@@ -9,10 +9,12 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -147,7 +149,7 @@ private fun NavigationDrawer(content: @Composable () -> Unit) {
                         modifier = Modifier.padding(bottom = 6.dp, start = 6.dp, end = 6.dp)
                     )
                 }
-                Spacer(Modifier.fillMaxHeight(.85f))
+                Spacer(Modifier.fillMaxHeight(.57f))
                 var darkMode by remember { mutableStateOf(false) }
                 Row(
                     modifier = Modifier.padding(start = 20.dp, end = 25.dp),
@@ -156,6 +158,20 @@ private fun NavigationDrawer(content: @Composable () -> Unit) {
                     Text("Dark Mode")
                     Spacer(modifier = Modifier.fillMaxWidth(.8f))
                     Switch(checked = darkMode, onCheckedChange = { darkMode = it })
+                }
+                TextButton(
+                    modifier = Modifier.padding(horizontal = 10.dp),
+                    onClick = {},
+                    colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)
+                ) {
+                    Text(text = "Logout", fontSize = 16.sp)
+                }
+                TextButton(
+                    modifier = Modifier.padding(horizontal = 10.dp),
+                    onClick = {},
+                    colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)
+                ) {
+                    Text(text = "Delete Account", fontSize = 16.sp)
                 }
             }
         },
