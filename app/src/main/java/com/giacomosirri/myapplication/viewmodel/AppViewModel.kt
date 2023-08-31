@@ -9,6 +9,7 @@ import com.giacomosirri.myapplication.repository.EventRepository
 import com.giacomosirri.myapplication.repository.ItemRepository
 import com.giacomosirri.myapplication.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.*
@@ -38,12 +39,12 @@ class AppViewModel(
         }
     }
 
-    fun getEventsOfUser(username : String): Flow<Map<Event, Relationship.RelationshipType>> {
+    fun getEventsOfUser(username : String): Flow<Set<Event>> {
         val potentialEvents = eventRepository.getPotentialEventsOfUser(username)
-        return potentialEvents.map { events ->
-            events.filter {
-                isInvitedToEvent(it.value, it.key)
-            }
+        return potentialEvents.map { map ->
+            map.filter { (event, type) ->
+                isInvitedToEvent(type, event)
+            }.keys
         }
     }
 
