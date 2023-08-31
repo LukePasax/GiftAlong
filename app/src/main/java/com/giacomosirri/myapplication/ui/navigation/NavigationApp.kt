@@ -24,6 +24,7 @@ import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Background
 import com.giacomosirri.myapplication.ui.theme.Primary
 import com.giacomosirri.myapplication.ui.theme.Typography
+import com.giacomosirri.myapplication.viewmodel.AppViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -56,7 +57,11 @@ class Navigator private constructor() {
 class LeadingNavigationIconStrategy(val onBackArrow: () -> Unit, val onMenuIcon: () -> Unit)
 
 @Composable
-fun NavigationApp(navController: NavHostController = rememberNavController(), paddingValues: PaddingValues) {
+fun NavigationApp(
+    navController: NavHostController = rememberNavController(),
+    paddingValues: PaddingValues,
+    viewModel: AppViewModel
+) {
     Navigator.setNavigation(Navigation(
         navController = navController,
         drawerState = rememberDrawerState(DrawerValue.Closed),
@@ -216,15 +221,19 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
                 isInEditMode = false
             )
         }
-        composable(NavigationScreen.UserProfile.name) {
+        composable(NavigationScreen.UserProfile.name + "{username}") {
+            val username = it.arguments?.getString("username") ?: AppContext.getCurrentUser()
             UserProfileScreen(
                 paddingValues = paddingValues,
-                username = AppContext.getCurrentUser(),
+                username = username,
                 navController = navController
             )
         }
         composable(NavigationScreen.Relationships.name) {
-            RelationshipsScreen(paddingValues)
+            RelationshipsScreen(
+                paddingValues = paddingValues,
+                navController = navController
+            )
         }
         composable(NavigationScreen.DataCenter.name) {
             DataCenterScreen(paddingValues)

@@ -4,12 +4,16 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.giacomosirri.myapplication.GiftAlong
 import com.giacomosirri.myapplication.ui.navigation.NavigationApp
 import com.giacomosirri.myapplication.ui.theme.MyApplicationTheme
+import com.giacomosirri.myapplication.viewmodel.AppViewModel
+import com.giacomosirri.myapplication.viewmodel.AppViewModelFactory
 import java.lang.ref.WeakReference
 
 class AppContext private constructor() {
@@ -34,6 +38,10 @@ class AppContext private constructor() {
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModel by viewModels<AppViewModel> {
+            val app = application as GiftAlong
+            AppViewModelFactory(app.eventRepository, app.itemRepository, app.userRepository)
+        }
         AppContext.setContext(applicationContext)
         setContent {
             MyApplicationTheme {
@@ -41,7 +49,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    NavigationApp(paddingValues = PaddingValues(top = 70.dp))
+                    NavigationApp(
+                        paddingValues = PaddingValues(top = 70.dp),
+                        viewModel = viewModel
+                    )
                 }
             }
         }
