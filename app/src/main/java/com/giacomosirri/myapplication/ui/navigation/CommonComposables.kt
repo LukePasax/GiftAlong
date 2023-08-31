@@ -3,6 +3,7 @@ package com.giacomosirri.myapplication.ui.navigation
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DateRange
@@ -14,10 +15,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -209,5 +212,68 @@ fun DateDialog(
             )
             Text(buttonText)
         }
+    }
+}
+
+@Composable
+fun FormButtons(
+    paddingValues: PaddingValues,
+    onSubmitClick: () -> Unit,
+    onCancelClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .padding(paddingValues)
+            .height(45.dp)
+            .fillMaxWidth()
+    ) {
+        val isCancelDialogOpen = remember { mutableStateOf(false) }
+        if (isCancelDialogOpen.value) {
+            CancelDialog(isCancelDialogOpen, onCancelClick)
+        }
+        Button(
+            modifier = Modifier
+                .fillMaxWidth(.5f)
+                .padding(end = 5.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Red, contentColor = Color.White),
+            onClick = { isCancelDialogOpen.value = true }
+        ) {
+            Text(text = "Cancel")
+        }
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 5.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Blue, contentColor = Color.White),
+            onClick = onSubmitClick
+        ) {
+            Text(text = "Done")
+        }
+    }
+}
+
+@Composable
+fun CheckboxItem(text: String, paddingValues: PaddingValues) {
+    val (checkedState, onStateChange) = remember { mutableStateOf(false) }
+    Row(
+        modifier = Modifier
+            .defaultMinSize(minWidth = 80.dp)
+            .padding(paddingValues)
+            .toggleable(
+                value = checkedState,
+                onValueChange = { onStateChange(!checkedState) },
+                role = Role.Checkbox
+            ),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            checked = checkedState,
+            onCheckedChange = null
+        )
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(start = 8.dp)
+        )
     }
 }
