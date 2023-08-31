@@ -1,15 +1,12 @@
 package com.giacomosirri.myapplication.viewmodel
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.giacomosirri.myapplication.data.entity.Event
 import com.giacomosirri.myapplication.data.entity.Relationship
 import com.giacomosirri.myapplication.repository.EventRepository
 import com.giacomosirri.myapplication.repository.ItemRepository
 import com.giacomosirri.myapplication.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.*
@@ -52,12 +49,15 @@ class AppViewModel(
         userRepository.insertUser(username, password, name, surname, birthday)
     }
 
-    fun loginUser(username: String, password: String) = viewModelScope.launch {
-        userRepository.getUser(username, password)
+    fun loginUser(username: String, password: String): LiveData<Boolean> {
+        val result = MutableLiveData<Boolean>()
+        viewModelScope.launch {
+            result.postValue(userRepository.getUser(username, password))
+        }
+        return result
     }
 
     fun getItemsOfUser(username: String) = itemRepository.getItemsOfUser(username)
-
 
     fun addItem(name : String, description : String? = null, url : String? = null, image : String? = null, priceL : Double? = null, priceU : Double? = null, listedBy : String) = viewModelScope.launch {
         itemRepository.insertItem(name, description, url, image, priceL, priceU, listedBy)
