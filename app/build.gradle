@@ -47,11 +47,6 @@ android {
 }
 
 dependencies {
-    configurations {
-        all {
-            exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
-        }
-    }
     def compose_version = "1.2.0"
     def room_version = "2.5.1"
     def nav_version = "2.5.3"
