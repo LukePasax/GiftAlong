@@ -8,6 +8,7 @@ import com.giacomosirri.myapplication.repository.EventRepository
 import com.giacomosirri.myapplication.repository.ItemRepository
 import com.giacomosirri.myapplication.repository.UserRepository
 import kotlinx.coroutines.launch
+import java.util.*
 
 class AppViewModel(
     private val eventRepository: EventRepository,
@@ -26,6 +27,14 @@ class AppViewModel(
 
     fun clearItems() = viewModelScope.launch {
         eventRepository.deleteAllItems()
+    }
+
+    fun registerUser(username: String, password: String, name: String, surname: String, birthday: Date) = viewModelScope.launch {
+        userRepository.insertUser(username, password, name, surname, birthday)
+    }
+
+    fun loginUser(username: String, password: String) = viewModelScope.launch {
+        userRepository.getUser(username, password)
     }
 }
 
