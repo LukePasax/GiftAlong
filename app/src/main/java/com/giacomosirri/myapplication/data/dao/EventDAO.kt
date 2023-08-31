@@ -10,9 +10,15 @@ interface EventDAO {
     @Query("SELECT * FROM events")
     fun getEvents(): Flow<List<Event>>
 
+    @MapInfo(
+        keyColumn = "id",
+        keyTable = "events",
+        valueColumn = "type",
+        valueTable = "relationships"
+    )
     @Query("SELECT events.*, relationships.type FROM users " +
-            "JOIN relationships ON users.username = relationships.followed" +
-            "JOIN events ON relationships.follower = events.organizer" +
+            "JOIN relationships ON users.username = relationships.followed " +
+            "JOIN events ON relationships.follower = events.organizer " +
             "WHERE users.username = :username")
     fun getPotentialEventsOfUser(username : String) : Flow<Map<Event,Relationship.RelationshipType>>
 
