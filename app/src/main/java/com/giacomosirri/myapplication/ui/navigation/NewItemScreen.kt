@@ -1,18 +1,14 @@
 package com.giacomosirri.myapplication.ui.navigation
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -65,31 +61,7 @@ fun NewItemScreen(
                 label = { Text("Title *") }
             )
             // Photo
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painterResource(id = R.drawable.placeholder),
-                    contentDescription = "Item image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .requiredSize(width = 165.dp, height = 140.dp)
-                        .clip(RoundedCornerShape(5.dp))
-                )
-                FilledTonalButton(
-                    modifier = Modifier.padding(start = 15.dp),
-                    onClick = { /* TODO select an image from the gallery */ }
-                ) {
-                    Icon(
-                        modifier = Modifier.padding(end = 5.dp),
-                        imageVector = ImageVector.vectorResource(R.drawable.round_camera_alt_24),
-                        contentDescription = null
-                    )
-                    Text("Select a photo")
-                }
-            }
+            PhotoSelector()
             // Link
             OutlinedTextField(
                 modifier = Modifier

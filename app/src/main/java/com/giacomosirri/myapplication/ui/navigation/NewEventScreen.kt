@@ -8,7 +8,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,10 +25,8 @@ import com.giacomosirri.myapplication.data.entity.Relationship
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Error
 import com.giacomosirri.myapplication.ui.theme.ErrorBackground
-import java.text.DateFormat
 import java.util.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewEventScreen(
     paddingValues: PaddingValues,
@@ -95,54 +92,7 @@ fun NewEventScreen(
                 }
             }
             // Date dialog
-            val isDateDialogOpen = remember { mutableStateOf(false) }
-            val datePickerState = rememberDatePickerState(initialSelectedDateMillis = Date().time)
-            val confirmEnabled = derivedStateOf { datePickerState.selectedDateMillis != null }
-            if (isDateDialogOpen.value) {
-                DatePickerDialog(
-                    onDismissRequest = {
-                        // Dismiss the dialog when the user clicks outside the dialog or on the back
-                        // button. If you want to disable that functionality, simply use an empty
-                        // onDismissRequest.
-                        isDateDialogOpen.value = false
-                    },
-                    confirmButton = {
-                        TextButton(
-                            onClick = { isDateDialogOpen.value = false },
-                            enabled = confirmEnabled.value
-                        ) {
-                            Text("OK")
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = { isDateDialogOpen.value = false }) {
-                            Text("Cancel")
-                        }
-                    }
-                ) {
-                    DatePicker(state = datePickerState)
-                }
-            }
-            // Date picker
-            Row(
-                modifier = Modifier
-                    .padding(lateralPadding)
-                    .align(Alignment.CenterHorizontally),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    modifier = Modifier.padding(end = 8.dp),
-                    text = DateFormat.getDateInstance().format(Date(datePickerState.selectedDateMillis!!))
-                )
-                FilledTonalButton(onClick = { isDateDialogOpen.value = true }) {
-                    Icon(
-                        modifier = Modifier.padding(end = 5.dp),
-                        imageVector = Icons.Rounded.DateRange,
-                        contentDescription = null
-                    )
-                    Text("Select a date *")
-                }
-            }
+            DateDialog(paddingValues = lateralPadding, buttonText = "Select a date *")
             // Description
             OutlinedTextField(
                 modifier = Modifier
