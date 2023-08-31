@@ -220,7 +220,10 @@ fun DateDialog(
 fun CancelDialog(
     isCancelDialogOpen: MutableState<Boolean>,
     quitOptionExists: Boolean = true,
-    onQuit: (() -> Unit)? = null
+    onQuit: (() -> Unit)? = null,
+    mainText: String,
+    quitText: String? = null,
+    stayText: String
 ) {
     Dialog(
         onDismissRequest = { isCancelDialogOpen.value = false },
@@ -234,7 +237,7 @@ fun CancelDialog(
             colors = CardDefaults.cardColors(containerColor = ErrorBackground)
         ) {
             Column(modifier = Modifier.padding(start = 20.dp, top = 20.dp, end = 10.dp, bottom = 10.dp)) {
-                Text("Are you sure you want to quit? All your inputs will be lost.")
+                Text(mainText)
                 Spacer(modifier = Modifier.height(12.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -244,7 +247,7 @@ fun CancelDialog(
                         onClick = { isCancelDialogOpen.value = false },
                         modifier = Modifier.padding(end = 10.dp)
                     ) {
-                        Text(text = "Cancel", color = Error)
+                        Text(text = stayText, color = Error)
                     }
                     if (quitOptionExists) {
                         TextButton(
@@ -254,7 +257,8 @@ fun CancelDialog(
                                 onQuit!!.invoke()
                             }
                         ) {
-                            Text(text = "Quit anyway", color = Error)
+                            // if quitOptionExists is true, quitText cannot be null
+                            Text(text = quitText!!, color = Error)
                         }
                     }
                 }
@@ -277,7 +281,13 @@ fun FormButtons(
     ) {
         val isCancelDialogOpen = remember { mutableStateOf(false) }
         if (isCancelDialogOpen.value) {
-            CancelDialog(isCancelDialogOpen = isCancelDialogOpen, onQuit = onCancelClick)
+            CancelDialog(
+                isCancelDialogOpen = isCancelDialogOpen,
+                onQuit = onCancelClick,
+                mainText = "Are you sure you want to quit? All your inputs will be lost.",
+                quitText = "Quit anyway",
+                stayText = "Cancel"
+            )
         }
         Button(
             modifier = Modifier

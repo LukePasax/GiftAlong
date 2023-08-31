@@ -24,15 +24,18 @@ import androidx.compose.ui.unit.sp
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Primary
 import com.giacomosirri.myapplication.ui.theme.Typography
+import com.giacomosirri.myapplication.viewmodel.AppViewModel
 
 @Composable
 fun LoginScreen(
+    viewModel: AppViewModel,
     onLoginClick: () -> Unit,
     onRegisterClick: (Int) -> Unit
 ) {
     val username = remember { mutableStateOf(TextFieldValue()) }
     val password = remember { mutableStateOf(TextFieldValue()) }
     var passwordHidden by remember { mutableStateOf(true) }
+    var isErrorDialogOpen = remember { mutableStateOf(false) }
     Box(modifier = Modifier.fillMaxSize()) {
         ClickableText(
             text = AnnotatedString("Don't have an account yet? Register now!"),
@@ -83,8 +86,13 @@ fun LoginScreen(
         Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
             Button(
                 onClick = {
-                    AppContext.setCurrentUser(username.value.text)
-                    onLoginClick.invoke()
+                    // Check whether the user actually exists
+                    if (checkLoggedUserExistence(viewModel, username.value.text, password.value.text)) {
+                        AppContext.setCurrentUser(username.value.text)
+                        onLoginClick.invoke()
+                    } else {
+                        isErrorDialogOpen.value = true
+                    }
                 },
                 shape = RoundedCornerShape(50.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Primary),
@@ -95,5 +103,17 @@ fun LoginScreen(
                 Text(text = "Login")
             }
         }
+        if (isErrorDialogOpen.value) {
+            CancelDialog(
+                isCancelDialogOpen = isErrorDialogOpen,
+                quitOptionExists = false,
+                mainText = "Username or password are incorrect.",
+                stayText = "Try again"
+            )
+        }
     }
+}
+
+fun checkLoggedUserExistence(viewModel: AppViewModel, username: String, password: String): Boolean {
+    return viewModel.loginUser(username, password).value ?: false
 }

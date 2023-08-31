@@ -194,6 +194,7 @@ fun NavigationGraph(
         }
         composable(NavigationScreen.Login.name) {
             LoginScreen(
+                viewModel = viewModel,
                 onLoginClick = { navController.navigate(NavigationScreen.Home.name) },
                 onRegisterClick = { navController.navigate(NavigationScreen.Registration.name) }
             )
