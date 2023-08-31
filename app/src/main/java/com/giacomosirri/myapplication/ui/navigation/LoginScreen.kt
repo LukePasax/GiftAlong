@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
@@ -32,15 +32,15 @@ fun LoginScreen(
     val password = remember { mutableStateOf(TextFieldValue()) }
     Box(modifier = Modifier.fillMaxSize()) {
         ClickableText(
-            text = AnnotatedString("Sign up here"),
+            text = AnnotatedString("Don't have an account yet? Register now!"),
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(20.dp),
+                .padding(bottom = 60.dp),
             onClick = onRegisterClick,
             style = TextStyle(
-                fontSize = 14.sp,
-                fontFamily = FontFamily.Default,
+                fontSize = 16.sp,
                 textDecoration = TextDecoration.Underline,
+                fontWeight = FontWeight.Bold,
                 color = Primary
             )
         )
@@ -81,14 +81,5 @@ fun LoginScreen(
                 Text(text = "Login")
             }
         }
-        Spacer(modifier = Modifier.height(20.dp))
-        ClickableText(
-            text = AnnotatedString("Forgot password?"),
-            onClick = { },
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontFamily = FontFamily.Default
-            )
-        )
     }
 }

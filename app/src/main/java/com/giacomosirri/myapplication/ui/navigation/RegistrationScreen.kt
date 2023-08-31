@@ -40,9 +40,9 @@ fun RegistrationScreen(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(top = 8.dp)
+                .padding(top = 10.dp)
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(32.dp),
+            verticalArrangement = Arrangement.spacedBy(25.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             var username by remember { mutableStateOf("") }
@@ -50,6 +50,26 @@ fun RegistrationScreen(
             var name by remember { mutableStateOf("") }
             var surname by remember { mutableStateOf("") }
             var passwordHidden by remember { mutableStateOf(true) }
+            // Name
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(lateralPadding)
+                    .fillMaxWidth(),
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("First name *") }
+            )
+            // Surname
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(lateralPadding)
+                    .fillMaxWidth(),
+                value = surname,
+                onValueChange = { surname = it },
+                label = { Text("Surname *") }
+            )
+            // Photo
+            PhotoSelector()
             // Username
             OutlinedTextField(
                 modifier = Modifier
@@ -69,7 +89,7 @@ fun RegistrationScreen(
                 singleLine = true,
                 label = { Text("Password *") },
                 visualTransformation =
-                    if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
+                if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 trailingIcon = {
                     IconButton(onClick = { passwordHidden = !passwordHidden }) {
@@ -80,32 +100,6 @@ fun RegistrationScreen(
                     }
                 }
             )
-            // Photo
-            PhotoSelector()
-            Row(
-                modifier = Modifier
-                    .padding(lateralPadding)
-                    .fillMaxWidth(),
-            ) {
-                // Name
-                OutlinedTextField(
-                    modifier = Modifier
-                        .padding(end = 5.dp)
-                        .fillMaxWidth(.5f),
-                    value = name,
-                    onValueChange = { name = it },
-                    label = { Text("First name *") }
-                )
-                // Surname
-                OutlinedTextField(
-                    modifier = Modifier
-                        .padding(start = 5.dp)
-                        .fillMaxWidth(),
-                    value = surname,
-                    onValueChange = { surname = it },
-                    label = { Text("Surname *") }
-                )
-            }
             // Date dialog
             val datePickerState = rememberDatePickerState(initialSelectedDateMillis = Date().time)
             DateDialog(
@@ -115,7 +109,7 @@ fun RegistrationScreen(
             )
             // Register button
             Button(
-                modifier = Modifier.padding(lateralPadding).padding(top = 60.dp).fillMaxWidth(),
+                modifier = Modifier.padding(lateralPadding).padding(top = 12.dp).fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue, contentColor = Color.White),
                 onClick = {
                     viewModel.registerUser(username, password, name, surname, Date(datePickerState.selectedDateMillis!!))
