@@ -17,9 +17,9 @@ data class Item(
     val priceLowerBound: Double,
     @ColumnInfo("price_upper")
     val priceUpperBound: Double,
-    @ColumnInfo("reserved_by_user")
+    @ColumnInfo("reserved_by")
     val reservedBy: String,
-    @ColumnInfo("listed_by_user")
+    @ColumnInfo("listed_by")
     val listedBy: String
 ) {
     @PrimaryKey(autoGenerate = true)
