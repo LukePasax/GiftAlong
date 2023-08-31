@@ -1,6 +1,5 @@
 package com.giacomosirri.myapplication.data.entity
 
-import android.media.Image
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey

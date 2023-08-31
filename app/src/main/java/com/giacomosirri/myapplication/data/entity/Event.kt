@@ -1,6 +1,5 @@
 package com.giacomosirri.myapplication.data.entity
 
-import android.location.Location
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -17,8 +16,8 @@ data class Event(
     val friendsAllowed: Boolean,
     @ColumnInfo("family_allowed")
     val familyAllowed: Boolean,
-    @ColumnInfo("partner_allowed")
-    val partnerAllowed: Boolean,
+    @ColumnInfo("partners_allowed")
+    val partnersAllowed: Boolean,
     @ColumnInfo("colleagues_allowed")
     val colleaguesAllowed: Boolean,
 ) {
