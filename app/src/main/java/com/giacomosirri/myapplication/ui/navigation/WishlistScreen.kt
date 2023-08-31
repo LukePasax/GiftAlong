@@ -1,7 +1,6 @@
 package com.giacomosirri.myapplication.ui.navigation
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -25,13 +24,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.giacomosirri.myapplication.ui.AppContext
-import com.giacomosirri.myapplication.ui.theme.Primary
 import com.giacomosirri.myapplication.ui.theme.Secondary
 
 @Composable
@@ -152,34 +149,33 @@ fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: St
         onDismissRequest = { openDialog.value = false },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
     ) {
-        Card(
-            modifier = Modifier.heightIn(max = 600.dp, min = 300.dp),
-            border = BorderStroke(1.dp, Primary),
-            shape = MaterialTheme.shapes.medium,
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 10.dp,
-                pressedElevation = 10.dp,
-                disabledElevation = 10.dp,
-                draggedElevation = 10.dp,
-                focusedElevation = 10.dp,
-                hoveredElevation = 10.dp
-            ),
-            colors = CardDefaults.cardColors(
-                containerColor = Secondary
-            )
+        DialogCard(
+            minHeight = 300.dp,
+            maxHeight = 600.dp,
+            elevations = 10.dp,
+            colors = CardDefaults.cardColors(containerColor = Secondary)
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
+                val entryPaddingValues = PaddingValues(horizontal = 15.dp, vertical = 10.dp)
                 DialogImage(imageDescription = "Item Image", imageId = R.drawable.placeholder)
-                DialogText(text = itemName)
-                DialogEntry(text = "Link: ", value = url)
-                DialogEntry(text = "Price Range: ", value = "10-20€")
-                DialogEntry(text = "Description", value = description)
-                }
+                DialogTitle(paddingValues = entryPaddingValues, text = itemName)
+                DialogEntry(paddingValues = entryPaddingValues, text = "Link: ", value = url)
+                DialogEntry(
+                    paddingValues = entryPaddingValues,
+                    text = "Price Range: ",
+                    value = "10-20€"
+                )
+                DialogEntry(
+                    paddingValues = entryPaddingValues,
+                    text = "Description",
+                    value = description
+                )
                 if (username != AppContext.getCurrentUser()) {
                     DialogEntry(
+                        paddingValues = entryPaddingValues,
                         text = "Reserved by: ",
                         value = {
                             TextButton(
@@ -190,9 +186,10 @@ fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: St
                         }
                     )
                     DialogEntry(
+                        paddingValues = entryPaddingValues,
                         composable1 = {
                             Button(
-                                onClick = {reserved.value = !reserved.value},
+                                onClick = { reserved.value = !reserved.value },
                                 enabled = !bought.value,
                                 modifier = Modifier
                                     .size(110.dp, 50.dp)
@@ -212,6 +209,7 @@ fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: St
                         }
                     )
                 }
+            }
         }
     }
 }

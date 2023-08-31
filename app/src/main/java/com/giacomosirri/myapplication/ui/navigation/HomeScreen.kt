@@ -1,7 +1,6 @@
 package com.giacomosirri.myapplication.ui.navigation
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,9 +21,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.giacomosirri.myapplication.R
@@ -66,7 +62,6 @@ fun HomeScreen(searchedEvents: String) {
         }
     }
 }
-
 
 @Composable
 fun DayCard(date: String, events: List<String>) {
@@ -122,31 +117,22 @@ fun EventDialog(eventName: String, openDialog: MutableState<Boolean>) {
         onDismissRequest = { openDialog.value = false },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
     ) {
-        Card(
-            modifier = Modifier
-                .heightIn(max = 600.dp, min = 300.dp),
-            border = BorderStroke(1.dp, Primary),
-            shape = MaterialTheme.shapes.medium,
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 10.dp,
-                pressedElevation = 10.dp,
-                disabledElevation = 10.dp,
-                draggedElevation = 10.dp,
-                focusedElevation = 10.dp,
-                hoveredElevation = 10.dp
-            ),
-            colors = CardDefaults.cardColors(
-                containerColor = Secondary
-            )
+        DialogCard(
+            minHeight = 300.dp,
+            maxHeight = 600.dp,
+            elevations = 10.dp,
+            colors = CardDefaults.cardColors(containerColor = Secondary)
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
+                val entryPaddingValues = PaddingValues(horizontal = 15.dp, vertical = 10.dp)
                 DialogImage(imageDescription = "Event Position", imageId = R.drawable.placeholder)
-                DialogText(text = eventName)
+                DialogTitle(paddingValues = entryPaddingValues, text = eventName)
                 if (username != AppContext.getCurrentUser()) {
                     DialogEntry(
+                        paddingValues = entryPaddingValues,
                         text = "Organizer: ",
                         value = {
                             TextButton(
@@ -156,24 +142,23 @@ fun EventDialog(eventName: String, openDialog: MutableState<Boolean>) {
                             }
                         })
                 }
-                DialogEntry(text = "Date: ", value = date)
-                DialogEntry(text = "Description: ", value = description)
-                DialogEntry(text = "Dress Code: ", value = dressCode)
+                DialogEntry(paddingValues = entryPaddingValues, text = "Date: ", value = date)
+                DialogEntry(paddingValues = entryPaddingValues, text = "Description: ", value = description)
+                DialogEntry(paddingValues = entryPaddingValues, text = "Dress Code: ", value = dressCode)
                 if (username == AppContext.getCurrentUser()) {
                     DialogEntry(
+                        paddingValues = entryPaddingValues,
                         composable1 = {
                             OutlinedButton(
                                 onClick = { /*TODO*/ },
-                                modifier = Modifier
-                                    .size(145.dp, 50.dp)) {
+                                modifier = Modifier.size(140.dp, 50.dp)) {
                                 Text(text = "Edit Event")
                             }
                         },
                         composable2 = {
                             Button(
                                 onClick = { /*TODO*/ },
-                                modifier = Modifier
-                                    .size(145.dp, 50.dp)) {
+                                modifier = Modifier.size(140.dp, 50.dp)) {
                                 Text(text = "Delete Event")
                             }
                         }
