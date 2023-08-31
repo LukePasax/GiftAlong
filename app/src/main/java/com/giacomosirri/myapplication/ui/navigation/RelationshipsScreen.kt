@@ -1,6 +1,7 @@
 package com.giacomosirri.myapplication.ui.navigation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,11 +15,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 
 @Composable
-fun RelationshipsScreen(paddingValues: PaddingValues) {
+fun RelationshipsScreen(
+    paddingValues: PaddingValues,
+    navController: NavController
+) {
     Scaffold(
         topBar = {
             NavigationAppBar(
@@ -29,9 +34,27 @@ fun RelationshipsScreen(paddingValues: PaddingValues) {
         }
     ) {
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
-            item { RelationshipListItem(username = "chiaaara", relationshipType = "Friend") }
-            item { RelationshipListItem(username = "lukepasax", relationshipType = "None") }
-            item { RelationshipListItem(username = "erzava", relationshipType = "Friend") }
+            item {
+                RelationshipListItem(
+                    username = "chiaaara",
+                    relationshipType = "Friend",
+                    navController = navController
+                )
+            }
+            item {
+                RelationshipListItem(
+                    username = "lukepasax",
+                    relationshipType = "None",
+                    navController = navController
+                )
+            }
+            item {
+                RelationshipListItem(
+                    username = "erzava",
+                    relationshipType = "Friend",
+                    navController = navController
+                )
+            }
         }
     }
 }
@@ -44,7 +67,8 @@ fun RelationshipsScreen(searchedUsers: String) {
 fun RelationshipListItem(
     username: String,
     image: Int = R.drawable.placeholder,
-    relationshipType: String
+    relationshipType: String,
+    navController: NavController
 ) {
     val isDialogOpen = remember { mutableStateOf(false) }
     val relationshipTypes = listOf("Friend", "Family", "Partner", "Colleague", "None")
@@ -56,7 +80,10 @@ fun RelationshipListItem(
         ListItem(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(90.dp),
+                .height(90.dp)
+                .clickable {
+                    navController.navigate(NavigationScreen.UserProfile.name + username)
+                },
             headlineContent = {
                 Text(
                     text = username,
