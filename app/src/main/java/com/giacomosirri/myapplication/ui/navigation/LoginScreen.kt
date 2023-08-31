@@ -25,7 +25,8 @@ import com.giacomosirri.myapplication.ui.theme.Typography
 
 @Composable
 fun LoginScreen(
-    onLoginClick: () -> Unit
+    onLoginClick: () -> Unit,
+    onRegisterClick: (Int) -> Unit
 ) {
     val username = remember { mutableStateOf(TextFieldValue()) }
     val password = remember { mutableStateOf(TextFieldValue()) }
@@ -35,7 +36,7 @@ fun LoginScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(20.dp),
-            onClick = { },
+            onClick = onRegisterClick,
             style = TextStyle(
                 fontSize = 14.sp,
                 fontFamily = FontFamily.Default,

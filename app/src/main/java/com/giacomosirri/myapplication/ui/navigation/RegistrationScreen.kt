@@ -23,7 +23,8 @@ import java.util.*
 @Composable
 fun RegistrationScreen(
     paddingValues: PaddingValues,
-    viewModel: AppViewModel
+    viewModel: AppViewModel,
+    onRegisterClick: () -> Unit
 ) {
     val lateralPadding = PaddingValues(horizontal = 20.dp)
     Scaffold(
@@ -116,7 +117,11 @@ fun RegistrationScreen(
             Button(
                 modifier = Modifier.padding(lateralPadding).padding(top = 60.dp).fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue, contentColor = Color.White),
-                onClick = { viewModel.registerUser(username, password, name, surname, Date(datePickerState.selectedDateMillis!!)) }
+                onClick = {
+                    viewModel.registerUser(username, password, name, surname, Date(datePickerState.selectedDateMillis!!))
+                    AppContext.setCurrentUser(username)
+                    onRegisterClick.invoke()
+                }
             ) {
                 Text(text = "Register")
             }

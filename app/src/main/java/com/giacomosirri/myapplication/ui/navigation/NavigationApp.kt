@@ -183,17 +183,19 @@ fun NavigationGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavigationScreen.Registration.name,
+        startDestination = NavigationScreen.Login.name,
     ) {
         composable(NavigationScreen.Registration.name) {
             RegistrationScreen(
                 paddingValues = paddingValues,
-                viewModel = viewModel
+                viewModel = viewModel,
+                onRegisterClick = { navController.navigate(NavigationScreen.Home.name) }
             )
         }
         composable(NavigationScreen.Login.name) {
             LoginScreen(
-                onLoginClick = { navController.navigate(NavigationScreen.Home.name) }
+                onLoginClick = { navController.navigate(NavigationScreen.Home.name) },
+                onRegisterClick = { navController.navigate(NavigationScreen.Registration.name) }
             )
         }
         composable(NavigationScreen.Home.name) {
