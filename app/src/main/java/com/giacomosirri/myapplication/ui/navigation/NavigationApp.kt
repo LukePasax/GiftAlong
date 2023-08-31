@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -37,6 +36,7 @@ sealed class NavigationScreen(val name: String) {
     object Relationships: NavigationScreen(AppContext.getContext()?.getString(R.string.relationships)!!)
     object DataCenter: NavigationScreen(AppContext.getContext()?.getString(R.string.data_center)!!)
     object Login: NavigationScreen(AppContext.getContext()?.getString(R.string.login)!!)
+    object Registration: NavigationScreen(AppContext.getContext()?.getString(R.string.registration)!!)
 }
 
 class Navigation(
@@ -179,8 +179,13 @@ fun navigateFromDrawer(menuItem: String?, navController: NavHostController) {
 fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValues) {
     NavHost(
         navController = navController,
-        startDestination = NavigationScreen.Login.name,
+        startDestination = NavigationScreen.Registration.name,
     ) {
+        composable(NavigationScreen.Registration.name) {
+            RegistrationScreen(
+                paddingValues = paddingValues
+            )
+        }
         composable(NavigationScreen.Login.name) {
             LoginScreen(
                 onLoginClick = { navController.navigate(NavigationScreen.Home.name) }
