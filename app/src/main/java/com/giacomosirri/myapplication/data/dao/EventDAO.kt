@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface EventDAO {
-    @Query("")
+    @Query("SELECT * FROM events")
     fun getEvents(): Flow<List<Event>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -15,6 +15,6 @@ interface EventDAO {
     @Delete
     suspend fun delete(event: Event)
 
-    @Query("")
+    @Query("DELETE FROM events")
     suspend fun deleteAll()
 }
