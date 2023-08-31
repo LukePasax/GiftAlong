@@ -2,18 +2,31 @@ package com.giacomosirri.myapplication.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import javax.inject.Inject
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.giacomosirri.myapplication.data.entity.Event
+import androidx.lifecycle.viewModelScope
 import com.giacomosirri.myapplication.repository.EventRepository
 import com.giacomosirri.myapplication.repository.ItemRepository
 import com.giacomosirri.myapplication.repository.UserRepository
+import kotlinx.coroutines.launch
 
-@HiltViewModel
-class AppViewModel @Inject constructor(
-    eventRepository: EventRepository,
-    itemRepository: ItemRepository,
-    userRepository: UserRepository
+class AppViewModel(
+    private val eventRepository: EventRepository,
+    private val itemRepository: ItemRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
+    val allItems = eventRepository.allItems
+
+    fun addEvent(event: Event) = viewModelScope.launch {
+        eventRepository.insertEvent(event)
+    }
+
+    fun removeEvent(event: Event) = viewModelScope.launch {
+        eventRepository.deleteEvent(event)
+    }
+
+    fun clearItems() = viewModelScope.launch {
+        eventRepository.deleteAllItems()
+    }
 }
 
 class AppViewModelFactory(
