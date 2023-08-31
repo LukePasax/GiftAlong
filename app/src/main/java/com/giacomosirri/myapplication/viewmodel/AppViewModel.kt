@@ -2,13 +2,17 @@ package com.giacomosirri.myapplication.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.giacomosirri.myapplication.data.entity.Event
 import androidx.lifecycle.viewModelScope
+import com.giacomosirri.myapplication.data.entity.Event
+import com.giacomosirri.myapplication.data.entity.Relationship
 import com.giacomosirri.myapplication.repository.EventRepository
 import com.giacomosirri.myapplication.repository.ItemRepository
 import com.giacomosirri.myapplication.repository.UserRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.*
+
 
 class AppViewModel(
     private val eventRepository: EventRepository,
@@ -25,8 +29,22 @@ class AppViewModel(
         eventRepository.deleteEvent(event)
     }
 
-    fun clearItems() = viewModelScope.launch {
-        eventRepository.deleteAllItems()
+    private fun isInvitedToEvent(type : Relationship.RelationshipType, event : Event) : Boolean {
+        return when(type) {
+            Relationship.RelationshipType.FRIEND -> event.friendsAllowed
+            Relationship.RelationshipType.FAMILY -> event.familyAllowed
+            Relationship.RelationshipType.PARTNER -> event.partnersAllowed
+            Relationship.RelationshipType.COLLEAGUE -> event.colleaguesAllowed
+        }
+    }
+
+    fun getEventsOfUser(username : String): Flow<Map<Event, Relationship.RelationshipType>> {
+        val potentialEvents = eventRepository.getPotentialEventsOfUser(username)
+        return potentialEvents.map { events ->
+            events.filter {
+                isInvitedToEvent(it.value, it.key)
+            }
+        }
     }
 
     fun registerUser(username: String, password: String, name: String, surname: String, birthday: Date) = viewModelScope.launch {
@@ -37,9 +55,8 @@ class AppViewModel(
         userRepository.getUser(username, password)
     }
 
-    fun getItemsOfUser(username: String) = viewModelScope.launch {
-        itemRepository.getItemsOfUser(username)
-    }
+    fun getItemsOfUser(username: String) = itemRepository.getItemsOfUser(username)
+
 
     fun addItem(name : String, description : String? = null, url : String? = null, image : String? = null, priceL : Double? = null, priceU : Double? = null, listedBy : String) = viewModelScope.launch {
         itemRepository.insertItem(name, description, url, image, priceL, priceU, listedBy)
