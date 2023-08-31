@@ -36,6 +36,22 @@ class AppViewModel(
     fun loginUser(username: String, password: String) = viewModelScope.launch {
         userRepository.getUser(username, password)
     }
+
+    fun getItemsOfUser(username: String) = viewModelScope.launch {
+        itemRepository.getItemsOfUser(username)
+    }
+
+    fun addItem(name : String, description : String? = null, url : String? = null, image : String? = null, priceL : Double? = null, priceU : Double? = null, listedBy : String) = viewModelScope.launch {
+        itemRepository.insertItem(name, description, url, image, priceL, priceU, listedBy)
+    }
+
+    fun deleteItem(id : Int) = viewModelScope.launch {
+        itemRepository.deleteItem(id)
+    }
+
+    fun updateItem(id : Int, bought : Boolean? = null, name : String? = null, description : String? = null, url : String? = null, image : String? = null, priceL : Double? = null, priceU : Double? = null, reservedBy : String? = null, listedBy : String? = null) = viewModelScope.launch {
+        itemRepository.updateItem(id, bought, name, description, url, image, priceL, priceU, reservedBy, listedBy)
+    }
 }
 
 class AppViewModelFactory(

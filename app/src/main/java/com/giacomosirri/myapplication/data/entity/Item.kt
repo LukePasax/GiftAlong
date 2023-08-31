@@ -9,16 +9,16 @@ import java.net.URL
 data class Item(
     val bought: Boolean,
     val name: String,
-    val description: String,
-    val url: URL,
+    val description: String?,
+    val url: String?,
     @ColumnInfo("image")
-    val imageURI: String,  // URI of the pic that points to the remote database.
+    val imageURI: String?,  // URI of the pic that points to the remote database.
     @ColumnInfo("price_lower")
-    val priceLowerBound: Double,
+    val priceLowerBound: Double?,
     @ColumnInfo("price_upper")
-    val priceUpperBound: Double,
+    val priceUpperBound: Double?,
     @ColumnInfo("reserved_by")
-    val reservedBy: String,
+    val reservedBy: String?,
     @ColumnInfo("listed_by")
     val listedBy: String
 ) {
