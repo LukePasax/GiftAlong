@@ -89,7 +89,7 @@ fun RegistrationScreen(
                 singleLine = true,
                 label = { Text("Password *") },
                 visualTransformation =
-                if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
+                    if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 trailingIcon = {
                     IconButton(onClick = { passwordHidden = !passwordHidden }) {
