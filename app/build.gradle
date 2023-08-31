@@ -88,3 +88,25 @@ dependencies {
 kapt {
     correctErrorTypes true
 }
+
+ksp {
+    arg(new RoomSchemaArgProvider(new File(projectDir, "schemas")))
+}
+
+class RoomSchemaArgProvider implements CommandLineArgumentProvider {
+    @InputDirectory
+    @PathSensitive(PathSensitivity.RELATIVE)
+    File schemaDir
+
+    RoomSchemaArgProvider(File schemaDir) {
+        this.schemaDir = schemaDir
+    }
+
+    @Override
+    Iterable<String> asArguments() {
+        return ["room.schemaLocation=${this.schemaDir.path}"]
+    }
+}
+
+
+
