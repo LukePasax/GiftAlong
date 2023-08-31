@@ -1,8 +1,6 @@
 package com.giacomosirri.myapplication.ui.navigation
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -11,11 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -43,7 +37,7 @@ fun RegistrationScreen(
                 .padding(paddingValues)
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(27.dp),
+            verticalArrangement = Arrangement.spacedBy(32.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             var username by remember { mutableStateOf("") }
@@ -68,7 +62,7 @@ fun RegistrationScreen(
                 value = password,
                 onValueChange = { password = it },
                 singleLine = true,
-                label = { Text("Enter password") },
+                label = { Text("Password *") },
                 visualTransformation =
                     if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -81,6 +75,8 @@ fun RegistrationScreen(
                     }
                 }
             )
+            // Photo
+            PhotoSelector()
             Row(
                 modifier = Modifier
                     .padding(lateralPadding)
@@ -105,31 +101,15 @@ fun RegistrationScreen(
                     label = { Text("Surname *") }
                 )
             }
-            // Photo
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+            // Date dialog
+            DateDialog(paddingValues = lateralPadding, buttonText = "Select your birthday *")
+            // Register button
+            Button(
+                modifier = Modifier.padding(lateralPadding).padding(top = 60.dp).fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Blue, contentColor = Color.White),
+                onClick = { /* TODO */ }
             ) {
-                Image(
-                    painterResource(id = R.drawable.placeholder),
-                    contentDescription = "Item image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .requiredSize(width = 165.dp, height = 140.dp)
-                        .clip(RoundedCornerShape(5.dp))
-                )
-                FilledTonalButton(
-                    modifier = Modifier.padding(start = 15.dp),
-                    onClick = { /* TODO select an image from the gallery */ }
-                ) {
-                    Icon(
-                        modifier = Modifier.padding(end = 5.dp),
-                        imageVector = ImageVector.vectorResource(R.drawable.round_camera_alt_24),
-                        contentDescription = null
-                    )
-                    Text("Select a photo")
-                }
+                Text(text = "Register")
             }
         }
     }
