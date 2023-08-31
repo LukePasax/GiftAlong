@@ -8,10 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,7 +22,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.giacomosirri.myapplication.R
+import com.giacomosirri.myapplication.ui.theme.Error
+import com.giacomosirri.myapplication.ui.theme.ErrorBackground
 import com.giacomosirri.myapplication.ui.theme.Typography
 import java.text.DateFormat
 import java.util.*
@@ -216,6 +217,53 @@ fun DateDialog(
 }
 
 @Composable
+fun CancelDialog(
+    isCancelDialogOpen: MutableState<Boolean>,
+    quitOptionExists: Boolean = true,
+    onQuit: (() -> Unit)? = null
+) {
+    Dialog(
+        onDismissRequest = { isCancelDialogOpen.value = false },
+        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+                .height(130.dp),
+            colors = CardDefaults.cardColors(containerColor = ErrorBackground)
+        ) {
+            Column(modifier = Modifier.padding(start = 20.dp, top = 20.dp, end = 10.dp, bottom = 10.dp)) {
+                Text("Are you sure you want to quit? All your inputs will be lost.")
+                Spacer(modifier = Modifier.height(12.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(
+                        onClick = { isCancelDialogOpen.value = false },
+                        modifier = Modifier.padding(end = 10.dp)
+                    ) {
+                        Text(text = "Cancel", color = Error)
+                    }
+                    if (quitOptionExists) {
+                        TextButton(
+                            onClick = {
+                                isCancelDialogOpen.value = false
+                                // if quitOptionExists is true, onQuit cannot be null
+                                onQuit!!.invoke()
+                            }
+                        ) {
+                            Text(text = "Quit anyway", color = Error)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun FormButtons(
     paddingValues: PaddingValues,
     onSubmitClick: () -> Unit,
@@ -229,7 +277,7 @@ fun FormButtons(
     ) {
         val isCancelDialogOpen = remember { mutableStateOf(false) }
         if (isCancelDialogOpen.value) {
-            CancelDialog(isCancelDialogOpen, onCancelClick)
+            CancelDialog(isCancelDialogOpen = isCancelDialogOpen, onQuit = onCancelClick)
         }
         Button(
             modifier = Modifier

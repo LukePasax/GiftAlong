@@ -15,14 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat.startActivity
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.data.entity.Relationship
 import com.giacomosirri.myapplication.ui.AppContext
-import com.giacomosirri.myapplication.ui.theme.Error
-import com.giacomosirri.myapplication.ui.theme.ErrorBackground
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -175,46 +171,6 @@ fun onSubmit(
         /* TODO show error dialog */
     } else {
         /* TODO launch database insertion query */
-    }
-}
-
-@Composable
-fun CancelDialog(isCancelDialogOpen: MutableState<Boolean>, onQuit: () -> Unit) {
-    Dialog(
-        onDismissRequest = { isCancelDialogOpen.value = false },
-        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
-    ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .height(130.dp),
-            colors = CardDefaults.cardColors(containerColor = ErrorBackground)
-        ) {
-            Column(modifier = Modifier.padding(start = 20.dp, top = 20.dp, end = 10.dp, bottom = 10.dp)) {
-                Text("Are you sure you want to quit? All your inputs will be lost.")
-                Spacer(modifier = Modifier.height(12.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TextButton(
-                        onClick = { isCancelDialogOpen.value = false },
-                        modifier = Modifier.padding(end = 10.dp)
-                    ) {
-                        Text(text = "Cancel", color = Error)
-                    }
-                    TextButton(
-                        onClick = {
-                            isCancelDialogOpen.value = false
-                            onQuit.invoke()
-                        }
-                    ) {
-                        Text(text = "Quit anyway", color = Error)
-                    }
-                }
-            }
-        }
     }
 }
 
