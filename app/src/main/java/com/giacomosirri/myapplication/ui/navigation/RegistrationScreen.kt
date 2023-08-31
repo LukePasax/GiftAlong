@@ -57,6 +57,7 @@ fun RegistrationScreen(
                     .fillMaxWidth(),
                 value = name,
                 onValueChange = { name = it },
+                singleLine = true,
                 label = { Text("First name *") }
             )
             // Surname
@@ -66,6 +67,7 @@ fun RegistrationScreen(
                     .fillMaxWidth(),
                 value = surname,
                 onValueChange = { surname = it },
+                singleLine = true,
                 label = { Text("Surname *") }
             )
             // Photo
@@ -77,6 +79,7 @@ fun RegistrationScreen(
                     .fillMaxWidth(),
                 value = username,
                 onValueChange = { username = it },
+                singleLine = true,
                 label = { Text("Username *") }
             )
             // Password
@@ -101,7 +104,7 @@ fun RegistrationScreen(
                 }
             )
             // Date dialog
-            val datePickerState = rememberDatePickerState(initialSelectedDateMillis = Date().time)
+            val datePickerState = rememberDatePickerState(0L)
             DateDialog(
                 paddingValues = lateralPadding,
                 buttonText = "Select your birthday *",
@@ -111,9 +114,10 @@ fun RegistrationScreen(
             Button(
                 modifier = Modifier.padding(lateralPadding).padding(top = 12.dp).fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue, contentColor = Color.White),
+                enabled = username.trim().isNotEmpty() && password.trim().isNotEmpty() && name.trim().isNotEmpty() && surname.trim().isNotEmpty(),
                 onClick = {
-                    viewModel.registerUser(username, password, name, surname, Date(datePickerState.selectedDateMillis!!))
-                    AppContext.setCurrentUser(username)
+                    viewModel.registerUser(username.trim(), password.trim(), name.trim(), surname.trim(), Date(datePickerState.selectedDateMillis!!))
+                    AppContext.setCurrentUser(username.trim())
                     onRegisterClick.invoke()
                 }
             ) {
