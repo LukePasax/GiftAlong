@@ -7,6 +7,8 @@ import java.util.Date
 
 @Entity(tableName = "events")
 data class Event(
+    @PrimaryKey(autoGenerate = true)
+    var id : Int = 0,
     val name: String,
     val date: Date,
     val location: String,
@@ -20,7 +22,4 @@ data class Event(
     val partnersAllowed: Boolean,
     @ColumnInfo("colleagues_allowed")
     val colleaguesAllowed: Boolean,
-) {
-    @PrimaryKey(autoGenerate = true)
-    var id : Int = 0
-}
+)

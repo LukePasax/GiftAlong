@@ -9,7 +9,7 @@ class UserRepository(private val userDAO: UserDAO) {
 
     @WorkerThread
     suspend fun insertUser(username: String, password: String, name: String, surname: String, birthday: Date) {
-        val user = User(password, name, surname, birthday, Date())
+        val user = User(username, password, name, surname, birthday, Date())
         userDAO.insert(user)
     }
 
