@@ -171,7 +171,7 @@ fun navigateFromDrawer(menuItem: String?, navController: NavHostController) {
         AppContext.getContext()?.getString(R.string.menu_item3) ->
             navController.navigate(NavigationScreen.Relationships.name)
         AppContext.getContext()?.getString(R.string.menu_item4) ->
-            navController.navigate(NavigationScreen.UserProfile.name)
+            navController.navigate(NavigationScreen.UserProfile.name + AppContext.getCurrentUser())
     }
 }
 
@@ -182,15 +182,8 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
         startDestination = NavigationScreen.Login.name,
     ) {
         composable(NavigationScreen.Login.name) {
-            val username = remember { mutableStateOf(TextFieldValue()) }
-            val password = remember { mutableStateOf(TextFieldValue()) }
             LoginScreen(
-                username = username,
-                password = password,
-                onLoginClick = {
-                    navController.navigate(NavigationScreen.Home.name)
-                    AppContext.setCurrentUser(username = username.value.text)
-                }
+                onLoginClick = { navController.navigate(NavigationScreen.Home.name) }
             )
         }
         composable(NavigationScreen.Home.name) {
@@ -226,7 +219,7 @@ fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValu
             UserProfileScreen(
                 paddingValues = paddingValues,
                 username = username,
-                navController = navController
+                onWishlistButtonClick = { navController.navigate(NavigationScreen.Wishlist.name + username) }
             )
         }
         composable(NavigationScreen.Relationships.name) {
