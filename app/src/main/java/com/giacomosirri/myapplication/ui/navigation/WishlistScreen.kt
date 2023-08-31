@@ -170,7 +170,7 @@ fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: St
                 )
                 DialogEntry(
                     paddingValues = entryPaddingValues,
-                    text = "Description",
+                    text = "Description:",
                     value = description
                 )
                 if (username != AppContext.getCurrentUser()) {
