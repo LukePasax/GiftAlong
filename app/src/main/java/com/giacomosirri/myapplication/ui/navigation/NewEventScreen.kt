@@ -199,7 +199,7 @@ fun NewEventScreen(
             FormButtons(
                 paddingValues = PaddingValues(
                     start = lateralPadding.calculateStartPadding(LayoutDirection.Ltr),
-                    top = 20.dp,
+                    top = 15.dp,
                     end = lateralPadding.calculateEndPadding(LayoutDirection.Ltr)
                 ),
                 onSubmitClick = {},
@@ -218,7 +218,7 @@ fun FormButtons(
     Row(
         modifier = Modifier
             .padding(paddingValues)
-            .height(40.dp)
+            .height(45.dp)
             .fillMaxWidth()
     ) {
         val isCancelDialogOpen = remember { mutableStateOf(false) }

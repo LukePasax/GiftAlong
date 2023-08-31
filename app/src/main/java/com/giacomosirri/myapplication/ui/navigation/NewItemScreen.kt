@@ -153,7 +153,7 @@ fun NewItemScreen(
             FormButtons(
                 paddingValues = PaddingValues(
                     start = lateralPadding.calculateStartPadding(LayoutDirection.Ltr),
-                    top = 17.dp,
+                    top = 12.dp,
                     end = lateralPadding.calculateEndPadding(LayoutDirection.Ltr)
                 ),
                 onSubmitClick = {},

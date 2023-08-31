@@ -151,14 +151,14 @@ fun EventDialog(eventName: String, openDialog: MutableState<Boolean>) {
                         composable1 = {
                             OutlinedButton(
                                 onClick = { /*TODO*/ },
-                                modifier = Modifier.size(140.dp, 50.dp)) {
+                                modifier = Modifier.size(140.dp, 45.dp)) {
                                 Text(text = "Edit Event")
                             }
                         },
                         composable2 = {
                             Button(
                                 onClick = { /*TODO*/ },
-                                modifier = Modifier.size(140.dp, 50.dp)) {
+                                modifier = Modifier.size(140.dp, 45.dp)) {
                                 Text(text = "Delete Event")
                             }
                         }

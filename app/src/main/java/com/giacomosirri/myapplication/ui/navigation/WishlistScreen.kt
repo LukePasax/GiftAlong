@@ -191,8 +191,7 @@ fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: St
                             Button(
                                 onClick = { reserved.value = !reserved.value },
                                 enabled = !bought.value,
-                                modifier = Modifier
-                                    .size(110.dp, 50.dp)
+                                modifier = Modifier.size(110.dp, 45.dp)
                             ) {
                                 Text(text = reserveButtonText)
                             }
@@ -201,8 +200,7 @@ fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: St
                             Button(
                                 onClick = { bought.value = !bought.value },
                                 enabled = reserved.value,
-                                modifier = Modifier
-                                    .size(110.dp, 50.dp)
+                                modifier = Modifier.size(110.dp, 45.dp)
                             ) {
                                 Text(text = buyButtonText)
                             }
