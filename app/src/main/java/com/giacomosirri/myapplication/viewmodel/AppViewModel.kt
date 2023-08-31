@@ -6,9 +6,11 @@ import com.giacomosirri.myapplication.data.entity.Relationship
 import com.giacomosirri.myapplication.repository.EventRepository
 import com.giacomosirri.myapplication.repository.ItemRepository
 import com.giacomosirri.myapplication.repository.UserRepository
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 
@@ -45,16 +47,16 @@ class AppViewModel(
         }
     }
 
-    fun registerUser(username: String, password: String, name: String, surname: String, birthday: Date) = viewModelScope.launch {
-        userRepository.insertUser(username, password, name, surname, birthday)
+    fun registerUser(username: String, password: String, name: String, surname: String, birthday: Date) {
+        viewModelScope.launch {
+            userRepository.insertUser(username, password, name, surname, birthday)
+        }
     }
 
-    fun loginUser(username: String, password: String): LiveData<Boolean> {
-        val result = MutableLiveData<Boolean>()
-        viewModelScope.launch {
-            result.postValue(userRepository.getUser(username, password))
+    suspend fun loginUser(username: String, password: String): Boolean {
+        return withContext(viewModelScope.coroutineContext) {
+            userRepository.getUser(username, password)
         }
-        return result
     }
 
     fun getItemsOfUser(username: String) = itemRepository.getItemsOfUser(username)

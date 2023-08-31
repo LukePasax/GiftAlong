@@ -34,8 +34,9 @@ fun LoginScreen(
 ) {
     val username = remember { mutableStateOf(TextFieldValue()) }
     val password = remember { mutableStateOf(TextFieldValue()) }
-    var passwordHidden by remember { mutableStateOf(true) }
-    var isErrorDialogOpen = remember { mutableStateOf(false) }
+    val passwordHidden = remember { mutableStateOf(true) }
+    val isErrorDialogOpen = remember { mutableStateOf(false) }
+    val isLoginButtonClicked = remember { mutableStateOf(false) }
     Box(modifier = Modifier.fillMaxSize()) {
         ClickableText(
             text = AnnotatedString("Don't have an account yet? Register now!"),
@@ -60,41 +61,56 @@ fun LoginScreen(
     ) {
         Text(text = "GiftAlong", style = Typography.headlineLarge, color = Primary)
         Spacer(modifier = Modifier.height(20.dp))
+        // Username
         OutlinedTextField(
             label = { Text(text = "Username") },
             value = username.value,
+            singleLine = true,
             onValueChange = { username.value = it }
         )
         Spacer(modifier = Modifier.height(20.dp))
+        // Password
         OutlinedTextField(
             label = { Text(text = "Password") },
             value = password.value,
+            singleLine = true,
             visualTransformation =
-                if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
+                if (passwordHidden.value) PasswordVisualTransformation() else VisualTransformation.None,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             onValueChange = { password.value = it },
             trailingIcon = {
-                IconButton(onClick = { passwordHidden = !passwordHidden }) {
-                    val visibilityIcon = if (passwordHidden) Icons.Rounded.Visibility else Icons.Filled.VisibilityOff
+                IconButton(onClick = { passwordHidden.value = !passwordHidden.value }) {
+                    val visibilityIcon = if (passwordHidden.value) Icons.Rounded.Visibility else Icons.Filled.VisibilityOff
                     // Please provide localized description for accessibility services
-                    val description = if (passwordHidden) "Show password" else "Hide password"
+                    val description = if (passwordHidden.value) "Show password" else "Hide password"
                     Icon(imageVector = visibilityIcon, contentDescription = description)
                 }
             }
         )
         Spacer(modifier = Modifier.height(20.dp))
-        Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
+        // Check that the login is valid.
+        if (isLoginButtonClicked.value) {
+            LaunchedEffect(Unit) {
+                val loginValid = viewModel.loginUser(username.value.text, password.value.text)
+                if (loginValid) {
+                    // Users passes the check and becomes the current user.
+                    AppContext.setCurrentUser(username.value.text.trim())
+                    onLoginClick.invoke()
+                } else {
+                    // User does not pass the check.
+                    username.value = TextFieldValue()
+                    password.value = TextFieldValue()
+                    isErrorDialogOpen.value = true
+                    isLoginButtonClicked.value = false
+                }
+            }
+        }
+        // Login button
+        Box(modifier = Modifier.padding(horizontal = 40.dp)) {
             Button(
-                onClick = {
-                    // Check whether the user actually exists
-                    if (checkLoggedUserExistence(viewModel, username.value.text, password.value.text)) {
-                        AppContext.setCurrentUser(username.value.text)
-                        onLoginClick.invoke()
-                    } else {
-                        isErrorDialogOpen.value = true
-                    }
-                },
+                onClick = { isLoginButtonClicked.value = true },
                 shape = RoundedCornerShape(50.dp),
+                enabled = username.value.text.trim().isNotEmpty() && password.value.text.trim().isNotEmpty(),
                 colors = ButtonDefaults.buttonColors(containerColor = Primary),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -103,6 +119,7 @@ fun LoginScreen(
                 Text(text = "Login")
             }
         }
+        // Incorrect login dialog
         if (isErrorDialogOpen.value) {
             CancelDialog(
                 isCancelDialogOpen = isErrorDialogOpen,
@@ -112,8 +129,4 @@ fun LoginScreen(
             )
         }
     }
-}
-
-fun checkLoggedUserExistence(viewModel: AppViewModel, username: String, password: String): Boolean {
-    return viewModel.loginUser(username, password).value ?: false
 }
