@@ -16,10 +16,14 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
+import com.giacomosirri.myapplication.viewmodel.AppViewModel
+import java.util.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistrationScreen(
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    viewModel: AppViewModel
 ) {
     val lateralPadding = PaddingValues(horizontal = 20.dp)
     Scaffold(
@@ -102,12 +106,17 @@ fun RegistrationScreen(
                 )
             }
             // Date dialog
-            DateDialog(paddingValues = lateralPadding, buttonText = "Select your birthday *")
+            val datePickerState = rememberDatePickerState(initialSelectedDateMillis = Date().time)
+            DateDialog(
+                paddingValues = lateralPadding,
+                buttonText = "Select your birthday *",
+                datePickerState = datePickerState
+            )
             // Register button
             Button(
                 modifier = Modifier.padding(lateralPadding).padding(top = 60.dp).fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue, contentColor = Color.White),
-                onClick = { /* TODO */ }
+                onClick = { viewModel.registerUser(username, password, name, surname, Date(datePickerState.selectedDateMillis!!)) }
             ) {
                 Text(text = "Register")
             }

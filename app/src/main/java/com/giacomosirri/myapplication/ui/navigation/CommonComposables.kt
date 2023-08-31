@@ -163,11 +163,11 @@ fun PhotoSelector() {
 @Composable
 fun DateDialog(
     paddingValues: PaddingValues,
-    buttonText: String
+    buttonText: String,
+    datePickerState: DatePickerState
 ) {
     // Date dialog
     val isDateDialogOpen = remember { mutableStateOf(false) }
-    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = Date().time)
     val confirmEnabled = derivedStateOf { datePickerState.selectedDateMillis != null }
     if (isDateDialogOpen.value) {
         DatePickerDialog(

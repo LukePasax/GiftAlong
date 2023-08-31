@@ -6,7 +6,6 @@ import android.location.Location
 import android.net.Uri
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.*
@@ -14,7 +13,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -27,6 +25,7 @@ import com.giacomosirri.myapplication.ui.theme.Error
 import com.giacomosirri.myapplication.ui.theme.ErrorBackground
 import java.util.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewEventScreen(
     paddingValues: PaddingValues,
@@ -92,7 +91,12 @@ fun NewEventScreen(
                 }
             }
             // Date dialog
-            DateDialog(paddingValues = lateralPadding, buttonText = "Select a date *")
+            val datePickerState = rememberDatePickerState(initialSelectedDateMillis = Date().time)
+            DateDialog(
+                paddingValues = lateralPadding,
+                buttonText = "Select a date *",
+                datePickerState = datePickerState
+            )
             // Description
             OutlinedTextField(
                 modifier = Modifier

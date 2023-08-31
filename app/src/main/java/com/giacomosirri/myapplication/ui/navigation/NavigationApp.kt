@@ -73,11 +73,11 @@ fun NavigationApp(
     if (entryScreenName != NavigationScreen.Login.name) {
         NavigationDrawer {
             Scaffold {
-                NavigationGraph(navController, paddingValues)
+                NavigationGraph(navController, paddingValues, viewModel)
             }
         }
     } else {
-        NavigationGraph(navController, paddingValues)
+        NavigationGraph(navController, paddingValues, viewModel)
     }
 }
 
@@ -176,14 +176,19 @@ fun navigateFromDrawer(menuItem: String?, navController: NavHostController) {
 }
 
 @Composable
-fun NavigationGraph(navController: NavHostController, paddingValues: PaddingValues) {
+fun NavigationGraph(
+    navController: NavHostController,
+    paddingValues: PaddingValues,
+    viewModel: AppViewModel
+) {
     NavHost(
         navController = navController,
         startDestination = NavigationScreen.Registration.name,
     ) {
         composable(NavigationScreen.Registration.name) {
             RegistrationScreen(
-                paddingValues = paddingValues
+                paddingValues = paddingValues,
+                viewModel = viewModel
             )
         }
         composable(NavigationScreen.Login.name) {
