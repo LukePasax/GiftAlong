@@ -3,12 +3,9 @@ package com.giacomosirri.myapplication.data.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.net.URL
 
 @Entity(tableName = "Items")
 data class Item(
-    @PrimaryKey(autoGenerate = true)
-    var id : Int = 0,
     val bought: Boolean,
     val name: String,
     val description: String?,
@@ -23,4 +20,7 @@ data class Item(
     val reservedBy: String?,
     @ColumnInfo("listed_by")
     val listedBy: String
-)
+) {
+    @PrimaryKey(autoGenerate = true)
+    var id : Int = 0
+}
