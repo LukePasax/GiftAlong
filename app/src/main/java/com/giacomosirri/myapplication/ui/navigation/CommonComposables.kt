@@ -447,12 +447,13 @@ fun EventCard(event: String, navController: NavController) {
         }
     }
     if (openDialog.value) {
-        EventDialog(AppContext.getCurrentUser(), event, "2023", "Nice", "Whatever", openDialog, navController)
+        EventDialog(0, AppContext.getCurrentUser(), event, "2023", "Nice", "Whatever", openDialog, navController)
     }
 }
 
 @Composable
 fun EventDialog(
+    id: Int,
     organizer: String,
     eventName: String,
     date: String,
@@ -500,7 +501,10 @@ fun EventDialog(
                         paddingValues = entryPaddingValues,
                         composable1 = {
                             OutlinedButton(
-                                onClick = { /*TODO*/ },
+                                onClick = {
+                                    openDialog.value = false
+                                    navController.navigate(NavigationScreen.NewEvent.name + id)
+                                },
                                 modifier = Modifier.size(140.dp, 45.dp)) {
                                 Text(text = "Edit Event")
                             }

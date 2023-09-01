@@ -155,22 +155,22 @@ fun NewItemScreen(
     }
 }
 
-fun getLowerBoundPriceFromItemId(id: Int): Int {
+private fun getLowerBoundPriceFromItemId(id: Int): Int {
     return 1
 }
 
-fun getUpperBoundPriceFromItemId(id: Int): Int {
+private fun getUpperBoundPriceFromItemId(id: Int): Int {
     return 1
 }
 
-fun getLinkFromItemId(id: Int): String {
+private fun getLinkFromItemId(id: Int): String {
     return "Ciao"
 }
 
-fun getDescriptionFromItemId(id: Int): String {
+private fun getDescriptionFromItemId(id: Int): String {
     return "Ciaoo"
 }
 
-fun getNameFromItemId(id: Int): String {
+private fun getNameFromItemId(id: Int): String {
     return "Ciaooo"
 }
