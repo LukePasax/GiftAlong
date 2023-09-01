@@ -50,7 +50,8 @@ fun NewEventScreen(
                 .padding(paddingValues)
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(17.dp)
+            verticalArrangement = Arrangement.spacedBy(17.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val eventTitle = remember { mutableStateOf("") }
             val eventDescription = remember { mutableStateOf("") }
@@ -72,7 +73,6 @@ fun NewEventScreen(
             Box(modifier = Modifier
                 .requiredHeight(120.dp)
                 .requiredWidth(220.dp)
-                .align(Alignment.CenterHorizontally)
                 .border(width = 1.dp, shape = ShapeDefaults.Small, color = Color.Gray)
                 .padding(lateralPadding)
                 .padding(top = 4.dp),

@@ -211,7 +211,6 @@ fun DateSelector(
     Row(
         modifier = Modifier.padding(paddingValues),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
     ) {
         Text(
             modifier = Modifier.padding(end = 8.dp),
