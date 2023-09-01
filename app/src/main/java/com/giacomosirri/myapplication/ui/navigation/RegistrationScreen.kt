@@ -110,15 +110,37 @@ fun RegistrationScreen(
                 buttonText = "Select your birthday *",
                 datePickerState = datePickerState
             )
+            val isUsernameAlreadyTakenDialogOpen = remember { mutableStateOf(false) }
+            if (isUsernameAlreadyTakenDialogOpen.value) {
+                IncorrectInputDialog(
+                    isDialogOpen = isUsernameAlreadyTakenDialogOpen,
+                    dialogTitle = "Username already exists",
+                    mainText = "Please choose another username.",
+                    acceptText = "OK"
+                )
+            }
             // Register button
             Button(
-                modifier = Modifier.padding(lateralPadding).padding(top = 12.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(lateralPadding)
+                    .padding(top = 12.dp)
+                    .fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue, contentColor = Color.White),
                 enabled = username.trim().isNotEmpty() && password.trim().isNotEmpty() && name.trim().isNotEmpty() && surname.trim().isNotEmpty(),
                 onClick = {
-                    viewModel.registerUser(username.trim(), password.trim(), name.trim(), surname.trim(), Date(datePickerState.selectedDateMillis!!))
-                    AppContext.setCurrentUser(username.trim())
-                    onRegisterClick.invoke()
+                    if (username.trim() == "giacomo") {
+                        isUsernameAlreadyTakenDialogOpen.value = true
+                    } else {
+                        viewModel.registerUser(
+                            username.trim(),
+                            password.trim(),
+                            name.trim(),
+                            surname.trim(),
+                            Date(datePickerState.selectedDateMillis!!)
+                        )
+                        AppContext.setCurrentUser(username.trim())
+                        onRegisterClick.invoke()
+                    }
                 }
             ) {
                 Text(text = "Register")
