@@ -88,7 +88,7 @@ fun NewEventScreen(
             }
             // Date dialog
             val datePickerState = rememberDatePickerState(initialSelectedDateMillis = Date().time)
-            DateDialog(
+            DateSelector(
                 paddingValues = lateralPadding,
                 buttonText = "Select a date *",
                 datePickerState = datePickerState

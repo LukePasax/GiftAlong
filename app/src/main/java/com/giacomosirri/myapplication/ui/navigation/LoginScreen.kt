@@ -121,11 +121,11 @@ fun LoginScreen(
         }
         // Incorrect login dialog
         if (isErrorDialogOpen.value) {
-            CancelDialog(
-                isCancelDialogOpen = isErrorDialogOpen,
-                quitOptionExists = false,
+            IncorrectInputDialog(
+                isDialogOpen = isErrorDialogOpen,
+                dialogTitle = null,
                 mainText = "Username or password are incorrect.",
-                stayText = "Try again"
+                acceptText = "Try again"
             )
         }
     }

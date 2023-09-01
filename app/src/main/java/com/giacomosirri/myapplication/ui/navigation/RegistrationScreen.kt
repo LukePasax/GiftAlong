@@ -33,7 +33,7 @@ fun RegistrationScreen(
                 currentScreenName = AppContext.getContext()?.getString(R.string.registration)!!,
                 hasSearchBar = false,
                 isLeadingIconMenu = false,
-                isLeadingIconBackArrow = false
+                isLeadingIconBackArrow = true
             )
         }
     ) {
@@ -105,7 +105,7 @@ fun RegistrationScreen(
             )
             // Date dialog
             val datePickerState = rememberDatePickerState(0L)
-            DateDialog(
+            DateSelector(
                 paddingValues = lateralPadding,
                 buttonText = "Select your birthday *",
                 datePickerState = datePickerState

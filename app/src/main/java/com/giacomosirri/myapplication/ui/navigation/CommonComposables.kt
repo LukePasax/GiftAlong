@@ -247,7 +247,7 @@ private fun CommonErrorDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
-                .height(130.dp),
+                .heightIn(130.dp, 400.dp),
             colors = CardDefaults.cardColors(containerColor = ErrorBackground)
         ) {
             Column(modifier = Modifier.padding(start = 20.dp, top = 20.dp, end = 10.dp, bottom = 10.dp)) {
