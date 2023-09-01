@@ -141,7 +141,13 @@ fun NewItemScreen(
                     top = 12.dp,
                     end = lateralPadding.calculateEndPadding(LayoutDirection.Ltr)
                 ),
-                onSubmitClick = {},
+                onSubmitClick = {
+                    if(isInEditMode) {
+                        /* TODO: update the values in the database */
+                    } else {
+                        /* TODO: create a new item in the database */
+                    }
+                },
                 onCancelClick = onQuit
             )
         }
