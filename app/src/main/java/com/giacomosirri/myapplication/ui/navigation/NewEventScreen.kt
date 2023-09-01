@@ -27,15 +27,35 @@ fun NewEventScreen(
     paddingValues: PaddingValues,
     onQuit: () -> Unit,
     isInEditMode: Boolean,
-    eventName: String? = null
+    id: Int? = null
 ) {
     val lateralPadding = PaddingValues(horizontal = 20.dp)
+    var name: String? = null
+    var description: String? = null
+    var location: String? = null
+    var dressCode: String? = null
+    var date: Date? = null
+    var friends: Boolean? = null
+    var partners: Boolean? = null
+    var family: Boolean? = null
+    var colleagues: Boolean? = null
+    if (isInEditMode) {
+        // id must exist
+        name = getNameFromEventId(id!!)
+        description = getDescriptionFromEventId(id)
+        dressCode = getDressCodeFromEventId(id)
+        date = getDateFromEventId(id)
+        friends = getFriendsAllowedFromEventId(id)
+        partners = getPartnersAllowedFromEventId(id)
+        family = getFamilyAllowedFromEventId(id)
+        colleagues = getColleaguesAllowedFromEventId(id)
+    }
     Scaffold(
         topBar = {
             NavigationAppBar(
                 currentScreenName =
                 if (isInEditMode) {
-                    "Edit $eventName"
+                    "Edit $name"
                 } else {
                     AppContext.getContext()?.getString(R.string.new_event)!!
                 },
@@ -53,13 +73,14 @@ fun NewEventScreen(
             verticalArrangement = Arrangement.spacedBy(17.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val eventTitle = remember { mutableStateOf("") }
-            val eventDescription = remember { mutableStateOf("") }
-            val dressCode = remember { mutableStateOf("") }
-            val friendsAllowed = remember { mutableStateOf(false) }
-            val partnersAllowed = remember { mutableStateOf(false) }
-            val familyAllowed = remember { mutableStateOf(false) }
-            val colleaguesAllowed = remember { mutableStateOf(false) }
+            val eventTitle = remember { mutableStateOf(name ?: "") }
+            val eventDescription = remember { mutableStateOf(description ?: "") }
+            val eventDressCode = remember { mutableStateOf(dressCode ?: "") }
+            val datePickerState = rememberDatePickerState(initialSelectedDateMillis = date?.time ?: Date().time)
+            val friendsAllowed = remember { mutableStateOf(friends ?: false) }
+            val partnersAllowed = remember { mutableStateOf(partners ?: false) }
+            val familyAllowed = remember { mutableStateOf(family ?: false) }
+            val colleaguesAllowed = remember { mutableStateOf(colleagues ?:false) }
             // Title
             OutlinedTextField(
                 modifier = Modifier
@@ -91,7 +112,6 @@ fun NewEventScreen(
                 }
             }
             // Date dialog
-            val datePickerState = rememberDatePickerState(initialSelectedDateMillis = Date().time)
             DateSelector(
                 paddingValues = lateralPadding,
                 buttonText = "Select a date *",
@@ -145,8 +165,8 @@ fun NewEventScreen(
                 modifier = Modifier
                     .padding(lateralPadding)
                     .fillMaxWidth(),
-                value = dressCode.value,
-                onValueChange = { dressCode.value = it },
+                value = eventDressCode.value,
+                onValueChange = { eventDressCode.value = it },
                 label = { Text("Dress code") },
             )
             // Buttons
@@ -163,6 +183,38 @@ fun NewEventScreen(
             )
         }
     }
+}
+
+private fun getDateFromEventId(id: Int): Date {
+    return Date(0L)
+}
+
+private fun getColleaguesAllowedFromEventId(id: Int): Boolean {
+    return true
+}
+
+private fun getFamilyAllowedFromEventId(id: Int): Boolean {
+    return false
+}
+
+private fun getPartnersAllowedFromEventId(id: Int): Boolean {
+    return true
+}
+
+private fun getFriendsAllowedFromEventId(id: Int): Boolean {
+    return false
+}
+
+private fun getDressCodeFromEventId(id: Int): String {
+    return "c"
+}
+
+private fun getDescriptionFromEventId(id: Int): String {
+    return "b"
+}
+
+private fun getNameFromEventId(id: Int): String {
+    return "a"
 }
 
 fun onSubmit(
