@@ -20,9 +20,22 @@ fun NewItemScreen(
     paddingValues: PaddingValues,
     onQuit: () -> Unit,
     isInEditMode: Boolean,
-    name: String? = null
+    id: Int? = null
 ) {
     val lateralPadding = PaddingValues(horizontal = 20.dp)
+    var name: String? = null
+    var description: String? = null
+    var link: String? = null
+    var upperBound: Int? = null
+    var lowerBound: Int? = null
+    if (isInEditMode) {
+        // id must exist
+        name = getNameFromItemId(id!!)
+        description = getDescriptionFromItemId(id)
+        link = getLinkFromItemId(id)
+        upperBound = getUpperBoundPriceFromItemId(id)
+        lowerBound = getLowerBoundPriceFromItemId(id)
+    }
     Scaffold(
         topBar = {
             NavigationAppBar(
@@ -46,11 +59,11 @@ fun NewItemScreen(
             verticalArrangement = Arrangement.spacedBy(27.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            var itemName by remember { mutableStateOf("") }
-            var itemDescription by remember { mutableStateOf("") }
-            var itemLink by remember { mutableStateOf("") }
-            var lowerBoundPrice by remember { mutableStateOf(0) }
-            var upperBoundPrice by remember { mutableStateOf(0) }
+            var itemName by remember { mutableStateOf(name ?: "") }
+            var itemDescription by remember { mutableStateOf(description ?:"") }
+            var itemLink by remember { mutableStateOf(link ?: "") }
+            var lowerBoundPrice by remember { mutableStateOf(upperBound?: 0) }
+            var upperBoundPrice by remember { mutableStateOf(lowerBound ?: 0) }
             // Title
             OutlinedTextField(
                 modifier = Modifier
@@ -133,4 +146,24 @@ fun NewItemScreen(
             )
         }
     }
+}
+
+fun getLowerBoundPriceFromItemId(id: Int): Int {
+    return 1
+}
+
+fun getUpperBoundPriceFromItemId(id: Int): Int {
+    return 1
+}
+
+fun getLinkFromItemId(id: Int): String {
+    return "Ciao"
+}
+
+fun getDescriptionFromItemId(id: Int): String {
+    return "Ciaoo"
+}
+
+fun getNameFromItemId(id: Int): String {
+    return "Ciaooo"
 }

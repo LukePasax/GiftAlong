@@ -226,14 +226,17 @@ fun NavigationGraph(
             WishlistScreen(
                 username = username,
                 paddingValues = paddingValues,
-                onFabClick = { navController.navigate(NavigationScreen.NewItem.name) }
+                onFabClick = { navController.navigate(NavigationScreen.NewItem.name) },
+                navController = navController
             )
         }
-        composable(NavigationScreen.NewItem.name) {
+        composable(NavigationScreen.NewItem.name + "{itemId}") {
+            val id = it.arguments?.getInt("itemId")
             NewItemScreen(
                 paddingValues = paddingValues,
                 onQuit = { navController.navigateUp() },
-                isInEditMode = false
+                isInEditMode = id != null,
+                id = id
             )
         }
         composable(NavigationScreen.NewEvent.name) {

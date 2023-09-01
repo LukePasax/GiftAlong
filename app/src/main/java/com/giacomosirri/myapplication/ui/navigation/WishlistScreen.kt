@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.navigation.NavController
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Secondary
 
@@ -35,7 +36,8 @@ import com.giacomosirri.myapplication.ui.theme.Secondary
 fun WishlistScreen(
     username: String,
     paddingValues: PaddingValues,
-    onFabClick: () -> Unit
+    onFabClick: () -> Unit,
+    navController: NavController
 ) {
     Scaffold(
         topBar = {
@@ -57,8 +59,8 @@ fun WishlistScreen(
         }
     ) {
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
-            item { WishlistItem(itemName = "Ciao", username  = username) }
-            item { WishlistItem(itemName = AppContext.getCurrentUser(), username = username) }
+            item { WishlistItem(itemId = 0, itemName = "Ciao", username  = username, navController = navController) }
+            item { WishlistItem(itemId = 1, itemName = AppContext.getCurrentUser(), username = username, navController = navController) }
         }
     }
 }
@@ -71,10 +73,12 @@ fun WishlistScreen(searchedItems: String) {
 @SuppressLint("UseCompatLoadingForDrawables")
 @Composable
 fun WishlistItem(
+    itemId: Int,
     itemName: String,
     username: String,
-    price: String?= null,
-    image: Int = R.drawable.placeholder
+    price: String? = null,
+    image: Int = R.drawable.placeholder,
+    navController: NavController
 ) {
     val openDialog = remember { mutableStateOf(false) }
     val reserved = remember { mutableStateOf(false) }
@@ -119,8 +123,14 @@ fun WishlistItem(
                             expanded = isMenuOpen.value, 
                             onDismissRequest = { isMenuOpen.value = false }
                         ) {
-                            DropdownMenuItem(text = { Text("Edit") }, onClick = { /*TODO*/ })
-                            DropdownMenuItem(text = { Text("Delete") }, onClick = { isCancelItemDialogOpen.value = true })
+                            DropdownMenuItem(
+                                text = { Text("Edit") },
+                                onClick = { navController.navigate(NavigationScreen.NewItem.name + "{itemId}") }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Delete") },
+                                onClick = { isCancelItemDialogOpen.value = true }
+                            )
                         }
                     }
                 } else {
