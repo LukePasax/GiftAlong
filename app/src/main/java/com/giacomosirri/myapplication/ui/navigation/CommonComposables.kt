@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.giacomosirri.myapplication.R
@@ -64,7 +65,9 @@ fun DialogEntry(
     value: String
 ) {
     Row(
-        modifier = Modifier.padding(paddingValues).fillMaxWidth(),
+        modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -80,7 +83,9 @@ fun DialogEntry(
     value: @Composable () -> Unit
 ) {
     Row(
-        modifier = Modifier.padding(paddingValues).fillMaxWidth(),
+        modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -96,7 +101,9 @@ fun DialogEntry(
     composable2: @Composable () -> Unit
 ) {
     Row(
-        modifier = Modifier.padding(paddingValues).fillMaxWidth(),
+        modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -111,7 +118,9 @@ fun DialogImage(
     imageId: Int
 ) {
     Image(
-        modifier = Modifier.fillMaxWidth().fillMaxHeight(.35f),
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(.35f),
         painter = painterResource(id = imageId),
         contentDescription = imageDescription,
         contentScale = ContentScale.Crop,
@@ -125,7 +134,9 @@ fun DialogTitle(
 ) {
     Text(
         text = text,
-        modifier = Modifier.padding(paddingValues).fillMaxWidth(),
+        modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxWidth(),
         textAlign = TextAlign.Center,
         style = Typography.headlineLarge
     )
@@ -162,7 +173,7 @@ fun PhotoSelector() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DateDialog(
+fun DateSelector(
     paddingValues: PaddingValues,
     buttonText: String,
     datePickerState: DatePickerState
@@ -217,16 +228,19 @@ fun DateDialog(
 }
 
 @Composable
-fun CancelDialog(
-    isCancelDialogOpen: MutableState<Boolean>,
-    quitOptionExists: Boolean = true,
-    onQuit: (() -> Unit)? = null,
+private fun CommonErrorDialog(
+    isDialogOpen: MutableState<Boolean>,
+    moveToAnotherScreenOptionExists: Boolean,
+    // if moveToAnotherScreenOptionExists is false, onAccept is going to be treated as if it were null anyway.
+    onAccept: (() -> Unit)?,
+    dialogTitle: String?,
     mainText: String,
-    quitText: String? = null,
-    stayText: String
+    stayText: String,
+    // if moveToAnotherScreenOptionExists is false, quitText is going to be treated as if it were null anyway.
+    quitText: String?,
 ) {
     Dialog(
-        onDismissRequest = { isCancelDialogOpen.value = false },
+        onDismissRequest = { isDialogOpen.value = false },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
     ) {
         Card(
@@ -237,6 +251,10 @@ fun CancelDialog(
             colors = CardDefaults.cardColors(containerColor = ErrorBackground)
         ) {
             Column(modifier = Modifier.padding(start = 20.dp, top = 20.dp, end = 10.dp, bottom = 10.dp)) {
+                if (!dialogTitle.isNullOrEmpty()) {
+                    Text(dialogTitle, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
                 Text(mainText)
                 Spacer(modifier = Modifier.height(12.dp))
                 Row(
@@ -244,17 +262,18 @@ fun CancelDialog(
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(
-                        onClick = { isCancelDialogOpen.value = false },
+                        onClick = { isDialogOpen.value = false },
                         modifier = Modifier.padding(end = 10.dp)
                     ) {
                         Text(text = stayText, color = Error)
                     }
-                    if (quitOptionExists) {
+                    // The rightmost button.
+                    if (moveToAnotherScreenOptionExists) {
                         TextButton(
                             onClick = {
-                                isCancelDialogOpen.value = false
+                                isDialogOpen.value = false
                                 // if quitOptionExists is true, onQuit cannot be null
-                                onQuit!!.invoke()
+                                onAccept!!.invoke()
                             }
                         ) {
                             // if quitOptionExists is true, quitText cannot be null
@@ -265,6 +284,79 @@ fun CancelDialog(
             }
         }
     }
+}
+
+/**
+ * A dialog that shows up when the input provided by the user is incorrect, either because it is missing
+ * information or because it is incompatible with the current state of the app. Obviously, such dialogs
+ * don't have the "Quit" option but only the "OK" or "Accept" one.
+ */
+@Composable
+fun IncorrectInputDialog(
+    isDialogOpen: MutableState<Boolean>,
+    dialogTitle: String?,
+    mainText: String,
+    stayText: String
+) {
+    CommonErrorDialog(
+        isDialogOpen = isDialogOpen,
+        moveToAnotherScreenOptionExists = false,
+        onAccept = null,
+        dialogTitle = dialogTitle,
+        mainText = mainText,
+        stayText = stayText,
+        quitText = null
+    )
+}
+
+/**
+ * A dialog that shows up when the user decides to interrupt an operation to go to another screen.
+ * Such operations include, for example, the filling of a form page. This type of dialog must have
+ * both the "Quit" option and the "OK" or "Accept" one.
+ */
+@Composable
+fun QuitScreenDialog(
+    isDialogOpen: MutableState<Boolean>,
+    onQuit: (() -> Unit),
+    dialogTitle: String?,
+    mainText: String,
+    quitText: String,
+    stayText: String
+) {
+    CommonErrorDialog(
+        isDialogOpen = isDialogOpen,
+        moveToAnotherScreenOptionExists = true,
+        onAccept = onQuit,
+        dialogTitle = dialogTitle,
+        mainText = mainText,
+        stayText = stayText,
+        quitText = quitText
+    )
+}
+
+/**
+ * A dialog that shows up when the user wants to perform a definitive operation that is going to delete
+ * an item of the user, or even the whole user account. This type of dialog must have both the "Accept"
+ * option and the "OK" or "Accept" one.
+ */
+@Composable
+fun DefinitiveDeletionDialog(
+    isDialogOpen: MutableState<Boolean>,
+    onAccept: (() -> Unit),
+    dialogTitle: String?,
+    mainText: String,
+    quitText: String,
+    stayText: String
+) {
+    CommonErrorDialog(
+        isDialogOpen = isDialogOpen,
+        moveToAnotherScreenOptionExists = true,
+        onAccept = onAccept,
+        dialogTitle = dialogTitle,
+        mainText = mainText,
+        stayText = stayText,
+        quitText = quitText
+    )
 }
 
 @Composable
@@ -281,9 +373,10 @@ fun FormButtons(
     ) {
         val isCancelDialogOpen = remember { mutableStateOf(false) }
         if (isCancelDialogOpen.value) {
-            CancelDialog(
-                isCancelDialogOpen = isCancelDialogOpen,
+            QuitScreenDialog(
+                isDialogOpen = isCancelDialogOpen,
                 onQuit = onCancelClick,
+                dialogTitle = null,
                 mainText = "Are you sure you want to quit? All your inputs will be lost.",
                 quitText = "Quit anyway",
                 stayText = "Cancel"
@@ -296,7 +389,7 @@ fun FormButtons(
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red, contentColor = Color.White),
             onClick = { isCancelDialogOpen.value = true }
         ) {
-            Text(text = "Cancel")
+            Text(text = "Quit")
         }
         Button(
             modifier = Modifier
