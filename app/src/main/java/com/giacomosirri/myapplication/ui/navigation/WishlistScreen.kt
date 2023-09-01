@@ -79,6 +79,18 @@ fun WishlistItem(
     val openDialog = remember { mutableStateOf(false) }
     val reserved = remember { mutableStateOf(false) }
     val bought = remember { mutableStateOf(false) }
+    val isMenuOpen = remember { mutableStateOf(false) }
+    val isCancelItemDialogOpen = remember { mutableStateOf(false) }
+    if (isCancelItemDialogOpen.value) {
+        DefinitiveDeletionDialog(
+            isDialogOpen = isCancelItemDialogOpen,
+            onAccept = { /*TODO*/ },
+            dialogTitle = "Item deletion",
+            mainText = "Are you sure you want to delete this item from your wishlist? This operation cannot be undone.",
+            acceptText = "Yes, I am",
+            refuseText = "Don't delete"
+        )
+    }
     Column {
         ListItem(
             modifier = Modifier
@@ -96,8 +108,20 @@ fun WishlistItem(
             },
             trailingContent = {
                 if (username == AppContext.getCurrentUser()) {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(ImageVector.vectorResource(id = R.drawable.baseline_more_horiz_24), "Item Menu")
+                    Box {
+                        IconButton(onClick = { isMenuOpen.value = true }) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(id = R.drawable.baseline_more_horiz_24),
+                                contentDescription = "Item Menu"
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = isMenuOpen.value, 
+                            onDismissRequest = { isMenuOpen.value = false }
+                        ) {
+                            DropdownMenuItem(text = { Text("Edit") }, onClick = { /*TODO*/ })
+                            DropdownMenuItem(text = { Text("Delete") }, onClick = { isCancelItemDialogOpen.value = true })
+                        }
                     }
                 } else {
                     if (reserved.value && !bought.value) {
