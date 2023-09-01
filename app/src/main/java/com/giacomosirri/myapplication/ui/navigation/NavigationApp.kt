@@ -274,7 +274,7 @@ fun NavigationGraph(
             NewItemScreen(
                 paddingValues = paddingValues,
                 onQuit = { navController.navigateUp() },
-                isInEditMode = id != null,
+                isInEditMode = true,
                 id = id
             )
         }
@@ -283,6 +283,15 @@ fun NavigationGraph(
                 paddingValues = paddingValues,
                 onQuit = { navController.navigateUp() },
                 isInEditMode = false
+            )
+        }
+        composable(NavigationScreen.NewEvent.name + "{eventId}") {
+            val id = it.arguments?.getInt("eventId")
+            NewEventScreen(
+                paddingValues = paddingValues,
+                onQuit = { navController.navigateUp() },
+                isInEditMode = true,
+                id = id
             )
         }
         composable(NavigationScreen.UserProfile.name + "{username}") {
