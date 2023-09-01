@@ -2,6 +2,7 @@ package com.giacomosirri.myapplication.ui.navigation
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,10 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.navigation.NavController
 import com.giacomosirri.myapplication.R
-import com.giacomosirri.myapplication.ui.theme.Error
-import com.giacomosirri.myapplication.ui.theme.ErrorBackground
-import com.giacomosirri.myapplication.ui.theme.Typography
+import com.giacomosirri.myapplication.ui.AppContext
+import com.giacomosirri.myapplication.ui.theme.*
 import java.text.DateFormat
 import java.util.*
 
@@ -425,5 +426,91 @@ fun CheckboxItem(text: String, paddingValues: PaddingValues) {
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(start = 8.dp)
         )
+    }
+}
+
+@Composable
+fun EventCard(event: String, navController: NavController) {
+    val openDialog = remember { mutableStateOf(false) }
+    Card(
+        modifier = Modifier
+            .padding(horizontal = 5.dp)
+            .padding(top = 5.dp)
+            .height(50.dp)
+            .clickable { openDialog.value = true },
+        border = BorderStroke(1.dp, Primary),
+        colors = CardDefaults.cardColors(containerColor = EventCardBackground)
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Text(event, Modifier.align(Alignment.Center))
+        }
+    }
+    if (openDialog.value) {
+        EventDialog("Sergio", event, "2023", "Nice", "Whatever", openDialog, navController)
+    }
+}
+
+@Composable
+fun EventDialog(
+    organizer: String,
+    eventName: String,
+    date: String,
+    description: String,
+    dressCode: String,
+    openDialog: MutableState<Boolean>,
+    navController: NavController
+) {
+    Dialog(
+        onDismissRequest = { openDialog.value = false },
+        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
+    ) {
+        DialogCard(
+            minHeight = 300.dp,
+            maxHeight = 600.dp,
+            elevations = 10.dp,
+            colors = CardDefaults.cardColors(containerColor = Secondary)
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                val entryPaddingValues = PaddingValues(horizontal = 15.dp, vertical = 10.dp)
+                DialogImage(imageDescription = "Event Position", imageId = R.drawable.placeholder)
+                DialogTitle(paddingValues = entryPaddingValues, text = eventName)
+                if (organizer != AppContext.getCurrentUser()) {
+                    DialogEntry(
+                        paddingValues = PaddingValues(horizontal = 15.dp),
+                        text = "Organizer: ",
+                        value = {
+                            OutlinedButton(
+                                onClick = { navController.navigate(NavigationScreen.UserProfile.name + organizer) }
+                            ) {
+                                Text(text = organizer)
+                            }
+                        })
+                }
+                DialogEntry(paddingValues = entryPaddingValues, text = "Date: ", value = date)
+                DialogEntry(paddingValues = entryPaddingValues, text = "Description: ", value = description)
+                DialogEntry(paddingValues = entryPaddingValues, text = "Dress Code: ", value = dressCode)
+                if (organizer == AppContext.getCurrentUser()) {
+                    DialogEntry(
+                        paddingValues = entryPaddingValues,
+                        composable1 = {
+                            OutlinedButton(
+                                onClick = { /*TODO*/ },
+                                modifier = Modifier.size(140.dp, 45.dp)) {
+                                Text(text = "Edit Event")
+                            }
+                        },
+                        composable2 = {
+                            Button(
+                                onClick = { /*TODO*/ },
+                                modifier = Modifier.size(140.dp, 45.dp)) {
+                                Text(text = "Delete Event")
+                            }
+                        }
+                    )
+                }
+            }
+        }
     }
 }
