@@ -230,14 +230,14 @@ fun DateSelector(
 @Composable
 private fun CommonErrorDialog(
     isDialogOpen: MutableState<Boolean>,
-    moveToAnotherScreenOptionExists: Boolean,
-    // if moveToAnotherScreenOptionExists is false, onAccept is going to be treated as if it were null anyway.
+    canRefuseToAccept: Boolean,
+    // if canRefuseToAccept is false, onAccept is going to be treated as if it were null anyway.
     onAccept: (() -> Unit)?,
     dialogTitle: String?,
     mainText: String,
-    stayText: String,
-    // if moveToAnotherScreenOptionExists is false, quitText is going to be treated as if it were null anyway.
-    quitText: String?,
+    acceptText: String,
+    // if canRefuseToAccept is false, quitText is going to be treated as if it were null anyway.
+    refuseText: String?,
 ) {
     Dialog(
         onDismissRequest = { isDialogOpen.value = false },
@@ -261,24 +261,23 @@ private fun CommonErrorDialog(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    TextButton(
-                        onClick = { isDialogOpen.value = false },
-                        modifier = Modifier.padding(end = 10.dp)
-                    ) {
-                        Text(text = stayText, color = Error)
-                    }
-                    // The rightmost button.
-                    if (moveToAnotherScreenOptionExists) {
+                    // The refuse button is not be present when the user has no choice but to accept the dialog.
+                    if (canRefuseToAccept) {
                         TextButton(
-                            onClick = {
-                                isDialogOpen.value = false
-                                // if quitOptionExists is true, onQuit cannot be null
-                                onAccept!!.invoke()
-                            }
+                            onClick = { isDialogOpen.value = false },
+                            modifier = Modifier.padding(end = 10.dp)
                         ) {
-                            // if quitOptionExists is true, quitText cannot be null
-                            Text(text = quitText!!, color = Error)
+                            Text(text = refuseText!!, color = Error)
                         }
+                    }
+                    // The accept button must always exist.
+                    TextButton(
+                        onClick = {
+                            isDialogOpen.value = false
+                            onAccept?.invoke()
+                        }
+                    ) {
+                        Text(text = acceptText, color = Error)
                     }
                 }
             }
@@ -296,16 +295,16 @@ fun IncorrectInputDialog(
     isDialogOpen: MutableState<Boolean>,
     dialogTitle: String?,
     mainText: String,
-    stayText: String
+    acceptText: String
 ) {
     CommonErrorDialog(
         isDialogOpen = isDialogOpen,
-        moveToAnotherScreenOptionExists = false,
+        canRefuseToAccept = false,
         onAccept = null,
         dialogTitle = dialogTitle,
         mainText = mainText,
-        stayText = stayText,
-        quitText = null
+        acceptText = acceptText,
+        refuseText = null
     )
 }
 
@@ -325,12 +324,12 @@ fun QuitScreenDialog(
 ) {
     CommonErrorDialog(
         isDialogOpen = isDialogOpen,
-        moveToAnotherScreenOptionExists = true,
+        canRefuseToAccept = true,
         onAccept = onQuit,
         dialogTitle = dialogTitle,
         mainText = mainText,
-        stayText = stayText,
-        quitText = quitText
+        acceptText = quitText,
+        refuseText = stayText
     )
 }
 
@@ -345,17 +344,17 @@ fun DefinitiveDeletionDialog(
     onAccept: (() -> Unit),
     dialogTitle: String?,
     mainText: String,
-    quitText: String,
-    stayText: String
+    acceptText: String,
+    refuseText: String
 ) {
     CommonErrorDialog(
         isDialogOpen = isDialogOpen,
-        moveToAnotherScreenOptionExists = true,
+        canRefuseToAccept = true,
         onAccept = onAccept,
         dialogTitle = dialogTitle,
         mainText = mainText,
-        stayText = stayText,
-        quitText = quitText
+        acceptText = acceptText,
+        refuseText = refuseText
     )
 }
 
