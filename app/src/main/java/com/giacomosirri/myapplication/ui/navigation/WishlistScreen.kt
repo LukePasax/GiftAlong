@@ -59,7 +59,7 @@ fun WishlistScreen(
         }
     ) {
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
-            item { WishlistItem(itemId = 0, itemName = "Ciao", username  = username, navController = navController) }
+            item { WishlistItem(itemId = 0, itemName = "Ciao", username  = username, navController = navController, reservingUser = "Mario") }
             item { WishlistItem(itemId = 1, itemName = AppContext.getCurrentUser(), username = username, navController = navController) }
         }
     }
@@ -78,6 +78,7 @@ fun WishlistItem(
     username: String,
     price: String? = null,
     image: Int = R.drawable.placeholder,
+    reservingUser: String? = null,
     navController: NavController
 ) {
     val openDialog = remember { mutableStateOf(false) }
@@ -168,14 +169,22 @@ fun WishlistItem(
         ListItemDivider()
     }
     if (openDialog.value) {
-        ItemDialog(itemName, openDialog, username, reserved, bought)
+        ItemDialog(navController, itemName, openDialog, username, reserved, bought, reservingUser)
     }
 }
 
 @Composable
-fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: String, reserved: MutableState<Boolean>, bought: MutableState<Boolean>) {
+fun ItemDialog(
+    navController: NavController,
+    itemName: String,
+    openDialog: MutableState<Boolean>,
+    username: String,
+    // The user that has ALREADY reserved this item, if it exists.
+    reserved: MutableState<Boolean>,
+    bought: MutableState<Boolean>,
+    reservingUser: String? = null,
+) {
     val description = "This is a description"
-    val reservingUser = "Sergio"
     val url = "www.url.it"
     val buyButtonText = if (reserved.value && bought.value) "Bought" else "Buy"
     val reserveButtonText = if (reserved.value) "Reserved" else "Reserve"
@@ -208,17 +217,19 @@ fun ItemDialog(itemName: String, openDialog: MutableState<Boolean>, username: St
                     value = description
                 )
                 if (username != AppContext.getCurrentUser()) {
-                    DialogEntry(
-                        paddingValues = entryPaddingValues,
-                        text = "Reserved by: ",
-                        value = {
-                            TextButton(
-                                onClick = { /*TODO*/ }
-                            ) {
-                                Text(text = reservingUser)
+                    if (reservingUser != null) {
+                        DialogEntry(
+                            paddingValues = PaddingValues(horizontal = 15.dp),
+                            text = "Reserved by:",
+                            value = {
+                                OutlinedButton(
+                                    onClick = { navController.navigate(NavigationScreen.UserProfile.name + reservingUser) }
+                                ) {
+                                    Text(text = reservingUser)
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                     DialogEntry(
                         paddingValues = entryPaddingValues,
                         composable1 = {
