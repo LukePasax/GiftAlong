@@ -59,18 +59,18 @@ fun NewItemScreen(
             verticalArrangement = Arrangement.spacedBy(27.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            var itemName by remember { mutableStateOf(name ?: "") }
-            var itemDescription by remember { mutableStateOf(description ?:"") }
-            var itemLink by remember { mutableStateOf(link ?: "") }
-            var lowerBoundPrice by remember { mutableStateOf(upperBound?: 0) }
-            var upperBoundPrice by remember { mutableStateOf(lowerBound ?: 0) }
+            val itemName = remember { mutableStateOf(name ?: "") }
+            val itemDescription = remember { mutableStateOf(description ?:"") }
+            val itemLink = remember { mutableStateOf(link ?: "") }
+            val lowerBoundPrice = remember { mutableStateOf(upperBound?: 0) }
+            val upperBoundPrice = remember { mutableStateOf(lowerBound ?: 0) }
             // Title
             OutlinedTextField(
                 modifier = Modifier
                     .padding(lateralPadding)
                     .fillMaxWidth(),
-                value = itemName,
-                onValueChange = { itemName = it },
+                value = itemName.value,
+                onValueChange = { itemName.value = it },
                 label = { Text("Title *") }
             )
             // Photo
@@ -80,8 +80,8 @@ fun NewItemScreen(
                 modifier = Modifier
                     .padding(lateralPadding)
                     .fillMaxWidth(),
-                value = itemLink,
-                onValueChange = { itemLink = it },
+                value = itemLink.value,
+                onValueChange = { itemLink.value = it },
                 label = { Text("Link") },
             )
             // Price range
@@ -99,8 +99,8 @@ fun NewItemScreen(
                     modifier = Modifier
                         .requiredWidth(100.dp)
                         .padding(PaddingValues(horizontal = 10.dp)),
-                    value = lowerBoundPrice.toString(),
-                    onValueChange = { lowerBoundPrice = it.toInt() },
+                    value = lowerBoundPrice.value.toString(),
+                    onValueChange = { lowerBoundPrice.value = it.toInt() },
                     label = { Text("Lower") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
@@ -109,8 +109,8 @@ fun NewItemScreen(
                     modifier = Modifier
                         .requiredWidth(100.dp)
                         .padding(PaddingValues(horizontal = 10.dp)),
-                    value = upperBoundPrice.toString(),
-                    onValueChange = { upperBoundPrice = it.toInt() },
+                    value = upperBoundPrice.value.toString(),
+                    onValueChange = { upperBoundPrice.value = it.toInt() },
                     label = { Text("Upper") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
@@ -130,8 +130,8 @@ fun NewItemScreen(
                     .padding(lateralPadding)
                     .fillMaxWidth()
                     .height(130.dp),
-                value = itemDescription,
-                onValueChange = { itemDescription = it },
+                value = itemDescription.value,
+                onValueChange = { itemDescription.value = it },
                 label = { Text("Description") },
             )
             // Buttons
@@ -141,6 +141,7 @@ fun NewItemScreen(
                     top = 12.dp,
                     end = lateralPadding.calculateEndPadding(LayoutDirection.Ltr)
                 ),
+                isSubmitEnabled = itemName.value.trim().isNotEmpty(),
                 onSubmitClick = {
                     if(isInEditMode) {
                         /* TODO: update the values in the database */

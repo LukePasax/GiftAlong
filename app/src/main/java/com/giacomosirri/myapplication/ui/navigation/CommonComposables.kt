@@ -362,6 +362,7 @@ fun DefinitiveDeletionDialog(
 @Composable
 fun FormButtons(
     paddingValues: PaddingValues,
+    isSubmitEnabled: Boolean,
     onSubmitClick: () -> Unit,
     onCancelClick: () -> Unit
 ) {
@@ -395,6 +396,7 @@ fun FormButtons(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 5.dp),
+            enabled = isSubmitEnabled,
             colors = ButtonDefaults.buttonColors(containerColor = Color.Blue, contentColor = Color.White),
             onClick = onSubmitClick
         ) {
@@ -404,21 +406,20 @@ fun FormButtons(
 }
 
 @Composable
-fun CheckboxItem(text: String, paddingValues: PaddingValues) {
-    val (checkedState, onStateChange) = remember { mutableStateOf(false) }
+fun CheckboxItem(text: String, paddingValues: PaddingValues, state: MutableState<Boolean>) {
     Row(
         modifier = Modifier
             .defaultMinSize(minWidth = 80.dp)
             .padding(paddingValues)
             .toggleable(
-                value = checkedState,
-                onValueChange = { onStateChange(!checkedState) },
+                value = state.value,
+                onValueChange = { state.value = !state.value },
                 role = Role.Checkbox
             ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Checkbox(
-            checked = checkedState,
+            checked = state.value,
             onCheckedChange = null
         )
         Text(

@@ -52,16 +52,20 @@ fun NewEventScreen(
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(17.dp)
         ) {
-            var eventTitle by remember { mutableStateOf("") }
-            var eventDescription by remember { mutableStateOf("") }
-            var dressCode by remember { mutableStateOf("") }
+            val eventTitle = remember { mutableStateOf("") }
+            val eventDescription = remember { mutableStateOf("") }
+            val dressCode = remember { mutableStateOf("") }
+            val friendsAllowed = remember { mutableStateOf(false) }
+            val partnersAllowed = remember { mutableStateOf(false) }
+            val familyAllowed = remember { mutableStateOf(false) }
+            val colleaguesAllowed = remember { mutableStateOf(false) }
             // Title
             OutlinedTextField(
                 modifier = Modifier
                     .padding(lateralPadding)
                     .fillMaxWidth(),
-                value = eventTitle,
-                onValueChange = { eventTitle = it },
+                value = eventTitle.value,
+                onValueChange = { eventTitle.value = it },
                 label = { Text("Title *") },
             )
             // Location
@@ -99,8 +103,8 @@ fun NewEventScreen(
                     .padding(lateralPadding)
                     .fillMaxWidth()
                     .height(120.dp),
-                value = eventDescription,
-                onValueChange = { eventDescription = it },
+                value = eventDescription.value,
+                onValueChange = { eventDescription.value = it },
                 label = { Text("Description") },
             )
             // Invite
@@ -125,14 +129,14 @@ fun NewEventScreen(
                     Column(
                         modifier = Modifier.requiredWidth(150.dp),
                     ) {
-                        CheckboxItem("Friends", pv)
-                        CheckboxItem("Partner", pv)
+                        CheckboxItem("Friends", pv, friendsAllowed)
+                        CheckboxItem("Partner", pv, partnersAllowed)
                     }
                     Column(
                         modifier = Modifier.requiredWidth(150.dp),
                     ) {
-                        CheckboxItem("Family", pv)
-                        CheckboxItem("Colleagues", pv)
+                        CheckboxItem("Family", pv, familyAllowed)
+                        CheckboxItem("Colleagues", pv, colleaguesAllowed)
                     }
                 }
             }
@@ -141,8 +145,8 @@ fun NewEventScreen(
                 modifier = Modifier
                     .padding(lateralPadding)
                     .fillMaxWidth(),
-                value = dressCode,
-                onValueChange = { dressCode = it },
+                value = dressCode.value,
+                onValueChange = { dressCode.value = it },
                 label = { Text("Dress code") },
             )
             // Buttons
@@ -152,6 +156,8 @@ fun NewEventScreen(
                     top = 15.dp,
                     end = lateralPadding.calculateEndPadding(LayoutDirection.Ltr)
                 ),
+                isSubmitEnabled = eventTitle.value.trim().isNotEmpty() &&
+                        (friendsAllowed.value || partnersAllowed.value || familyAllowed.value || colleaguesAllowed.value),
                 onSubmitClick = {},
                 onCancelClick = onQuit
             )
