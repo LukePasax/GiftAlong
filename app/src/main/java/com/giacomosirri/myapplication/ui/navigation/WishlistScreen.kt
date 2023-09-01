@@ -223,7 +223,10 @@ fun ItemDialog(
                             text = "Reserved by:",
                             value = {
                                 OutlinedButton(
-                                    onClick = { navController.navigate(NavigationScreen.UserProfile.name + reservingUser) }
+                                    onClick = {
+                                        openDialog.value = false
+                                        navController.navigate(NavigationScreen.UserProfile.name + reservingUser)
+                                    }
                                 ) {
                                     Text(text = reservingUser)
                                 }

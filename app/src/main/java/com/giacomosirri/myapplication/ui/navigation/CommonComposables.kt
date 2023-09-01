@@ -179,6 +179,7 @@ fun DateSelector(
     buttonText: String,
     datePickerState: DatePickerState
 ) {
+    /* TODO disable picking some dates based on boolean input parameters */
     // Date dialog
     val isDateDialogOpen = remember { mutableStateOf(false) }
     val confirmEnabled = derivedStateOf { datePickerState.selectedDateMillis != null }
@@ -446,7 +447,7 @@ fun EventCard(event: String, navController: NavController) {
         }
     }
     if (openDialog.value) {
-        EventDialog("Sergio", event, "2023", "Nice", "Whatever", openDialog, navController)
+        EventDialog(AppContext.getCurrentUser(), event, "2023", "Nice", "Whatever", openDialog, navController)
     }
 }
 
@@ -482,7 +483,10 @@ fun EventDialog(
                         text = "Organizer: ",
                         value = {
                             OutlinedButton(
-                                onClick = { navController.navigate(NavigationScreen.UserProfile.name + organizer) }
+                                onClick = {
+                                    openDialog.value = false
+                                    navController.navigate(NavigationScreen.UserProfile.name + organizer)
+                                }
                             ) {
                                 Text(text = organizer)
                             }
