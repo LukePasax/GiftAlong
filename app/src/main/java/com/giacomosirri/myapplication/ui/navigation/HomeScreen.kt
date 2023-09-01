@@ -23,12 +23,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.navigation.NavController
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.*
 
 @Composable
-fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit) {
+fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit, navController: NavController) {
     Scaffold(
         topBar = {
             NavigationAppBar(
@@ -47,7 +48,11 @@ fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit) {
     ) {
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
             items(1) {
-                DayCard(date = "Tuesday, December 21, 2023", events = listOf("Sergio's Degree", "James' Birthday"))
+                DayCard(
+                    date = "Tuesday, December 21, 2023",
+                    events = listOf("Sergio's Degree", "James' Birthday"),
+                    navController = navController
+                )
                 SpecialEventCard(date = "25 December", event = "Christmas")
             }
         }
@@ -55,16 +60,20 @@ fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit) {
 }
 
 @Composable
-fun HomeScreen(searchedEvents: String) {
+fun HomeScreen(searchedEvents: String, navController: NavController) {
     LazyColumn(modifier = Modifier.padding(PaddingValues(top = 10.dp))) {
         items(1) {
-            DayCard(date = "Tuesday, December 21, 2023", events = listOf("Sergio's Degree", "James' Birthday"))
+            DayCard(
+                date = "Tuesday, December 21, 2023",
+                events = listOf("Sergio's Degree", "James' Birthday"),
+                navController = navController
+            )
         }
     }
 }
 
 @Composable
-fun DayCard(date: String, events: List<String>) {
+fun DayCard(date: String, events: List<String>, navController: NavController) {
     Column(
         modifier = Modifier
             .padding(horizontal = 5.dp, vertical = 10.dp)
@@ -81,13 +90,13 @@ fun DayCard(date: String, events: List<String>) {
             }
         }
         for (event in events) {
-            EventCard(event)
+            EventCard(event, navController)
         }
     }
 }
 
 @Composable
-fun EventCard(event: String) {
+fun EventCard(event: String, navController: NavController) {
     val openDialog = remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
@@ -103,13 +112,13 @@ fun EventCard(event: String) {
         }
     }
     if (openDialog.value) {
-        EventDialog(event, openDialog)
+        EventDialog(event, openDialog, navController)
     }
 }
 
 @Composable
-fun EventDialog(eventName: String, openDialog: MutableState<Boolean>) {
-    val username = AppContext.getCurrentUser()
+fun EventDialog(eventName: String, openDialog: MutableState<Boolean>, navController: NavController) {
+    val username = "Sergio"
     val date = "25 December"
     val description = "This is a description"
     val dressCode = "Casual"
@@ -136,7 +145,7 @@ fun EventDialog(eventName: String, openDialog: MutableState<Boolean>) {
                         text = "Organizer: ",
                         value = {
                             TextButton(
-                                onClick = { /*TODO*/ }
+                                onClick = { navController.navigate(NavigationScreen.UserProfile.name + username) }
                             ) {
                                 Text(text = username)
                             }

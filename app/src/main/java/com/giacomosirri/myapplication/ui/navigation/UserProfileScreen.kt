@@ -19,13 +19,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.navigation.NavController
 import com.giacomosirri.myapplication.R
 
 @Composable
 fun UserProfileScreen(
     paddingValues: PaddingValues,
     username: String,
-    onWishlistButtonClick: () -> Unit
+    onWishlistButtonClick: () -> Unit,
+    navController: NavController
 ) {
     val openDialog = remember { mutableStateOf(false) }
     val relationshipTypes = listOf("Friend", "Family", "Partner", "Colleague", "None")
@@ -99,8 +101,8 @@ fun UserProfileScreen(
                 }
                 LazyColumn(modifier = Modifier.padding(10.dp)) {
                     items(1) {
-                        EventCard("Sergio's Degree")
-                        EventCard("James' Birthday")
+                        EventCard(event = "Sergio's Degree", navController = navController)
+                        EventCard(event ="James' Birthday", navController = navController)
                     }
                 }
             }

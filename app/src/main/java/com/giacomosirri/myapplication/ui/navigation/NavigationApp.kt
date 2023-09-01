@@ -218,7 +218,8 @@ fun NavigationGraph(
         composable(NavigationScreen.Home.name) {
             HomeScreen(
                 paddingValues = paddingValues,
-                onFabClick = { navController.navigate(NavigationScreen.NewEvent.name) }
+                onFabClick = { navController.navigate(NavigationScreen.NewEvent.name) },
+                navController = navController
             )
         }
         composable(NavigationScreen.Wishlist.name + "{username}") {
@@ -251,7 +252,8 @@ fun NavigationGraph(
             UserProfileScreen(
                 paddingValues = paddingValues,
                 username = username,
-                onWishlistButtonClick = { navController.navigate(NavigationScreen.Wishlist.name + username) }
+                onWishlistButtonClick = { navController.navigate(NavigationScreen.Wishlist.name + username) },
+                navController = navController
             )
         }
         composable(NavigationScreen.Relationships.name) {
@@ -306,7 +308,7 @@ fun NavigationAppBar(
         ) {
             if (displayQueriedEvents) {
                 when (currentScreenName) {
-                    AppContext.getContext()?.getString(R.string.home) -> HomeScreen(query)
+                    AppContext.getContext()?.getString(R.string.home) -> HomeScreen(query, navigation.navController)
                     AppContext.getContext()?.getString(R.string.wishlist) -> WishlistScreen(query)
                     AppContext.getContext()?.getString(R.string.relationships) -> RelationshipsScreen(query)
                 }
