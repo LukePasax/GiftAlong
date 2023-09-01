@@ -92,7 +92,7 @@ fun WishlistItem(
             onAccept = { /*TODO*/ },
             dialogTitle = "Item deletion",
             mainText = "Are you sure you want to delete this item from your wishlist? This operation cannot be undone.",
-            acceptText = "Yes, I am",
+            acceptText = "Yes",
             refuseText = "Don't delete"
         )
     }

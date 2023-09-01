@@ -159,16 +159,47 @@ private fun NavigationDrawer(content: @Composable () -> Unit) {
                     Spacer(modifier = Modifier.fillMaxWidth(.8f))
                     Switch(checked = darkMode, onCheckedChange = { darkMode = it })
                 }
+                val isLogoutDialogOpen = remember { mutableStateOf(false) }
+                if (isLogoutDialogOpen.value) {
+                    QuitScreenDialog(
+                        isDialogOpen = isLogoutDialogOpen,
+                        onQuit = {
+                            navigation.scope.launch { navigation.drawerState.close() }
+                            navigation.navController.navigate(NavigationScreen.Login.name)
+                        },
+                        dialogTitle = "Logout",
+                        mainText = "Are you sure you want to logout?",
+                        quitText = "Yes",
+                        stayText = "Don't logout"
+                    )
+                }
                 TextButton(
                     modifier = Modifier.padding(horizontal = 10.dp),
-                    onClick = {},
+                    onClick = {
+                        isLogoutDialogOpen.value = true
+                    },
                     colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)
                 ) {
                     Text(text = "Logout", fontSize = 16.sp)
                 }
+                val isDeleteAccountDialogOpen = remember { mutableStateOf(false) }
+                if (isDeleteAccountDialogOpen.value) {
+                    QuitScreenDialog(
+                        isDialogOpen = isDeleteAccountDialogOpen,
+                        onQuit = {
+                            /* TODO remove user from database */
+                            navigation.scope.launch { navigation.drawerState.close() }
+                            navigation.navController.navigate(NavigationScreen.Login.name)
+                        },
+                        dialogTitle = "Delete Account",
+                        mainText = "Are you really sure you want to delete your account? This operation cannot be undone.",
+                        quitText = "Yes",
+                        stayText = "Don't delete"
+                    )
+                }
                 TextButton(
                     modifier = Modifier.padding(horizontal = 10.dp),
-                    onClick = {},
+                    onClick = { isDeleteAccountDialogOpen.value = true },
                     colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)
                 ) {
                     Text(text = "Delete Account", fontSize = 16.sp)
