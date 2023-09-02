@@ -84,7 +84,7 @@ fun NavigationApp(
                     paddingValues = paddingValues,
                     appViewModel = appViewModel,
                     settingsViewModel = settingsViewModel,
-                    isLoginRequired = currentLoggedInUsername.isNotEmpty() && currentLoggedInPassword.isNotEmpty(),
+                    isLoginRequired = currentLoggedInUsername.isEmpty() && currentLoggedInPassword.isEmpty(),
                     currentUser = currentLoggedInUsername
                 )
             }
@@ -95,7 +95,7 @@ fun NavigationApp(
             paddingValues = paddingValues,
             appViewModel = appViewModel,
             settingsViewModel = settingsViewModel,
-            isLoginRequired = currentLoggedInUsername.isNotEmpty() && currentLoggedInPassword.isNotEmpty(),
+            isLoginRequired = currentLoggedInUsername.isEmpty() && currentLoggedInPassword.isEmpty(),
             currentUser = currentLoggedInUsername
         )
     }
