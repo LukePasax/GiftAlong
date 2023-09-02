@@ -17,13 +17,15 @@ import androidx.compose.ui.unit.dp
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
+import com.giacomosirri.myapplication.viewmodel.SettingsViewModel
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistrationScreen(
     paddingValues: PaddingValues,
-    viewModel: AppViewModel,
+    appViewModel: AppViewModel,
+    settingsViewModel: SettingsViewModel,
     onRegisterClick: () -> Unit
 ) {
     val lateralPadding = PaddingValues(horizontal = 20.dp)
@@ -139,13 +141,14 @@ fun RegistrationScreen(
                     if (username.trim() == "giacomo") {
                         isUsernameAlreadyTakenDialogOpen.value = true
                     } else {
-                        viewModel.registerUser(
+                        appViewModel.registerUser(
                             username.trim(),
                             password.trim(),
                             name.trim(),
                             surname.trim(),
                             Date(datePickerState.selectedDateMillis!!)
                         )
+                        settingsViewModel.automaticLogin(username.trim(), password.trim())
                         AppContext.setCurrentUser(username.trim())
                         onRegisterClick.invoke()
                     }
