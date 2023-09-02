@@ -84,7 +84,7 @@ fun NavigationApp(
                     paddingValues = paddingValues,
                     appViewModel = appViewModel,
                     settingsViewModel = settingsViewModel,
-                    isLoginRequired = isAutoAuthActive,
+                    isLoginRequired = !isAutoAuthActive,
                     currentUser = authUser
                 )
             }
@@ -95,7 +95,7 @@ fun NavigationApp(
             paddingValues = paddingValues,
             appViewModel = appViewModel,
             settingsViewModel = settingsViewModel,
-            isLoginRequired = isAutoAuthActive,
+            isLoginRequired = !isAutoAuthActive,
             currentUser = authUser
         )
     }
@@ -260,7 +260,7 @@ fun NavigationGraph(
             else {
                 AppContext.setCurrentUser(currentUser)
                 NavigationScreen.Home.name
-            },
+            }
     ) {
         composable(NavigationScreen.Registration.name) {
             RegistrationScreen(
