@@ -89,7 +89,7 @@ fun WishlistItem(
     if (isCancelItemDialogOpen.value) {
         DefinitiveDeletionDialog(
             isDialogOpen = isCancelItemDialogOpen,
-            onAccept = { /*TODO*/ },
+            onAccept = { /*TODO delete item from database */ },
             dialogTitle = "Item deletion",
             mainText = "Are you sure you want to delete this item from your wishlist? This operation cannot be undone.",
             acceptText = "Yes",

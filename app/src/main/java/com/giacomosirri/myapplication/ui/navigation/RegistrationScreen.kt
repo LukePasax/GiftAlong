@@ -50,6 +50,15 @@ fun RegistrationScreen(
             var name by remember { mutableStateOf("") }
             var surname by remember { mutableStateOf("") }
             var passwordHidden by remember { mutableStateOf(true) }
+            val datePickerState = rememberDatePickerState(
+                initialSelectedDateMillis = 0L,
+                // A person must be born before 2012 in order to be registered.
+                selectableDates = object: SelectableDates {
+                    override fun isSelectableYear(year: Int): Boolean {
+                        return year < 2012
+                    }
+                }
+            )
             // Name
             OutlinedTextField(
                 modifier = Modifier
@@ -104,7 +113,6 @@ fun RegistrationScreen(
                 }
             )
             // Date dialog
-            val datePickerState = rememberDatePickerState(0L)
             DateSelector(
                 paddingValues = lateralPadding,
                 buttonText = "Select your birthday *",

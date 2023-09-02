@@ -76,7 +76,15 @@ fun NewEventScreen(
             val eventTitle = remember { mutableStateOf(name ?: "") }
             val eventDescription = remember { mutableStateOf(description ?: "") }
             val eventDressCode = remember { mutableStateOf(dressCode ?: "") }
-            val datePickerState = rememberDatePickerState(initialSelectedDateMillis = date?.time ?: Date().time)
+            val datePickerState = rememberDatePickerState(
+                initialSelectedDateMillis = date?.time ?: Date().time,
+                // An event can only be scheduled for the future.
+                selectableDates = object: SelectableDates {
+                    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                        return Date(utcTimeMillis).after(Date())
+                    }
+                }
+            )
             val friendsAllowed = remember { mutableStateOf(friends ?: false) }
             val partnersAllowed = remember { mutableStateOf(partners ?: false) }
             val familyAllowed = remember { mutableStateOf(family ?: false) }
