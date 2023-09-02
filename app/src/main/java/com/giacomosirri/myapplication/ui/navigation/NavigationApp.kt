@@ -77,7 +77,7 @@ fun NavigationApp(
     val isAutoAuthActive by settingsViewModel.isAutoAuthActive.collectAsState(initial = false)
     val authUser by settingsViewModel.authenticatedUser.collectAsState(initial = "")
     if (entryScreenName != NavigationScreen.Login.name) {
-        NavigationDrawer {
+        NavigationDrawer(settingsViewModel) {
             Scaffold {
                 NavigationGraph(
                     navController = navController,
@@ -102,7 +102,7 @@ fun NavigationApp(
 }
 
 @Composable
-private fun NavigationDrawer(content: @Composable () -> Unit) {
+private fun NavigationDrawer(settingsViewModel: SettingsViewModel, content: @Composable () -> Unit) {
     val navigation = Navigator.getNavigation()
     ModalNavigationDrawer(
         drawerState = navigation.drawerState,
@@ -194,6 +194,7 @@ private fun NavigationDrawer(content: @Composable () -> Unit) {
                 TextButton(
                     modifier = Modifier.padding(horizontal = 10.dp),
                     onClick = {
+                        settingsViewModel.deactivateAutomaticAuthentication()
                         isLogoutDialogOpen.value = true
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)

@@ -25,10 +25,12 @@ import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Primary
 import com.giacomosirri.myapplication.ui.theme.Typography
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
+import com.giacomosirri.myapplication.viewmodel.SettingsViewModel
 
 @Composable
 fun LoginScreen(
-    viewModel: AppViewModel,
+    appViewModel: AppViewModel,
+    settingsViewModel: SettingsViewModel,
     onLoginClick: () -> Unit,
     onRegisterClick: (Int) -> Unit
 ) {
@@ -91,9 +93,10 @@ fun LoginScreen(
         // Check that the login is valid.
         if (isLoginButtonClicked.value) {
             LaunchedEffect(Unit) {
-                val loginValid = viewModel.loginUser(username.value.text, password.value.text)
+                val loginValid = appViewModel.loginUser(username.value.text, password.value.text)
                 if (loginValid) {
                     // Users passes the check and becomes the current user.
+                    settingsViewModel.activateAutomaticAuthentication(username.value.text.trim())
                     AppContext.setCurrentUser(username.value.text.trim())
                     onLoginClick.invoke()
                 } else {

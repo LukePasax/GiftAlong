@@ -148,7 +148,10 @@ fun RegistrationScreen(
                             surname.trim(),
                             Date(datePickerState.selectedDateMillis!!)
                         )
-                        settingsViewModel.automaticLogin(username.trim(), password.trim())
+                        // The next time the user launches the app from this device,
+                        // the login page won't show as the user is automatically authenticated.
+                        // This is true until the user logs out.
+                        settingsViewModel.activateAutomaticAuthentication(username.trim())
                         AppContext.setCurrentUser(username.trim())
                         onRegisterClick.invoke()
                     }
