@@ -26,6 +26,7 @@ import com.giacomosirri.myapplication.ui.theme.Background
 import com.giacomosirri.myapplication.ui.theme.Primary
 import com.giacomosirri.myapplication.ui.theme.Typography
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
+import com.giacomosirri.myapplication.viewmodel.SettingsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -62,7 +63,8 @@ class LeadingNavigationIconStrategy(val onBackArrow: () -> Unit, val onMenuIcon:
 fun NavigationApp(
     navController: NavHostController = rememberNavController(),
     paddingValues: PaddingValues,
-    viewModel: AppViewModel
+    appViewModel: AppViewModel,
+    settingsViewModel: SettingsViewModel
 ) {
     Navigator.setNavigation(Navigation(
         navController = navController,
@@ -72,14 +74,30 @@ fun NavigationApp(
     ))
     val entryScreenName = navController.currentBackStackEntryAsState().value?.destination?.route ?:
         NavigationScreen.Login.name
+    val currentLoggedInUsername by settingsViewModel.username.collectAsState(initial = "")
+    val currentLoggedInPassword by settingsViewModel.password.collectAsState(initial = "")
     if (entryScreenName != NavigationScreen.Login.name) {
         NavigationDrawer {
             Scaffold {
-                NavigationGraph(navController, paddingValues, viewModel)
+                NavigationGraph(
+                    navController = navController,
+                    paddingValues = paddingValues,
+                    appViewModel = appViewModel,
+                    settingsViewModel = settingsViewModel,
+                    isLoginRequired = currentLoggedInUsername.isNotEmpty() && currentLoggedInPassword.isNotEmpty(),
+                    currentUser = currentLoggedInUsername
+                )
             }
         }
     } else {
-        NavigationGraph(navController, paddingValues, viewModel)
+        NavigationGraph(
+            navController = navController,
+            paddingValues = paddingValues,
+            appViewModel = appViewModel,
+            settingsViewModel = settingsViewModel,
+            isLoginRequired = currentLoggedInUsername.isNotEmpty() && currentLoggedInPassword.isNotEmpty(),
+            currentUser = currentLoggedInUsername
+        )
     }
 }
 
@@ -226,22 +244,34 @@ fun navigateFromDrawer(menuItem: String?, navController: NavHostController) {
 fun NavigationGraph(
     navController: NavHostController,
     paddingValues: PaddingValues,
-    viewModel: AppViewModel
+    appViewModel: AppViewModel,
+    settingsViewModel: SettingsViewModel,
+    isLoginRequired: Boolean,
+    // The login is required if there is no current user, in which case this argument gets automatically ignored.
+    currentUser: String
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavigationScreen.Login.name,
+        startDestination =
+            if (isLoginRequired) {
+                NavigationScreen.Login.name
+            }
+            else {
+                AppContext.setCurrentUser(currentUser)
+                NavigationScreen.Home.name
+            },
     ) {
         composable(NavigationScreen.Registration.name) {
             RegistrationScreen(
                 paddingValues = paddingValues,
-                viewModel = viewModel,
+                appViewModel = appViewModel,
+                settingsViewModel = settingsViewModel,
                 onRegisterClick = { navController.navigate(NavigationScreen.Home.name) }
             )
         }
         composable(NavigationScreen.Login.name) {
             LoginScreen(
-                viewModel = viewModel,
+                viewModel = appViewModel,
                 onLoginClick = { navController.navigate(NavigationScreen.Home.name) },
                 onRegisterClick = { navController.navigate(NavigationScreen.Registration.name) }
             )

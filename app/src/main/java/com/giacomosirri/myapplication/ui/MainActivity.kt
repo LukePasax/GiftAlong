@@ -9,11 +9,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.giacomosirri.myapplication.GiftAlong
 import com.giacomosirri.myapplication.ui.navigation.NavigationApp
 import com.giacomosirri.myapplication.ui.theme.MyApplicationTheme
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
-import com.giacomosirri.myapplication.viewmodel.AppViewModelFactory
+import com.giacomosirri.myapplication.viewmodel.SettingsViewModel
 import java.lang.ref.WeakReference
 
 class AppContext private constructor() {
@@ -38,10 +37,8 @@ class AppContext private constructor() {
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel by viewModels<AppViewModel> {
-            val app = application as GiftAlong
-            AppViewModelFactory(app.eventRepository, app.itemRepository, app.userRepository)
-        }
+        val appViewModel: AppViewModel by viewModels()
+        val settingsViewModel: SettingsViewModel by viewModels()
         AppContext.setContext(applicationContext)
         setContent {
             MyApplicationTheme {
@@ -51,7 +48,8 @@ class MainActivity : ComponentActivity() {
                 ) {
                     NavigationApp(
                         paddingValues = PaddingValues(top = 70.dp),
-                        viewModel = viewModel
+                        appViewModel = appViewModel,
+                        settingsViewModel = settingsViewModel
                     )
                 }
             }
