@@ -179,7 +179,6 @@ fun DateSelector(
     buttonText: String,
     datePickerState: DatePickerState
 ) {
-    /* TODO disable picking some dates based on boolean input parameters */
     // Date dialog
     val isDateDialogOpen = remember { mutableStateOf(false) }
     val confirmEnabled = derivedStateOf { datePickerState.selectedDateMillis != null }
@@ -497,6 +496,21 @@ fun EventDialog(
                 DialogEntry(paddingValues = entryPaddingValues, text = "Description: ", value = description)
                 DialogEntry(paddingValues = entryPaddingValues, text = "Dress Code: ", value = dressCode)
                 if (organizer == AppContext.getCurrentUser()) {
+                    val isCancelEventDialogOpen = remember { mutableStateOf(false) }
+                    if (isCancelEventDialogOpen.value) {
+                        DefinitiveDeletionDialog(
+                            isDialogOpen = isCancelEventDialogOpen,
+                            onAccept = {
+                                isCancelEventDialogOpen.value = false
+                                openDialog.value = false
+                                /* TODO delete event from database */
+                            },
+                            dialogTitle = "Event Deletion",
+                            mainText = "Are you sure you want to delete this event? This action cannot be undone.",
+                            acceptText = "Yes",
+                            refuseText = "Cancel"
+                        )
+                    }
                     DialogEntry(
                         paddingValues = entryPaddingValues,
                         composable1 = {
@@ -511,7 +525,7 @@ fun EventDialog(
                         },
                         composable2 = {
                             Button(
-                                onClick = { /*TODO*/ },
+                                onClick = { isCancelEventDialogOpen.value = true },
                                 modifier = Modifier.size(140.dp, 45.dp)) {
                                 Text(text = "Delete Event")
                             }
