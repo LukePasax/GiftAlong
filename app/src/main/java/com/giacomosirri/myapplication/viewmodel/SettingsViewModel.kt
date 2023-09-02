@@ -9,13 +9,18 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 class SettingsViewModel(private val settingsRepository: SettingsRepository): ViewModel() {
-    val username: Flow<String> = settingsRepository.getUsername()
-    val password: Flow<String> = settingsRepository.getPassword()
+    val isAutoAuthActive: Flow<Boolean> = settingsRepository.isAutomaticAuthenticationActive()
+    val authenticatedUser: Flow<String> = settingsRepository.getAutomaticallyAuthenticatedUser()
 
-    fun automaticLogin(username: String, password: String) {
+    fun activateAutomaticAuthentication(username: String) {
         viewModelScope.launch {
-            settingsRepository.saveUsername(username)
-            settingsRepository.savePassword(password)
+            settingsRepository.activateAutomaticAuthentication(username)
+        }
+    }
+
+    fun deactivateAutomaticAuthentication() {
+        viewModelScope.launch {
+            settingsRepository.deactivateAutomaticAuthentication()
         }
     }
 }

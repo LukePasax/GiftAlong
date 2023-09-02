@@ -74,8 +74,8 @@ fun NavigationApp(
     ))
     val entryScreenName = navController.currentBackStackEntryAsState().value?.destination?.route ?:
         NavigationScreen.Login.name
-    val currentLoggedInUsername by settingsViewModel.username.collectAsState(initial = "")
-    val currentLoggedInPassword by settingsViewModel.password.collectAsState(initial = "")
+    val isAutoAuthActive by settingsViewModel.isAutoAuthActive.collectAsState(initial = false)
+    val authUser by settingsViewModel.authenticatedUser.collectAsState(initial = "")
     if (entryScreenName != NavigationScreen.Login.name) {
         NavigationDrawer {
             Scaffold {
@@ -84,8 +84,8 @@ fun NavigationApp(
                     paddingValues = paddingValues,
                     appViewModel = appViewModel,
                     settingsViewModel = settingsViewModel,
-                    isLoginRequired = currentLoggedInUsername.isEmpty() && currentLoggedInPassword.isEmpty(),
-                    currentUser = currentLoggedInUsername
+                    isLoginRequired = isAutoAuthActive,
+                    currentUser = authUser
                 )
             }
         }
@@ -95,8 +95,8 @@ fun NavigationApp(
             paddingValues = paddingValues,
             appViewModel = appViewModel,
             settingsViewModel = settingsViewModel,
-            isLoginRequired = currentLoggedInUsername.isEmpty() && currentLoggedInPassword.isEmpty(),
-            currentUser = currentLoggedInUsername
+            isLoginRequired = isAutoAuthActive,
+            currentUser = authUser
         )
     }
 }
@@ -271,7 +271,8 @@ fun NavigationGraph(
         }
         composable(NavigationScreen.Login.name) {
             LoginScreen(
-                viewModel = appViewModel,
+                appViewModel = appViewModel,
+                settingsViewModel = settingsViewModel,
                 onLoginClick = { navController.navigate(NavigationScreen.Home.name) },
                 onRegisterClick = { navController.navigate(NavigationScreen.Registration.name) }
             )

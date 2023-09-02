@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
             val app = application as GiftAlong
             AppViewModelFactory(app.eventRepository, app.itemRepository, app.userRepository)
         }
-        val settingsViewModel: SettingsViewModel by viewModels<SettingsViewModel> {
+        val settingsViewModel by viewModels<SettingsViewModel> {
             val app = application as GiftAlong
             SettingsViewModelFactory(app.settingsRepository)
         }
