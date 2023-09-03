@@ -122,7 +122,7 @@ fun NewItemScreen(
                 }
             }
             if (openDialog.value) {
-                RadioButtonDialog(currencies, selected, onSelected, openDialog)
+                RadioButtonDialog(title = "Select a currency:", currencies, selected, onSelected, openDialog)
             }
             // Description
             OutlinedTextField(

@@ -44,7 +44,7 @@ fun RelationshipsScreen(
             item {
                 RelationshipListItem(
                     username = "lukepasax",
-                    relationshipType = "None",
+                    relationshipType = "Colleague",
                     navController = navController
                 )
             }
@@ -71,10 +71,10 @@ fun RelationshipListItem(
     navController: NavController
 ) {
     val isDialogOpen = remember { mutableStateOf(false) }
-    val relationshipTypes = listOf("Friend", "Family", "Partner", "Colleague", "None")
+    val relationshipTypes = listOf("Friend", "Family", "Partner", "Colleague")
     val (selected, onSelected) = remember { mutableStateOf(relationshipType) }
     if (isDialogOpen.value) {
-        RadioButtonDialog(relationshipTypes, selected, onSelected, isDialogOpen)
+        RadioButtonDialog(title = "Select a type of relationship:", relationshipTypes, selected, onSelected, isDialogOpen)
     }
     Column {
         ListItem(
@@ -93,15 +93,7 @@ fun RelationshipListItem(
             },
             trailingContent = {
                 OutlinedButton(onClick = { isDialogOpen.value = true }) {
-                    Text(
-                        text = relationshipType,
-                        color =
-                            if (relationshipType == "None") {
-                                Color.Red
-                            } else {
-                                Color.Blue
-                            }
-                    )
+                    Text(text = relationshipType, color = Color.Blue)
                 }
             },
             leadingContent = {

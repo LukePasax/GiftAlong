@@ -108,13 +108,14 @@ fun UserProfileScreen(
             }
         }
         if (openDialog.value) {
-            RadioButtonDialog(relationshipTypes, selected, onSelected, openDialog)
+            RadioButtonDialog(title = "Select a type of relationship:", relationshipTypes, selected, onSelected, openDialog)
         }
     }
 }
 
 @Composable
 fun RadioButtonDialog(
+    title: String,
     items: List<String>,
     selected: String,
     onSelected: (String) -> Unit,
@@ -129,34 +130,42 @@ fun RadioButtonDialog(
                 .padding(top = 20.dp, start = 20.dp, end = 20.dp)
                 .fillMaxWidth()
         ) {
-            Column(Modifier.selectableGroup()) {
-                for (item in items) {
+            Column {
+                Text(
+                    modifier = Modifier.padding(vertical = 12.dp, horizontal = 10.dp),
+                    text = title,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
+                Column(Modifier.selectableGroup()) {
+                    for (item in items) {
+                        Row(
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .fillMaxWidth()
+                                .selectable(
+                                    selected = (item == selected),
+                                    onClick = { onSelected(item) },
+                                    role = Role.RadioButton
+                                )
+                        ) {
+                            RadioButton(
+                                modifier = Modifier.padding(end = 6.dp),
+                                selected = (item == selected),
+                                onClick = null
+                            )
+                            Text(text = item)
+                        }
+                    }
                     Row(
                         modifier = Modifier
-                            .padding(10.dp)
-                            .fillMaxWidth()
-                            .selectable(
-                                selected = (item == selected),
-                                onClick = { onSelected(item) },
-                                role = Role.RadioButton
-                            )
+                            .padding(end = 10.dp, bottom = 5.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
                     ) {
-                        RadioButton(
-                            modifier = Modifier.padding(end = 6.dp),
-                            selected = (item == selected),
-                            onClick = null
-                        )
-                        Text(text = item)
-                    }
-                }
-                Row(
-                    modifier = Modifier
-                        .padding(end = 10.dp, bottom = 5.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TextButton(onClick = { openDialog.value = false }) {
-                        Text(text = "OK")
+                        TextButton(onClick = { openDialog.value = false }) {
+                            Text(text = "OK")
+                        }
                     }
                 }
             }
