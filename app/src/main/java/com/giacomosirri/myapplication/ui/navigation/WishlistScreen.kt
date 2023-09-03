@@ -187,7 +187,7 @@ fun ItemDialog(
     val description = "This is a description"
     val url = "www.url.it"
     val buyButtonText = if (reserved.value && bought.value) "Bought" else "Buy"
-    val reserveButtonText = if (reserved.value) "Reserved" else "Reserve"
+    val reserveButtonText = if (reserved.value) "Unreserve" else "Reserve"
     Dialog(
         onDismissRequest = { openDialog.value = false },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
@@ -233,13 +233,14 @@ fun ItemDialog(
                             }
                         )
                     }
+                    /* TODO consider changing how these buttons work because it's not great UX now */
                     DialogEntry(
                         paddingValues = entryPaddingValues,
                         composable1 = {
                             Button(
                                 onClick = { reserved.value = !reserved.value },
                                 enabled = !bought.value,
-                                modifier = Modifier.size(110.dp, 45.dp)
+                                modifier = Modifier.size(120.dp, 45.dp)
                             ) {
                                 Text(text = reserveButtonText)
                             }
@@ -248,7 +249,7 @@ fun ItemDialog(
                             Button(
                                 onClick = { bought.value = !bought.value },
                                 enabled = reserved.value,
-                                modifier = Modifier.size(110.dp, 45.dp)
+                                modifier = Modifier.size(120.dp, 45.dp)
                             ) {
                                 Text(text = buyButtonText)
                             }

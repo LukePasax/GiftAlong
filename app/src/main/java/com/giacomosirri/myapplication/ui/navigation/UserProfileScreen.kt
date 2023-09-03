@@ -108,7 +108,7 @@ fun UserProfileScreen(
             }
         }
         if (openDialog.value) {
-            RadioButtonDialog(title = "Select a type of relationship:", relationshipTypes, selected, onSelected, openDialog)
+            RadioButtonDialog(title = "Select the relationship:", relationshipTypes, selected, onSelected, openDialog)
         }
     }
 }
