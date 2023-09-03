@@ -288,30 +288,6 @@ private fun CommonErrorDialog(
 }
 
 /**
- * A dialog that shows up when the input provided by the user is incorrect, either because it is missing
- * information or because it is incompatible with the current state of the app. Obviously, such dialogs
- * don't have the "Quit" option but only the "OK" or "Accept" one.
- */
-@Composable
-fun IncorrectInputDialog(
-    isDialogOpen: MutableState<Boolean>,
-    dialogTitle: String?,
-    mainText: String,
-    acceptText: String
-) {
-    /* TODO replace with snack-bars */
-    CommonErrorDialog(
-        isDialogOpen = isDialogOpen,
-        canRefuseToAccept = false,
-        onAccept = null,
-        dialogTitle = dialogTitle,
-        mainText = mainText,
-        acceptText = acceptText,
-        refuseText = null
-    )
-}
-
-/**
  * A dialog that shows up when the user decides to interrupt an operation to go to another screen.
  * Such operations include, for example, the filling of a form page. This type of dialog must have
  * both the "Quit" option and the "OK" or "Accept" one.
