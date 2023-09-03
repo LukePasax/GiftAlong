@@ -37,99 +37,98 @@ fun LoginScreen(
     val username = remember { mutableStateOf(TextFieldValue()) }
     val password = remember { mutableStateOf(TextFieldValue()) }
     val passwordHidden = remember { mutableStateOf(true) }
-    val isErrorDialogOpen = remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
     val isLoginButtonClicked = remember { mutableStateOf(false) }
-    Box(modifier = Modifier.fillMaxSize()) {
-        ClickableText(
-            text = AnnotatedString("Don't have an account yet? Register now!"),
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 60.dp),
-            onClick = onRegisterClick,
-            style = TextStyle(
-                fontSize = 16.sp,
-                textDecoration = TextDecoration.Underline,
-                fontWeight = FontWeight.Bold,
-                color = Primary
-            )
-        )
-    }
-    Column(
-        modifier = Modifier
-            .padding(20.dp)
-            .fillMaxHeight(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "GiftAlong", style = Typography.headlineLarge, color = Primary)
-        Spacer(modifier = Modifier.height(20.dp))
-        // Username
-        OutlinedTextField(
-            label = { Text(text = "Username") },
-            value = username.value,
-            singleLine = true,
-            onValueChange = { username.value = it }
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        // Password
-        OutlinedTextField(
-            label = { Text(text = "Password") },
-            value = password.value,
-            singleLine = true,
-            visualTransformation =
-                if (passwordHidden.value) PasswordVisualTransformation() else VisualTransformation.None,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            onValueChange = { password.value = it },
-            trailingIcon = {
-                IconButton(onClick = { passwordHidden.value = !passwordHidden.value }) {
-                    val visibilityIcon = if (passwordHidden.value) Icons.Rounded.Visibility else Icons.Filled.VisibilityOff
-                    // Please provide localized description for accessibility services
-                    val description = if (passwordHidden.value) "Show password" else "Hide password"
-                    Icon(imageVector = visibilityIcon, contentDescription = description)
-                }
-            }
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        // Check that the login is valid.
-        if (isLoginButtonClicked.value) {
-            LaunchedEffect(Unit) {
-                val loginValid = appViewModel.loginUser(username.value.text, password.value.text)
-                if (loginValid) {
-                    // Users passes the check and becomes the current user.
-                    settingsViewModel.activateAutomaticAuthentication(username.value.text.trim())
-                    AppContext.setCurrentUser(username.value.text.trim())
-                    onLoginClick.invoke()
-                } else {
-                    // User does not pass the check.
-                    username.value = TextFieldValue()
-                    password.value = TextFieldValue()
-                    isErrorDialogOpen.value = true
-                    isLoginButtonClicked.value = false
-                }
-            }
-        }
-        // Login button
-        Box(modifier = Modifier.padding(horizontal = 40.dp)) {
-            Button(
-                onClick = { isLoginButtonClicked.value = true },
-                shape = RoundedCornerShape(50.dp),
-                enabled = username.value.text.trim().isNotEmpty() && password.value.text.trim().isNotEmpty(),
-                colors = ButtonDefaults.buttonColors(containerColor = Primary),
+    Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            ClickableText(
+                text = AnnotatedString("Don't have an account yet? Register now!"),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-            ) {
-                Text(text = "Login")
-            }
-        }
-        // Incorrect login dialog
-        if (isErrorDialogOpen.value) {
-            IncorrectInputDialog(
-                isDialogOpen = isErrorDialogOpen,
-                dialogTitle = null,
-                mainText = "Username or password are incorrect.",
-                acceptText = "Try again"
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 60.dp),
+                onClick = onRegisterClick,
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    textDecoration = TextDecoration.Underline,
+                    fontWeight = FontWeight.Bold,
+                    color = Primary
+                )
             )
+        }
+        Column(
+            modifier = Modifier
+                .padding(20.dp)
+                .fillMaxHeight(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = "GiftAlong", style = Typography.headlineLarge, color = Primary)
+            Spacer(modifier = Modifier.height(20.dp))
+            // Username
+            OutlinedTextField(
+                label = { Text(text = "Username") },
+                value = username.value,
+                singleLine = true,
+                onValueChange = { username.value = it }
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            // Password
+            OutlinedTextField(
+                label = { Text(text = "Password") },
+                value = password.value,
+                singleLine = true,
+                visualTransformation =
+                if (passwordHidden.value) PasswordVisualTransformation() else VisualTransformation.None,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                onValueChange = { password.value = it },
+                trailingIcon = {
+                    IconButton(onClick = { passwordHidden.value = !passwordHidden.value }) {
+                        val visibilityIcon =
+                            if (passwordHidden.value) Icons.Rounded.Visibility else Icons.Filled.VisibilityOff
+                        // Please provide localized description for accessibility services
+                        val description =
+                            if (passwordHidden.value) "Show password" else "Hide password"
+                        Icon(imageVector = visibilityIcon, contentDescription = description)
+                    }
+                }
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            // Check that the login is valid.
+            if (isLoginButtonClicked.value) {
+                LaunchedEffect(Unit) {
+                    val loginValid = appViewModel.loginUser(username.value.text, password.value.text)
+                    if (loginValid) {
+                        // Users passes the check and becomes the current user.
+                        settingsViewModel.activateAutomaticAuthentication(username.value.text.trim())
+                        AppContext.setCurrentUser(username.value.text.trim())
+                        onLoginClick.invoke()
+                    } else {
+                        // User does not pass the check.
+                        username.value = TextFieldValue()
+                        password.value = TextFieldValue()
+                        snackbarHostState.showSnackbar(
+                            message = "Wrong username or password. Please try again.",
+                            duration = SnackbarDuration.Short
+                        )
+                        isLoginButtonClicked.value = false
+                    }
+                }
+            }
+            // Login button
+            Box(modifier = Modifier.padding(horizontal = 40.dp)) {
+                Button(
+                    onClick = { isLoginButtonClicked.value = true },
+                    shape = RoundedCornerShape(50.dp),
+                    enabled = username.value.text.trim().isNotEmpty() && password.value.text.trim()
+                        .isNotEmpty(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Primary),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                ) {
+                    Text(text = "Login")
+                }
+            }
         }
     }
 }

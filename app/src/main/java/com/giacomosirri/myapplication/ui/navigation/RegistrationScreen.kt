@@ -14,10 +14,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
 import com.giacomosirri.myapplication.viewmodel.SettingsViewModel
+import kotlinx.coroutines.launch
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,6 +31,7 @@ fun RegistrationScreen(
     onRegisterClick: () -> Unit
 ) {
     val lateralPadding = PaddingValues(horizontal = 20.dp)
+    val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
         topBar = {
             NavigationAppBar(
@@ -37,7 +40,8 @@ fun RegistrationScreen(
                 isLeadingIconMenu = false,
                 isLeadingIconBackArrow = true
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) {
         Column(
             modifier = Modifier
@@ -120,15 +124,6 @@ fun RegistrationScreen(
                 buttonText = "Select your birthday *",
                 datePickerState = datePickerState
             )
-            val isUsernameAlreadyTakenDialogOpen = remember { mutableStateOf(false) }
-            if (isUsernameAlreadyTakenDialogOpen.value) {
-                IncorrectInputDialog(
-                    isDialogOpen = isUsernameAlreadyTakenDialogOpen,
-                    dialogTitle = "Username already exists",
-                    mainText = "Please choose another username.",
-                    acceptText = "OK"
-                )
-            }
             // Register button
             Button(
                 modifier = Modifier
@@ -138,8 +133,14 @@ fun RegistrationScreen(
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue, contentColor = Color.White),
                 enabled = username.trim().isNotEmpty() && password.trim().isNotEmpty() && name.trim().isNotEmpty() && surname.trim().isNotEmpty(),
                 onClick = {
+                    /* TODO check if the username already exists in the database */
                     if (username.trim() == "giacomo") {
-                        isUsernameAlreadyTakenDialogOpen.value = true
+                        appViewModel.viewModelScope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = "Username already exists. Please choose another one.",
+                                duration = SnackbarDuration.Long
+                            )
+                        }
                     } else {
                         appViewModel.registerUser(
                             username.trim(),
