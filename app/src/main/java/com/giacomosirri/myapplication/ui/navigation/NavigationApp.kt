@@ -183,6 +183,7 @@ private fun NavigationDrawer(settingsViewModel: SettingsViewModel, content: @Com
                         isDialogOpen = isLogoutDialogOpen,
                         onQuit = {
                             navigation.scope.launch { navigation.drawerState.close() }
+                            settingsViewModel.deactivateAutomaticAuthentication()
                             navigation.navController.navigate(NavigationScreen.Login.name)
                         },
                         dialogTitle = "Logout",
@@ -194,7 +195,6 @@ private fun NavigationDrawer(settingsViewModel: SettingsViewModel, content: @Com
                 TextButton(
                     modifier = Modifier.padding(horizontal = 10.dp),
                     onClick = {
-                        settingsViewModel.deactivateAutomaticAuthentication()
                         isLogoutDialogOpen.value = true
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)
