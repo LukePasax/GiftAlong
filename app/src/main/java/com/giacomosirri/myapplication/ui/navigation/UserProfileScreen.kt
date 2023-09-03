@@ -3,8 +3,6 @@ package com.giacomosirri.myapplication.ui.navigation
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -13,12 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.giacomosirri.myapplication.R
 
@@ -108,67 +103,7 @@ fun UserProfileScreen(
             }
         }
         if (openDialog.value) {
-            RadioButtonDialog(title = "Select the relationship:", relationshipTypes, selected, onSelected, openDialog)
-        }
-    }
-}
-
-@Composable
-fun RadioButtonDialog(
-    title: String,
-    items: List<String>,
-    selected: String,
-    onSelected: (String) -> Unit,
-    openDialog: MutableState<Boolean>
-) {
-    Dialog(
-        onDismissRequest = { openDialog.value = false },
-        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
-    ) {
-        Card(
-            modifier = Modifier
-                .padding(top = 20.dp, start = 20.dp, end = 20.dp)
-                .fillMaxWidth()
-        ) {
-            Column {
-                Text(
-                    modifier = Modifier.padding(vertical = 12.dp, horizontal = 10.dp),
-                    text = title,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
-                )
-                Column(Modifier.selectableGroup()) {
-                    for (item in items) {
-                        Row(
-                            modifier = Modifier
-                                .padding(10.dp)
-                                .fillMaxWidth()
-                                .selectable(
-                                    selected = (item == selected),
-                                    onClick = { onSelected(item) },
-                                    role = Role.RadioButton
-                                )
-                        ) {
-                            RadioButton(
-                                modifier = Modifier.padding(end = 6.dp),
-                                selected = (item == selected),
-                                onClick = null
-                            )
-                            Text(text = item)
-                        }
-                    }
-                    Row(
-                        modifier = Modifier
-                            .padding(end = 10.dp, bottom = 5.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        TextButton(onClick = { openDialog.value = false }) {
-                            Text(text = "OK")
-                        }
-                    }
-                }
-            }
+            SingleChoiceDialog(title = "Select the relationship:", relationshipTypes, selected, onSelected, openDialog)
         }
     }
 }

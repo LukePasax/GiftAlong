@@ -74,7 +74,7 @@ fun RelationshipListItem(
     val relationshipTypes = listOf("Friend", "Family", "Partner", "Colleague")
     val (selected, onSelected) = remember { mutableStateOf(relationshipType) }
     if (isDialogOpen.value) {
-        RadioButtonDialog(title = "Select the relationship:", relationshipTypes, selected, onSelected, isDialogOpen)
+        SingleChoiceDialog(title = "Select the relationship:", relationshipTypes, selected, onSelected, isDialogOpen)
     }
     Column {
         ListItem(

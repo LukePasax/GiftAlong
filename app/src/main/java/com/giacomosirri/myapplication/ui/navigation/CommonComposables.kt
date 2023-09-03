@@ -4,6 +4,8 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -297,6 +299,7 @@ fun IncorrectInputDialog(
     mainText: String,
     acceptText: String
 ) {
+    /* TODO replace with snack-bars */
     CommonErrorDialog(
         isDialogOpen = isDialogOpen,
         canRefuseToAccept = false,
@@ -531,6 +534,66 @@ fun EventDialog(
                             }
                         }
                     )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SingleChoiceDialog(
+    title: String,
+    items: List<String>,
+    selected: String,
+    onSelected: (String) -> Unit,
+    openDialog: MutableState<Boolean>
+) {
+    Dialog(
+        onDismissRequest = { openDialog.value = false },
+        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
+    ) {
+        Card(
+            modifier = Modifier
+                .padding(top = 20.dp, start = 20.dp, end = 20.dp)
+                .fillMaxWidth()
+        ) {
+            Column {
+                Text(
+                    modifier = Modifier.padding(vertical = 12.dp, horizontal = 10.dp),
+                    text = title,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
+                Column(Modifier.selectableGroup()) {
+                    for (item in items) {
+                        Row(
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .fillMaxWidth()
+                                .selectable(
+                                    selected = (item == selected),
+                                    onClick = { onSelected(item) },
+                                    role = Role.RadioButton
+                                )
+                        ) {
+                            RadioButton(
+                                modifier = Modifier.padding(end = 6.dp),
+                                selected = (item == selected),
+                                onClick = null
+                            )
+                            Text(text = item)
+                        }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(end = 10.dp, bottom = 5.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        TextButton(onClick = { openDialog.value = false }) {
+                            Text(text = "OK")
+                        }
+                    }
                 }
             }
         }
