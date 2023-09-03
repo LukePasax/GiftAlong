@@ -7,6 +7,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.giacomosirri.myapplication.GiftAlong
@@ -48,8 +50,13 @@ class MainActivity : ComponentActivity() {
             val app = application as GiftAlong
             SettingsViewModelFactory(app.settingsRepository)
         }
-        AppContext.setContext(applicationContext)
         setContent {
+            AppContext.setContext(applicationContext)
+            val isAutoAuthActive by settingsViewModel.isAutoAuthActive.collectAsState(initial = false)
+            val authUser by settingsViewModel.authenticatedUser.collectAsState(initial = "")
+            if (isAutoAuthActive) {
+                AppContext.setCurrentUser(authUser)
+            }
             MyApplicationTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -58,7 +65,8 @@ class MainActivity : ComponentActivity() {
                     NavigationApp(
                         paddingValues = PaddingValues(top = 70.dp),
                         appViewModel = appViewModel,
-                        settingsViewModel = settingsViewModel
+                        settingsViewModel = settingsViewModel,
+                        isUserLoggedIn = isAutoAuthActive
                     )
                 }
             }

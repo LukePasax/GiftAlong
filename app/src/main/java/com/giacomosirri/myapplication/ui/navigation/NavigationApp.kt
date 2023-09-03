@@ -63,6 +63,7 @@ class LeadingNavigationIconStrategy(val onBackArrow: () -> Unit, val onMenuIcon:
 fun NavigationApp(
     navController: NavHostController = rememberNavController(),
     paddingValues: PaddingValues,
+    isUserLoggedIn: Boolean,
     appViewModel: AppViewModel,
     settingsViewModel: SettingsViewModel
 ) {
@@ -73,9 +74,7 @@ fun NavigationApp(
         isSearchBarOpen = rememberSaveable { mutableStateOf(false) }
     ))
     val entryScreenName = navController.currentBackStackEntryAsState().value?.destination?.route ?:
-        NavigationScreen.Login.name
-    val isAutoAuthActive by settingsViewModel.isAutoAuthActive.collectAsState(initial = false)
-    val authUser by settingsViewModel.authenticatedUser.collectAsState(initial = "")
+        if (isUserLoggedIn) NavigationScreen.Home.name else NavigationScreen.Login.name
     if (entryScreenName != NavigationScreen.Login.name) {
         NavigationDrawer(settingsViewModel) {
             Scaffold {
@@ -84,8 +83,7 @@ fun NavigationApp(
                     paddingValues = paddingValues,
                     appViewModel = appViewModel,
                     settingsViewModel = settingsViewModel,
-                    isLoginRequired = !isAutoAuthActive,
-                    currentUser = authUser
+                    isLoginRequired = !isUserLoggedIn,
                 )
             }
         }
@@ -95,8 +93,7 @@ fun NavigationApp(
             paddingValues = paddingValues,
             appViewModel = appViewModel,
             settingsViewModel = settingsViewModel,
-            isLoginRequired = !isAutoAuthActive,
-            currentUser = authUser
+            isLoginRequired = !isUserLoggedIn,
         )
     }
 }
@@ -248,19 +245,10 @@ fun NavigationGraph(
     appViewModel: AppViewModel,
     settingsViewModel: SettingsViewModel,
     isLoginRequired: Boolean,
-    // The login is required if there is no current user, in which case this argument gets automatically ignored.
-    currentUser: String
 ) {
     NavHost(
         navController = navController,
-        startDestination =
-            if (isLoginRequired) {
-                NavigationScreen.Login.name
-            }
-            else {
-                AppContext.setCurrentUser(currentUser)
-                NavigationScreen.Home.name
-            }
+        startDestination = if (isLoginRequired) NavigationScreen.Login.name else NavigationScreen.Home.name
     ) {
         composable(NavigationScreen.Registration.name) {
             RegistrationScreen(
