@@ -52,12 +52,13 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             AppContext.setContext(applicationContext)
+            val darkModeOn by settingsViewModel.isDarkModeOn.collectAsState(initial = false)
             val isAutoAuthActive by settingsViewModel.isAutoAuthActive.collectAsState(initial = false)
             val authUser by settingsViewModel.authenticatedUser.collectAsState(initial = "")
             if (isAutoAuthActive) {
                 AppContext.setCurrentUser(authUser)
             }
-            MyApplicationTheme {
+            MyApplicationTheme(darkModeOn) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,

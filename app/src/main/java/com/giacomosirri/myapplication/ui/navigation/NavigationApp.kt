@@ -172,7 +172,13 @@ private fun NavigationDrawer(settingsViewModel: SettingsViewModel, content: @Com
                 ) {
                     Text("Dark Mode")
                     Spacer(modifier = Modifier.fillMaxWidth(.8f))
-                    Switch(checked = darkMode, onCheckedChange = { darkMode = it })
+                    Switch(
+                        checked = darkMode,
+                        onCheckedChange = {
+                            darkMode = it
+                            if (darkMode) settingsViewModel.deactivateDarkMode() else settingsViewModel.activateDarkMode()
+                        }
+                    )
                 }
                 val isLogoutDialogOpen = remember { mutableStateOf(false) }
                 if (isLogoutDialogOpen.value) {

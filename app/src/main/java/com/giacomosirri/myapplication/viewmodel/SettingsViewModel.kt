@@ -11,6 +11,7 @@ import java.util.*
 class SettingsViewModel(private val settingsRepository: SettingsRepository): ViewModel() {
     val isAutoAuthActive: Flow<Boolean> = settingsRepository.isAutomaticAuthenticationActive()
     val authenticatedUser: Flow<String> = settingsRepository.getAutomaticallyAuthenticatedUser()
+    val isDarkModeOn: Flow<Boolean> = settingsRepository.isDarkModeActive()
 
     fun activateAutomaticAuthentication(username: String) {
         viewModelScope.launch {
@@ -21,6 +22,18 @@ class SettingsViewModel(private val settingsRepository: SettingsRepository): Vie
     fun deactivateAutomaticAuthentication() {
         viewModelScope.launch {
             settingsRepository.deactivateAutomaticAuthentication()
+        }
+    }
+
+    fun activateDarkMode() {
+        viewModelScope.launch {
+            settingsRepository.activateDarkMode()
+        }
+    }
+
+    fun deactivateDarkMode() {
+        viewModelScope.launch {
+            settingsRepository.deactivateDarkMode()
         }
     }
 }
