@@ -12,13 +12,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
+import com.giacomosirri.myapplication.viewmodel.AppViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun NewItemScreen(
+    appViewModel: AppViewModel,
     paddingValues: PaddingValues,
-    onQuit: () -> Unit,
+    onExit: () -> Unit,
     isInEditMode: Boolean,
     id: Int? = null
 ) {
@@ -30,11 +34,13 @@ fun NewItemScreen(
     var lowerBound: Int? = null
     if (isInEditMode) {
         // id must exist
-        name = getNameFromItemId(id!!)
-        description = getDescriptionFromItemId(id)
-        link = getLinkFromItemId(id)
-        upperBound = getUpperBoundPriceFromItemId(id)
-        lowerBound = getLowerBoundPriceFromItemId(id)
+        appViewModel.viewModelScope.launch {
+            name = appViewModel.getItemNameFromId(id!!)
+            description = appViewModel.getItemDescriptionFromId(id)
+            link = appViewModel.getItemLinkFromId(id)
+            upperBound = appViewModel.getItemUpperBoundPriceFromId(id)
+            lowerBound = appViewModel.getItemLowerBoundPriceFromId(id)
+        }
     }
     Scaffold(
         topBar = {
@@ -143,34 +149,29 @@ fun NewItemScreen(
                 ),
                 isSubmitEnabled = itemName.value.trim().isNotEmpty(),
                 onSubmitClick = {
-                    if(isInEditMode) {
-                        /* TODO: update the values in the database */
+                    if (isInEditMode) {
+                        appViewModel.updateItem(
+                            id = id!!,
+                            name = itemName.value.trim().ifEmpty { null },
+                            description = itemDescription.value.trim().ifEmpty { null },
+                            url = itemDescription.value.trim().ifEmpty { null },
+                            priceL = if (lowerBoundPrice.value == 0) lowerBoundPrice.value else null,
+                            priceU = if (upperBoundPrice.value == 0) upperBoundPrice.value else null
+                        )
                     } else {
-                        /* TODO: create a new item in the database */
+                        appViewModel.addItem(
+                            name = itemName.value.trim(),
+                            description = itemDescription.value.trim().ifEmpty { null },
+                            url = itemDescription.value.trim().ifEmpty { null },
+                            priceL = if (lowerBoundPrice.value == 0) lowerBoundPrice.value else null,
+                            priceU = if (upperBoundPrice.value == 0) upperBoundPrice.value else null,
+                            listedBy = AppContext.getCurrentUser()
+                        )
                     }
+                    onExit.invoke()
                 },
-                onCancelClick = onQuit
+                onCancelClick = onExit
             )
         }
     }
-}
-
-private fun getLowerBoundPriceFromItemId(id: Int): Int {
-    return 1
-}
-
-private fun getUpperBoundPriceFromItemId(id: Int): Int {
-    return 1
-}
-
-private fun getLinkFromItemId(id: Int): String {
-    return "Ciao"
-}
-
-private fun getDescriptionFromItemId(id: Int): String {
-    return "Ciaoo"
-}
-
-private fun getNameFromItemId(id: Int): String {
-    return "Ciaooo"
 }

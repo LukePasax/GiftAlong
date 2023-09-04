@@ -116,8 +116,7 @@ fun LoginScreen(
                 // Check that the login is valid.
                 if (isLoginButtonClicked.value) {
                     LaunchedEffect(Unit) {
-                        val loginValid =
-                            appViewModel.loginUser(username.value.text, password.value.text)
+                        val loginValid = appViewModel.loginUser(username.value.text, password.value.text)
                         if (loginValid) {
                             // Users passes the check and becomes the current user.
                             settingsViewModel.activateAutomaticAuthentication(username.value.text.trim())

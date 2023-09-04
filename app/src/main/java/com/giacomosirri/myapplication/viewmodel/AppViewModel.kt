@@ -103,7 +103,6 @@ class AppViewModel(
     }
 
     // Item functions
-
     fun getItemsOfUser(username: String): Flow<List<Item>> = itemRepository.getItemsOfUser(username)
 
     suspend fun getItemFromId(id: Int): Item = itemRepository.getItemFromId(id)
@@ -113,8 +112,8 @@ class AppViewModel(
         description: String? = null,
         url: String? = null,
         image: Int? = null,
-        priceL: Double? = null,
-        priceU: Double? = null,
+        priceL: Int? = null,
+        priceU: Int? = null,
         listedBy: String
     ) {
         viewModelScope.launch {
@@ -133,13 +132,33 @@ class AppViewModel(
         description: String? = null,
         url: String? = null,
         image: Int? = null,
-        priceL: Double? = null,
-        priceU: Double? = null,
+        priceL: Int? = null,
+        priceU: Int? = null,
         reservedBy: String? = null
     ) {
         viewModelScope.launch {
             itemRepository.updateItem(id, bought, name, description, url, image, priceL, priceU, reservedBy)
         }
+    }
+
+    suspend fun getItemNameFromId(id: Int): String {
+        return itemRepository.getItemFromId(id).name
+    }
+
+    suspend fun getItemDescriptionFromId(id: Int): String? {
+        return itemRepository.getItemFromId(id).description
+    }
+
+    suspend fun getItemLinkFromId(id: Int): String? {
+        return itemRepository.getItemFromId(id).url
+    }
+
+    suspend fun getItemUpperBoundPriceFromId(id: Int): Int? {
+        return itemRepository.getItemFromId(id).priceUpperBound
+    }
+
+    suspend fun getItemLowerBoundPriceFromId(id: Int): Int? {
+        return itemRepository.getItemFromId(id).priceLowerBound
     }
 }
 

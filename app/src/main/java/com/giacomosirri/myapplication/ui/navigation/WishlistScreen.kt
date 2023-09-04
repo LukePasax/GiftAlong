@@ -31,8 +31,6 @@ import com.giacomosirri.myapplication.data.entity.Item
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Secondary
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
 @Composable
@@ -67,7 +65,7 @@ fun WishlistScreen(
             for (item in items.value) {
                 item {
                     WishlistItem(
-                        itemId = item.id,
+                        itemId = item.id!!,
                         itemName = item.name,
                         username = username,
                         image = item.imageId,
@@ -95,8 +93,8 @@ fun WishlistItem(
     itemId: Int,
     itemName: String,
     username: String,
-    priceL: Double? = null,
-    priceU: Double? = null,
+    priceL: Int? = null,
+    priceU: Int? = null,
     image: Int,
     reservingUser: String? = null,
     bought: Boolean = false,

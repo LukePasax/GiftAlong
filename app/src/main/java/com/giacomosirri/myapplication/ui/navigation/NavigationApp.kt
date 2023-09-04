@@ -292,16 +292,18 @@ fun NavigationGraph(
         }
         composable(NavigationScreen.NewItem.name) {
             NewItemScreen(
+                appViewModel = appViewModel,
                 paddingValues = paddingValues,
-                onQuit = { navController.navigateUp() },
+                onExit = { navController.navigateUp() },
                 isInEditMode = false,
             )
         }
         composable(NavigationScreen.NewItem.name + "{itemId}") {
             val id = it.arguments?.getInt("itemId")
             NewItemScreen(
+                appViewModel = appViewModel,
                 paddingValues = paddingValues,
-                onQuit = { navController.navigateUp() },
+                onExit = { navController.navigateUp() },
                 isInEditMode = true,
                 id = id
             )
