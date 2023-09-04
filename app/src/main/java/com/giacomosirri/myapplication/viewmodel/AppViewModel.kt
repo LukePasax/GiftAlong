@@ -98,10 +98,10 @@ class AppViewModel(
 
     private fun isInvitedToEvent(type : Relationship.RelationshipType, event : Event) : Boolean {
         return when(type) {
-            Relationship.RelationshipType.FRIEND -> event.friendsAllowed
-            Relationship.RelationshipType.FAMILY -> event.familyAllowed
-            Relationship.RelationshipType.PARTNER -> event.partnersAllowed
-            Relationship.RelationshipType.COLLEAGUE -> event.colleaguesAllowed
+            Relationship.RelationshipType.Friend -> event.friendsAllowed
+            Relationship.RelationshipType.Family -> event.familyAllowed
+            Relationship.RelationshipType.Partner -> event.partnersAllowed
+            Relationship.RelationshipType.Colleague -> event.colleaguesAllowed
         }
     }
 
@@ -204,6 +204,10 @@ class AppViewModel(
     fun getRelationshipsOfUser(username: String): Flow<List<Relationship>> = userRepository.getRelationshipsOfUser(username)
 
     fun getUsersMatchingPattern(query: String): Flow<List<User>> = userRepository.getAllUsers(query)
+
+    fun updateRelationship(follower: String, followed: String, relationship: String) {
+        userRepository.updateRelationship(follower, followed, relationship)
+    }
 }
 
 class AppViewModelFactory(

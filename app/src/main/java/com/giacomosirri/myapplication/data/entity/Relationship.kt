@@ -9,9 +9,9 @@ data class Relationship(
     val type: RelationshipType
 ) {
     enum class RelationshipType {
-        FRIEND,
-        FAMILY,
-        PARTNER,
-        COLLEAGUE
+        Friend,
+        Family,
+        Partner,
+        Colleague
     }
 }
