@@ -95,10 +95,6 @@ fun UserProfileScreen(
                         fontWeight = FontWeight.Bold)
                 }
                 LazyColumn(modifier = Modifier.padding(10.dp)) {
-                    items(1) {
-                        EventCard(event = "Sergio's Degree", navController = navController)
-                        EventCard(event ="James' Birthday", navController = navController)
-                    }
                 }
             }
         }

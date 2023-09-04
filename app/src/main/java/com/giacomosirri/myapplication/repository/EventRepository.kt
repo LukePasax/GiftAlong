@@ -11,6 +11,11 @@ class EventRepository(private val eventDAO: EventDAO) {
     val allItems: Flow<List<Event>> = eventDAO.getEvents()
 
     @WorkerThread
+    fun getEventsOrganizedByUser(username : String) : Flow<List<Event>> {
+        return eventDAO.getEventsOrganizedByUser(username)
+    }
+
+    @WorkerThread
     fun getPotentialEventsOfUser(username : String) : Flow<Map<Event, Relationship.RelationshipType>> {
         return eventDAO.getPotentialEventsOfUser(username)
     }

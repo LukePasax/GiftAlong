@@ -10,6 +10,9 @@ interface EventDAO {
     @Query("SELECT * FROM events")
     fun getEvents(): Flow<List<Event>>
 
+    @Query("SELECT * FROM events WHERE organizer = :username")
+    fun getEventsOrganizedByUser(username : String) : Flow<List<Event>>
+
     @MapInfo(
         keyColumn = "id",
         keyTable = "events",

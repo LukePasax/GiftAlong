@@ -27,30 +27,20 @@ import com.giacomosirri.myapplication.viewmodel.AppViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-val calendar = Calendar.getInstance()
-val currentYear = calendar.get(Calendar.YEAR)
-
-fun getSpecialEventDate(year: Int, month: Int, day: Int): Date {
-    calendar.set(year, month, day)
-    return calendar.time
-}
-
-val specialEvents = mapOf(
-    Pair(getSpecialEventDate(currentYear, Calendar.DECEMBER, 25), Pair("Christmas", Color.Red)),
-    Pair(getSpecialEventDate(currentYear, Calendar.DECEMBER, 31), Pair("New Year's Eve", Color.Blue)),
-    Pair(getSpecialEventDate(currentYear, Calendar.FEBRUARY, 14), Pair("Valentine's Day", Color.Magenta)),
-    Pair(getSpecialEventDate(currentYear, Calendar.OCTOBER, 31), Pair("Halloween", Color.Cyan)),
-
-)
-
-val specialDateFormat : SimpleDateFormat = SimpleDateFormat("dd MMMM", Locale.ENGLISH)
-val dateFormat : SimpleDateFormat = SimpleDateFormat("EEEE, MMMM dd, yyyy", Locale.ENGLISH)
-
 @Composable
 fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit, navController: NavController, viewModel: AppViewModel) {
-    val eventsOfUser = viewModel.getEventsOfUser(AppContext.getCurrentUser()).collectAsState(initial = listOf()).value
+    val eventsOfUser = viewModel.getEventsOfUser(AppContext.getCurrentUser()).collectAsState(initial = emptyList())
+    val eventsOrganized = viewModel.getEventsOrganizedByUser(AppContext.getCurrentUser()).collectAsState(initial = emptyList())
     val totalEvents : MutableMap<Date, List<Event>> = mutableMapOf()
-    for (event in eventsOfUser) {
+    for (event in eventsOfUser.value) {
+        val eventDate = event.date
+        if (totalEvents.containsKey(eventDate)) {
+            totalEvents[eventDate] = totalEvents[eventDate]!!.plus(event)
+        } else {
+            totalEvents[eventDate] = listOf(event)
+        }
+    }
+    for (event in eventsOrganized.value) {
         val eventDate = event.date
         if (totalEvents.containsKey(eventDate)) {
             totalEvents[eventDate] = totalEvents[eventDate]!!.plus(event)
@@ -76,18 +66,9 @@ fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit, navControll
         }
     ) {
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
-            for (date in totalEvents.keys) {
+            for (date in totalEvents) {
                 item {
-                    val events = totalEvents[date]!!
-                    if (specialEvents.containsKey(date)) {
-                        val specialEvent = specialEvents[date]!!
-                        SpecialEventCard(specialDateFormat.format(date), specialEvent.first, specialEvent.second)
-                    }
-                    DayCard(
-                        date = dateFormat.format(date),
-                        events = events.map { it.name },
-                        navController = navController
-                    )
+                    DayCard(date = dateFormat.format(date.key), events = date.value, navController = navController)
                 }
             }
         }
@@ -100,7 +81,7 @@ fun HomeScreen(searchedEvents: String, navController: NavController) {
         items(1) {
             DayCard(
                 date = "Tuesday, December 21, 2023",
-                events = listOf("Sergio's Degree", "James' Birthday"),
+                events = listOf(),
                 navController = navController
             )
         }
@@ -108,7 +89,7 @@ fun HomeScreen(searchedEvents: String, navController: NavController) {
 }
 
 @Composable
-fun DayCard(date: String, events: List<String>, navController: NavController) {
+fun DayCard(date: String, events: List<Event>, navController: NavController) {
     Column(
         modifier = Modifier
             .padding(horizontal = 5.dp, vertical = 10.dp)

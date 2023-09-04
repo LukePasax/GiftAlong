@@ -30,10 +30,31 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.giacomosirri.myapplication.R
+import com.giacomosirri.myapplication.data.entity.Event
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.*
 import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
+
+val calendar = Calendar.getInstance()
+val currentYear = calendar.get(Calendar.YEAR)
+
+fun getSpecialEventDate(year: Int, month: Int, day: Int): Date {
+    calendar.set(year, month, day)
+    return calendar.time
+}
+
+val specialEvents = mapOf(
+    Pair(getSpecialEventDate(currentYear, Calendar.DECEMBER, 25), Pair("Christmas", Color.Red)),
+    Pair(getSpecialEventDate(currentYear, Calendar.DECEMBER, 31), Pair("New Year's Eve", Color.Blue)),
+    Pair(getSpecialEventDate(currentYear, Calendar.FEBRUARY, 14), Pair("Valentine's Day", Color.Magenta)),
+    Pair(getSpecialEventDate(currentYear, Calendar.OCTOBER, 31), Pair("Halloween", Color.Cyan)),
+
+    )
+
+val specialDateFormat : SimpleDateFormat = SimpleDateFormat("dd MMMM", Locale.ENGLISH)
+val dateFormat : SimpleDateFormat = SimpleDateFormat("EEEE, MMMM dd, yyyy", Locale.ENGLISH)
 
 @Composable
 fun DialogCard(
@@ -409,7 +430,7 @@ fun CheckboxItem(text: String, paddingValues: PaddingValues, state: MutableState
 }
 
 @Composable
-fun EventCard(event: String, navController: NavController) {
+fun EventCard(event: Event, navController: NavController) {
     val openDialog = remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
@@ -421,11 +442,18 @@ fun EventCard(event: String, navController: NavController) {
         colors = CardDefaults.cardColors(containerColor = EventCardBackground)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            Text(event, Modifier.align(Alignment.Center))
+            Text(event.name, Modifier.align(Alignment.Center))
         }
     }
     if (openDialog.value) {
-        EventDialog(0, AppContext.getCurrentUser(), event, "2023", "Nice", "Whatever", openDialog, navController)
+        EventDialog(
+            event.id!!,
+            AppContext.getCurrentUser(),
+            event.name,
+            dateFormat.format(event.date),
+            event.dressCode ?: "No dress code",
+            openDialog,
+            navController)
     }
 }
 
@@ -435,7 +463,6 @@ fun EventDialog(
     organizer: String,
     eventName: String,
     date: String,
-    description: String,
     dressCode: String,
     openDialog: MutableState<Boolean>,
     navController: NavController
@@ -472,7 +499,6 @@ fun EventDialog(
                         })
                 }
                 DialogEntry(paddingValues = entryPaddingValues, text = "Date: ", value = date)
-                DialogEntry(paddingValues = entryPaddingValues, text = "Description: ", value = description)
                 DialogEntry(paddingValues = entryPaddingValues, text = "Dress Code: ", value = dressCode)
                 if (organizer == AppContext.getCurrentUser()) {
                     val isCancelEventDialogOpen = remember { mutableStateOf(false) }

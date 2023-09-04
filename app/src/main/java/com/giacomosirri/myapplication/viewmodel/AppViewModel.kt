@@ -46,6 +46,12 @@ class AppViewModel(
     }
 
     // Event functions
+    fun getAllEvents(): Flow<List<Event>> = eventRepository.allItems
+
+    fun getEventsOrganizedByUser(username : String) : Flow<List<Event>> {
+        return eventRepository.getEventsOrganizedByUser(username)
+    }
+
     fun addEvent(
         name: String,
         date: Date,
