@@ -68,8 +68,8 @@ fun NewItemScreen(
             val itemName = remember { mutableStateOf(name ?: "") }
             val itemDescription = remember { mutableStateOf(description ?:"") }
             val itemLink = remember { mutableStateOf(link ?: "") }
-            val lowerBoundPrice = remember { mutableStateOf(upperBound?: 0) }
-            val upperBoundPrice = remember { mutableStateOf(lowerBound ?: 0) }
+            val lowerBoundPrice = remember { mutableStateOf(lowerBound?: 0) }
+            val upperBoundPrice = remember { mutableStateOf(upperBound ?: 0) }
             // Title
             OutlinedTextField(
                 modifier = Modifier

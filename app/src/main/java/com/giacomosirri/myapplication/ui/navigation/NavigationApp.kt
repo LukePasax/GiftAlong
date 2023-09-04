@@ -299,7 +299,7 @@ fun NavigationGraph(
             )
         }
         composable(NavigationScreen.NewItem.name + "{itemId}") {
-            val id = it.arguments?.getInt("itemId")
+            val id = it.arguments?.getString("itemId")?.toInt()
             NewItemScreen(
                 appViewModel = appViewModel,
                 paddingValues = paddingValues,
@@ -317,7 +317,7 @@ fun NavigationGraph(
             )
         }
         composable(NavigationScreen.NewEvent.name + "{eventId}") {
-            val id = it.arguments?.getInt("eventId")
+            val id = it.arguments?.getString("eventId")?.toInt()
             NewEventScreen(
                 appViewModel = appViewModel,
                 paddingValues = paddingValues,
