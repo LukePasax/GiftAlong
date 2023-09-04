@@ -31,7 +31,6 @@ fun NewEventScreen(
 ) {
     val lateralPadding = PaddingValues(horizontal = 20.dp)
     var name: String? = null
-    var description: String? = null
     var location: String? = null
     var dressCode: String? = null
     var date: Date? = null
@@ -42,7 +41,6 @@ fun NewEventScreen(
     if (isInEditMode) {
         // id must exist
         name = getNameFromEventId(id!!)
-        description = getDescriptionFromEventId(id)
         dressCode = getDressCodeFromEventId(id)
         date = getDateFromEventId(id)
         friends = getFriendsAllowedFromEventId(id)
@@ -70,11 +68,10 @@ fun NewEventScreen(
                 .padding(paddingValues)
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(17.dp),
+            verticalArrangement = Arrangement.spacedBy(35.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val eventTitle = remember { mutableStateOf(name ?: "") }
-            val eventDescription = remember { mutableStateOf(description ?: "") }
             val eventDressCode = remember { mutableStateOf(dressCode ?: "") }
             val datePickerState = rememberDatePickerState(
                 initialSelectedDateMillis = date?.time ?: Date().time,
@@ -100,8 +97,8 @@ fun NewEventScreen(
             )
             // Location
             Box(modifier = Modifier
-                .requiredHeight(120.dp)
-                .requiredWidth(220.dp)
+                .requiredHeight(170.dp)
+                .requiredWidth(260.dp)
                 .border(width = 1.dp, shape = ShapeDefaults.Small, color = Color.Gray)
                 .padding(lateralPadding)
                 .padding(top = 4.dp),
@@ -125,15 +122,14 @@ fun NewEventScreen(
                 buttonText = "Select a date *",
                 datePickerState = datePickerState
             )
-            // Description
+            // Dress code
             OutlinedTextField(
                 modifier = Modifier
                     .padding(lateralPadding)
-                    .fillMaxWidth()
-                    .height(120.dp),
-                value = eventDescription.value,
-                onValueChange = { eventDescription.value = it },
-                label = { Text("Description") },
+                    .fillMaxWidth(),
+                value = eventDressCode.value,
+                onValueChange = { eventDressCode.value = it },
+                label = { Text("Dress code") },
             )
             // Invite
             Column(
@@ -168,20 +164,11 @@ fun NewEventScreen(
                     }
                 }
             }
-            // Dress code
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(lateralPadding)
-                    .fillMaxWidth(),
-                value = eventDressCode.value,
-                onValueChange = { eventDressCode.value = it },
-                label = { Text("Dress code") },
-            )
             // Buttons
             FormButtons(
                 paddingValues = PaddingValues(
                     start = lateralPadding.calculateStartPadding(LayoutDirection.Ltr),
-                    top = 15.dp,
+                    top = 23.dp,
                     end = lateralPadding.calculateEndPadding(LayoutDirection.Ltr)
                 ),
                 isSubmitEnabled = eventTitle.value.trim().isNotEmpty() &&
@@ -243,10 +230,6 @@ private fun getFriendsAllowedFromEventId(id: Int): Boolean {
 
 private fun getDressCodeFromEventId(id: Int): String {
     return "c"
-}
-
-private fun getDescriptionFromEventId(id: Int): String {
-    return "b"
 }
 
 private fun getNameFromEventId(id: Int): String {
