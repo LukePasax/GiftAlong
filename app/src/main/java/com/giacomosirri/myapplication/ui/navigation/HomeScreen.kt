@@ -17,13 +17,48 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
+import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavController
 import com.giacomosirri.myapplication.R
+import com.giacomosirri.myapplication.data.entity.Event
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.*
+import com.giacomosirri.myapplication.viewmodel.AppViewModel
+import java.text.SimpleDateFormat
+import java.util.*
+
+val calendar = Calendar.getInstance()
+val currentYear = calendar.get(Calendar.YEAR)
+
+fun getSpecialEventDate(year: Int, month: Int, day: Int): Date {
+    calendar.set(year, month, day)
+    return calendar.time
+}
+
+val specialEvents = mapOf(
+    Pair(getSpecialEventDate(currentYear, Calendar.DECEMBER, 25), Pair("Christmas", Color.Red)),
+    Pair(getSpecialEventDate(currentYear, Calendar.DECEMBER, 31), Pair("New Year's Eve", Color.Blue)),
+    Pair(getSpecialEventDate(currentYear, Calendar.FEBRUARY, 14), Pair("Valentine's Day", Color.Magenta)),
+    Pair(getSpecialEventDate(currentYear, Calendar.OCTOBER, 31), Pair("Halloween", Color.Cyan)),
+
+)
+
+val specialDateFormat : SimpleDateFormat = SimpleDateFormat("dd MMMM", Locale.ENGLISH)
+val dateFormat : SimpleDateFormat = SimpleDateFormat("EEEE, MMMM dd, yyyy", Locale.ENGLISH)
 
 @Composable
-fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit, navController: NavController) {
+fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit, navController: NavController, viewModel: AppViewModel) {
+    val eventsOfUser = viewModel.getEventsOfUser(AppContext.getCurrentUser()).collectAsState(initial = listOf()).value
+    val totalEvents : MutableMap<Date, List<Event>> = mutableMapOf()
+    for (event in eventsOfUser) {
+        val eventDate = event.date
+        if (totalEvents.containsKey(eventDate)) {
+            totalEvents[eventDate] = totalEvents[eventDate]!!.plus(event)
+        } else {
+            totalEvents[eventDate] = listOf(event)
+        }
+    }
+    totalEvents.toSortedMap(compareBy { it.time })
     Scaffold(
         topBar = {
             NavigationAppBar(
@@ -41,13 +76,19 @@ fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit, navControll
         }
     ) {
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
-            items(1) {
-                DayCard(
-                    date = "Tuesday, December 21, 2023",
-                    events = listOf("Sergio's Degree", "James' Birthday"),
-                    navController = navController
-                )
-                SpecialEventCard(date = "25 December", event = "Christmas")
+            for (date in totalEvents.keys) {
+                item {
+                    val events = totalEvents[date]!!
+                    if (specialEvents.containsKey(date)) {
+                        val specialEvent = specialEvents[date]!!
+                        SpecialEventCard(specialDateFormat.format(date), specialEvent.first, specialEvent.second)
+                    }
+                    DayCard(
+                        date = dateFormat.format(date),
+                        events = events.map { it.name },
+                        navController = navController
+                    )
+                }
             }
         }
     }
@@ -90,13 +131,13 @@ fun DayCard(date: String, events: List<String>, navController: NavController) {
 }
 
 @Composable
-fun SpecialEventCard(date: String, event: String) {
+fun SpecialEventCard(date: String, event: String, color: Color) {
     Card(
         modifier = Modifier
             .padding(horizontal = 5.dp, vertical = 10.dp)
             .height(75.dp),
         border = BorderStroke(1.dp, Primary),
-        colors = CardDefaults.cardColors(containerColor = SpecialEventCardBackground)
+        colors = CardDefaults.cardColors(containerColor = color)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Text(

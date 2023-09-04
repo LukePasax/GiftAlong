@@ -276,7 +276,8 @@ fun NavigationGraph(
             HomeScreen(
                 paddingValues = paddingValues,
                 onFabClick = { navController.navigate(NavigationScreen.NewEvent.name) },
-                navController = navController
+                navController = navController,
+                viewModel = appViewModel
             )
         }
         composable(NavigationScreen.Wishlist.name + "{username}") {
