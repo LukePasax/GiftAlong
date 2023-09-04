@@ -1,6 +1,7 @@
 package com.giacomosirri.myapplication.viewmodel
 
 import androidx.lifecycle.*
+import androidx.room.ColumnInfo
 import com.giacomosirri.myapplication.data.entity.Event
 import com.giacomosirri.myapplication.data.entity.Relationship
 import com.giacomosirri.myapplication.repository.EventRepository
@@ -19,12 +20,27 @@ class AppViewModel(
 ) : ViewModel() {
     val allItems = eventRepository.allItems
 
-    fun addEvent(event: Event) = viewModelScope.launch {
-        eventRepository.insertEvent(event)
+    fun addEvent(
+        name: String,
+        date: Date,
+        location: String?,
+        organizer: String,
+        dressCode: String?,
+        friendsAllowed: Boolean,
+        familyAllowed: Boolean,
+        partnersAllowed: Boolean,
+        colleaguesAllowed: Boolean
+    ) {
+        viewModelScope.launch {
+            eventRepository.insertEvent(
+                name, date, location, organizer, dressCode,
+                friendsAllowed, familyAllowed, partnersAllowed, colleaguesAllowed
+            )
+        }
     }
 
-    fun removeEvent(event: Event) = viewModelScope.launch {
-        eventRepository.deleteEvent(event)
+    fun removeEvent(eventId: Int) = viewModelScope.launch {
+        eventRepository.deleteEvent(eventId)
     }
 
     private fun isInvitedToEvent(type : Relationship.RelationshipType, event : Event) : Boolean {
@@ -69,6 +85,21 @@ class AppViewModel(
 
     fun updateItem(id : Int, bought : Boolean? = null, name : String? = null, description : String? = null, url : String? = null, image : String? = null, priceL : Double? = null, priceU : Double? = null, reservedBy : String? = null, listedBy : String? = null) = viewModelScope.launch {
         itemRepository.updateItem(id, bought, name, description, url, image, priceL, priceU, reservedBy, listedBy)
+    }
+
+    fun editEvent(
+        id: Int,
+        name: String,
+        date: Date,
+        location: Nothing?,
+        organizer: String,
+        dressCode: String?,
+        friendsAllowed: Boolean,
+        partnersAllowed: Boolean,
+        familyAllowed: Boolean,
+        colleaguesAllowed: Boolean
+    ) {
+
     }
 }
 
