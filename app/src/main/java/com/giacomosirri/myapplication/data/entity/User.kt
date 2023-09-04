@@ -8,7 +8,7 @@ import java.util.Date
 @Entity(tableName = "users")
 data class User(
     @PrimaryKey
-    val username : String,
+    val username: String,
     val password: String,
     val name: String,
     val surname: String,

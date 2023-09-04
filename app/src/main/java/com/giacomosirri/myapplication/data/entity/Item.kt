@@ -6,6 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "Items")
 data class Item(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int?,
     val bought: Boolean,
     val name: String,
     val description: String?,
@@ -13,14 +15,11 @@ data class Item(
     @ColumnInfo("image")
     val imageId: Int,
     @ColumnInfo("price_lower")
-    val priceLowerBound: Double?,
+    val priceLowerBound: Int?,
     @ColumnInfo("price_upper")
-    val priceUpperBound: Double?,
+    val priceUpperBound: Int?,
     @ColumnInfo("reserved_by")
     val reservedBy: String?,
     @ColumnInfo("listed_by")
     val listedBy: String
-) {
-    @PrimaryKey(autoGenerate = true)
-    var id : Int = 0
-}
+)
