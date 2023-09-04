@@ -25,18 +25,16 @@ fun RelationshipsScreen(
     paddingValues: PaddingValues,
     navController: NavController,
     viewModel: AppViewModel,
-    query: String? = null
+    query: String?
 ) {
     Scaffold(
         topBar = {
-            if (query == null) {
-                NavigationAppBar(
-                    currentScreenName = AppContext.getContext()
-                        ?.getString(R.string.relationships)!!,
-                    hasSearchBar = true,
-                    searchBarPlaceholder = "Search any user of this app"
-                )
-            }
+            NavigationAppBar(
+                currentScreenName = AppContext.getContext()
+                    ?.getString(R.string.relationships)!!,
+                hasSearchBar = true,
+                searchBarPlaceholder = "Search any user of this app"
+            )
         }
     ) {
         val relationships = viewModel.getRelationshipsOfUser(AppContext.getCurrentUser()).collectAsState(initial = emptyList())

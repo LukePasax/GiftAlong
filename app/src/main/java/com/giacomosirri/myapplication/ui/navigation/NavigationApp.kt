@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Background
@@ -339,11 +340,16 @@ fun NavigationGraph(
                 navController = navController
             )
         }
-        composable(NavigationScreen.Relationships.name) {
+        composable(
+            route ="${NavigationScreen.Relationships.name}?query={query}",
+            arguments = listOf(navArgument("query") { nullable = true })
+        ) {
+            val query = it.arguments?.getString("query")
             RelationshipsScreen(
                 paddingValues = paddingValues,
                 navController = navController,
-                viewModel = appViewModel
+                viewModel = appViewModel,
+                query = query
             )
         }
         composable(NavigationScreen.DataCenter.name) {
@@ -394,7 +400,8 @@ fun NavigationAppBar(
                 when (currentScreenName) {
                     AppContext.getContext()?.getString(R.string.home) -> HomeScreen(query, navigation.navController)
                     AppContext.getContext()?.getString(R.string.wishlist) -> WishlistScreen(query)
-                    AppContext.getContext()?.getString(R.string.relationships) -> RelationshipsScreen(query)
+                    AppContext.getContext()?.getString(R.string.relationships) ->
+                        navigation.navController.navigate("${NavigationScreen.Relationships.name}?query=$query")
                 }
             }
         }
