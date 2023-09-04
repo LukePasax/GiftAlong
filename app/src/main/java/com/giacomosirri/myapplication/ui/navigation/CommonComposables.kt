@@ -254,13 +254,10 @@ fun DateSelector(
 @Composable
 private fun CommonErrorDialog(
     isDialogOpen: MutableState<Boolean>,
-    canRefuseToAccept: Boolean,
-    // if canRefuseToAccept is false, onAccept is going to be treated as if it were null anyway.
     onAccept: (() -> Unit)?,
     dialogTitle: String?,
     mainText: String,
     acceptText: String,
-    // if canRefuseToAccept is false, quitText is going to be treated as if it were null anyway.
     refuseText: String?,
 ) {
     Dialog(
@@ -285,16 +282,12 @@ private fun CommonErrorDialog(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    // The refuse button is not be present when the user has no choice but to accept the dialog.
-                    if (canRefuseToAccept) {
-                        TextButton(
-                            onClick = { isDialogOpen.value = false },
-                            modifier = Modifier.padding(end = 10.dp)
-                        ) {
-                            Text(text = refuseText!!, color = Error)
-                        }
+                    TextButton(
+                        onClick = { isDialogOpen.value = false },
+                        modifier = Modifier.padding(end = 10.dp)
+                    ) {
+                        Text(text = refuseText!!, color = Error)
                     }
-                    // The accept button must always exist.
                     TextButton(
                         onClick = {
                             isDialogOpen.value = false
@@ -325,7 +318,6 @@ fun QuitScreenDialog(
 ) {
     CommonErrorDialog(
         isDialogOpen = isDialogOpen,
-        canRefuseToAccept = true,
         onAccept = onQuit,
         dialogTitle = dialogTitle,
         mainText = mainText,
@@ -350,7 +342,6 @@ fun DefinitiveDeletionDialog(
 ) {
     CommonErrorDialog(
         isDialogOpen = isDialogOpen,
-        canRefuseToAccept = true,
         onAccept = onAccept,
         dialogTitle = dialogTitle,
         mainText = mainText,
