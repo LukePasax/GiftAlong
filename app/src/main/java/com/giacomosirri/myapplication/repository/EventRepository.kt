@@ -32,7 +32,7 @@ class EventRepository(private val eventDAO: EventDAO) {
         partnersAllowed: Boolean,
         colleaguesAllowed: Boolean
     ) {
-        eventDAO.insertEvent(Event(name, date, location, organizer, dressCode,
+        eventDAO.insertEvent(Event(null, name, date, location, organizer, dressCode,
             friendsAllowed, familyAllowed, partnersAllowed, colleaguesAllowed))
     }
 
