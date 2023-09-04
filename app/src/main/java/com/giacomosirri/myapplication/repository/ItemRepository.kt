@@ -46,7 +46,7 @@ class ItemRepository(private val itemDAO: ItemDAO) {
             name ?: oldItem.name,
             description ?: oldItem.description,
             url ?: oldItem.url,
-            image ?: oldItem.imageURI,
+            image ?: oldItem.imageId,
             priceL ?: oldItem.priceLowerBound,
             priceU ?: oldItem.priceUpperBound,
             reservedBy ?: oldItem.reservedBy,

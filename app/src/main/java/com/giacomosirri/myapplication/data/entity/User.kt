@@ -13,6 +13,8 @@ data class User(
     val name: String,
     val surname: String,
     val birthday: Date,
+    @ColumnInfo("image")
+    val imageId: Int?,
     @ColumnInfo("subscription_date")
     val subscriptionDate: Date,
 )

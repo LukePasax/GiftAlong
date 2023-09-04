@@ -11,7 +11,7 @@ data class Item(
     val description: String?,
     val url: String?,
     @ColumnInfo("image")
-    val imageURI: String?,  // URI of the pic that points to the remote database.
+    val imageId: Int?,
     @ColumnInfo("price_lower")
     val priceLowerBound: Double?,
     @ColumnInfo("price_upper")
