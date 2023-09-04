@@ -131,11 +131,10 @@ class AppViewModel(
         image: String? = null,
         priceL: Double? = null,
         priceU: Double? = null,
-        reservedBy: String? = null,
-        listedBy: String? = null
+        reservedBy: String? = null
     ) {
         viewModelScope.launch {
-            itemRepository.updateItem(id, bought, name, description, url, image, priceL, priceU, reservedBy, listedBy)
+            itemRepository.updateItem(id, bought, name, description, url, image, priceL, priceU, reservedBy)
         }
     }
 }

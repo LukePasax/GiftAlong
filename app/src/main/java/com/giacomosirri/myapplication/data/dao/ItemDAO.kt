@@ -18,6 +18,6 @@ interface ItemDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(item: Item)
 
-    @Delete(entity = Item::class)
-    suspend fun deleteItem(itemId: Int)
+    @Delete
+    suspend fun deleteItem(item: Item)
 }

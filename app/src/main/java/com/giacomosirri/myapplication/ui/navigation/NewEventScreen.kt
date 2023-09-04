@@ -188,7 +188,7 @@ fun NewEventScreen(
                         (friendsAllowed.value || partnersAllowed.value || familyAllowed.value || colleaguesAllowed.value),
                 onSubmitClick = {
                     if (isInEditMode) {
-                        appViewModel.editEvent(
+                        appViewModel.updateEvent(
                             id = id!!,
                             name = eventTitle.value.trim(),
                             date = Date(datePickerState.selectedDateMillis!!),

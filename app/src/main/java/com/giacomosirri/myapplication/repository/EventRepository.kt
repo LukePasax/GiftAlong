@@ -17,7 +17,7 @@ class EventRepository(private val eventDAO: EventDAO) {
 
     @WorkerThread
     suspend fun getEvent(id: Int) : Event {
-        return eventDAO.getEvent(id)
+        return eventDAO.getEventFromId(id)
     }
 
     @WorkerThread
@@ -38,6 +38,6 @@ class EventRepository(private val eventDAO: EventDAO) {
 
     @WorkerThread
     suspend fun deleteEvent(eventId: Int) {
-        eventDAO.deleteEvent(eventId)
+        eventDAO.deleteEvent(eventDAO.getEventFromId(eventId))
     }
 }

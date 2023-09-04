@@ -11,6 +11,9 @@ interface UserDAO {
     @Query("SELECT * FROM users WHERE username = :username AND password = :password")
     suspend fun getUser(username: String, password: String): User?
 
-    @Delete(entity = User::class)
-    suspend fun deleteUser(username: String)
+    @Query("SELECT * FROM users WHERE username = :username")
+    suspend fun getUser(username: String): User
+
+    @Delete()
+    suspend fun deleteUser(user: User)
 }

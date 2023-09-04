@@ -23,11 +23,11 @@ interface EventDAO {
     fun getPotentialEventsOfUser(username : String) : Flow<Map<Event,Relationship.RelationshipType>>
 
     @Query("SELECT * FROM events WHERE id = :id")
-    suspend fun getEvent(id: Int) : Event
+    suspend fun getEventFromId(id: Int) : Event
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertEvent(event: Event)
 
-    @Delete(entity = Event::class)
-    suspend fun deleteEvent(eventId: Int)
+    @Delete
+    suspend fun deleteEvent(event: Event)
 }
