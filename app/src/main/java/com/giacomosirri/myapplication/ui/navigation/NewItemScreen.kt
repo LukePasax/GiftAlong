@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.giacomosirri.myapplication.R
@@ -65,10 +66,10 @@ fun NewItemScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val itemName = remember { mutableStateOf(name ?: "") }
-            val itemDescription = remember { mutableStateOf(description ?:"") }
+            val itemDescription = remember { mutableStateOf(description ?: "") }
             val itemLink = remember { mutableStateOf(link ?: "") }
-            val lowerBoundPrice = remember { mutableStateOf(lowerBound?: 0) }
-            val upperBoundPrice = remember { mutableStateOf(upperBound ?: 0) }
+            val lowerBoundPrice = remember { mutableStateOf(if (lowerBound != null) lowerBound.toString() else "") }
+            val upperBoundPrice = remember { mutableStateOf(if (upperBound != null) upperBound.toString() else "") }
             // Title
             OutlinedTextField(
                 modifier = Modifier
@@ -76,7 +77,8 @@ fun NewItemScreen(
                     .fillMaxWidth(),
                 value = itemName.value,
                 onValueChange = { itemName.value = it },
-                label = { Text("Title *") }
+                label = { Text("Title *") },
+                singleLine = true
             )
             // Photo
             PhotoSelector()
@@ -88,6 +90,7 @@ fun NewItemScreen(
                 value = itemLink.value,
                 onValueChange = { itemLink.value = it },
                 label = { Text("Link") },
+                singleLine = true
             )
             // Price range
             val openDialog = remember { mutableStateOf(false) }
@@ -104,9 +107,10 @@ fun NewItemScreen(
                     modifier = Modifier
                         .requiredWidth(100.dp)
                         .padding(PaddingValues(horizontal = 10.dp)),
-                    value = lowerBoundPrice.value.toString(),
-                    onValueChange = { lowerBoundPrice.value = it.toInt() },
+                    value = lowerBoundPrice.value,
+                    onValueChange = { lowerBoundPrice.value = it },
                     label = { Text("Lower") },
+                    singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
                 Text(text = "-")
@@ -114,9 +118,10 @@ fun NewItemScreen(
                     modifier = Modifier
                         .requiredWidth(100.dp)
                         .padding(PaddingValues(horizontal = 10.dp)),
-                    value = upperBoundPrice.value.toString(),
-                    onValueChange = { upperBoundPrice.value = it.toInt() },
+                    value = upperBoundPrice.value,
+                    onValueChange = { upperBoundPrice.value = it },
                     label = { Text("Upper") },
+                    singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
                 OutlinedButton(
@@ -130,13 +135,21 @@ fun NewItemScreen(
                 SingleChoiceDialog(title = "Select a currency:", currencies, selected, onSelected, openDialog)
             }
             // Description
+            val maxLength = 100
             OutlinedTextField(
                 modifier = Modifier
                     .padding(lateralPadding)
                     .fillMaxWidth()
                     .height(130.dp),
+                supportingText = {
+                    Text(
+                        text = "${itemDescription.value.length} / $maxLength",
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.End,
+                    )
+                },
                 value = itemDescription.value,
-                onValueChange = { itemDescription.value = it },
+                onValueChange = { if (it.length <= maxLength) itemDescription.value = it },
                 label = { Text("Description") },
             )
             // Buttons
@@ -146,7 +159,7 @@ fun NewItemScreen(
                     top = 12.dp,
                     end = lateralPadding.calculateEndPadding(LayoutDirection.Ltr)
                 ),
-                isSubmitEnabled = itemName.value.trim().isNotEmpty(),
+                isSubmitEnabled = itemName.value.trim().isNotEmpty() && lowerBoundPrice.value <= upperBoundPrice.value,
                 onSubmitClick = {
                     if (isInEditMode) {
                         appViewModel.updateItem(
@@ -154,16 +167,16 @@ fun NewItemScreen(
                             name = itemName.value.trim().ifEmpty { null },
                             description = itemDescription.value.trim().ifEmpty { null },
                             url = itemDescription.value.trim().ifEmpty { null },
-                            priceL = if (lowerBoundPrice.value == 0) lowerBoundPrice.value else null,
-                            priceU = if (upperBoundPrice.value == 0) upperBoundPrice.value else null
+                            priceL = try { lowerBoundPrice.value.toInt() } catch (e: NumberFormatException) { null },
+                            priceU = try { upperBoundPrice.value.toInt() } catch (e: NumberFormatException) { null }
                         )
                     } else {
                         appViewModel.addItem(
                             name = itemName.value.trim(),
                             description = itemDescription.value.trim().ifEmpty { null },
                             url = itemDescription.value.trim().ifEmpty { null },
-                            priceL = if (lowerBoundPrice.value == 0) lowerBoundPrice.value else null,
-                            priceU = if (upperBoundPrice.value == 0) upperBoundPrice.value else null,
+                            priceL = try { lowerBoundPrice.value.toInt() } catch (e: NumberFormatException) { null },
+                            priceU = try { upperBoundPrice.value.toInt() } catch (e: NumberFormatException) { null },
                             listedBy = AppContext.getCurrentUser()
                         )
                     }
