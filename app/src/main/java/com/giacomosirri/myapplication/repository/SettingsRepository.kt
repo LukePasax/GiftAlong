@@ -19,7 +19,8 @@ class SettingsRepository(private val context: Context) {
     }
 
     fun isAutomaticAuthenticationActive(): Flow<Boolean> {
-        return context.dataStore.data.map { preferences -> preferences[SAVED_USERNAME] != "" }
+        return context.dataStore.data.map { preferences ->
+            preferences[SAVED_USERNAME] != null && preferences[SAVED_USERNAME] != "" }
     }
 
     fun getAutomaticallyAuthenticatedUser(): Flow<String> {
