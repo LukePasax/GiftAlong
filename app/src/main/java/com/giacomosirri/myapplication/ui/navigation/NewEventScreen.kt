@@ -97,6 +97,7 @@ fun NewEventScreen(
                 value = eventTitle.value,
                 onValueChange = { eventTitle.value = it },
                 label = { Text("Title *") },
+                singleLine = true
             )
             // Location
             Box(modifier = Modifier
@@ -133,6 +134,7 @@ fun NewEventScreen(
                 value = eventDressCode.value,
                 onValueChange = { eventDressCode.value = it },
                 label = { Text("Dress code") },
+                singleLine = true
             )
             // Invite
             Column(
@@ -142,7 +144,7 @@ fun NewEventScreen(
                     .fillMaxWidth()
             ) {
                 Text(
-                    modifier = Modifier.padding(bottom = 4.dp),
+                    modifier = Modifier.padding(bottom = 8.dp),
                     text = "Invite *",
                     style = MaterialTheme.typography.bodyLarge,
                 )
