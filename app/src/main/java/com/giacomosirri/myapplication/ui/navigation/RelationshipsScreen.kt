@@ -74,7 +74,7 @@ fun RelationshipListItem(
     viewModel: AppViewModel
 ) {
     val isDialogOpen = remember { mutableStateOf(false) }
-    val relationshipTypes = listOf("Friend", "Family", "Partner", "Colleague")
+    val relationshipTypes = listOf("Friend", "Family", "Partner", "Colleague", "None")
     val (selected, onSelected) = remember { mutableStateOf(relationshipType) }
     if (isDialogOpen.value) {
         SingleChoiceDialog(

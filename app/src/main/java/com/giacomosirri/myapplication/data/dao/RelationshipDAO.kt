@@ -12,12 +12,9 @@ interface RelationshipDAO {
     @Query("SELECT * FROM relationships WHERE follower = :follower AND followed = :followed")
     suspend fun getRelationshipsBetweenUsers(follower: String, followed: String): Relationship?
 
-    @Update
-    fun updateRelationship(relationship: Relationship)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertRelationship(relationship: Relationship)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRelationship(relationship: Relationship)
 
     @Delete
-    fun deleteRelationships(relationship: Relationship)
+    suspend fun deleteRelationships(relationship: Relationship)
 }

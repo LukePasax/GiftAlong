@@ -206,7 +206,11 @@ class AppViewModel(
     fun getUsersMatchingPattern(query: String): Flow<List<User>> = userRepository.getAllUsers(query)
 
     fun updateRelationship(follower: String, followed: String, relationship: String) {
-        userRepository.updateRelationship(follower, followed, relationship)
+        if (relationship == "None") {
+            viewModelScope.launch { userRepository.deleteRelationship(follower, followed) }
+        } else {
+            viewModelScope.launch { userRepository.updateRelationship(follower, followed, relationship) }
+        }
     }
 }
 

@@ -34,21 +34,16 @@ class UserRepository(private val userDAO: UserDAO, private val relationshipDAO: 
 
     fun getAllUsers(query: String): Flow<List<User>> = userDAO.getAllUsers(query)
 
-    fun updateRelationship(follower: String, followed: String, newRelationship: String) {
-        runBlocking {
-            val oldRelationship = getRelationshipsBetweenUsers(follower, followed)?.type?.name
-            if (newRelationship == "None") {
-                // The user wants to delete this relationship.
-                relationshipDAO.deleteRelationships(Relationship(follower, followed, enumValueOf(oldRelationship!!)))
-            } else {
-                if (oldRelationship == null) {
-                    // The user wants to add a relationship.
-                    relationshipDAO.insertRelationship(Relationship(follower, followed, enumValueOf(newRelationship)))
-                } else {
-                    // The user wants to change the type of a relationship that already exist.
-                    relationshipDAO.updateRelationship(Relationship(follower, followed, enumValueOf(newRelationship)))
-                }
-            }
+    suspend fun updateRelationship(follower: String, followed: String, newRelationship: String) {
+        // Updating a relationships means either adding it or updating if it already existed.
+        relationshipDAO.insertRelationship(Relationship(follower, followed, enumValueOf(newRelationship)))
+    }
+
+    suspend fun deleteRelationship(follower: String, followed: String) {
+        val currentRelationship = getRelationshipsBetweenUsers(follower, followed)
+        // If the current relationship is already null, there is nothing to remove.
+        if (currentRelationship != null) {
+            relationshipDAO.deleteRelationships(Relationship(follower, followed, currentRelationship.type))
         }
     }
 }
