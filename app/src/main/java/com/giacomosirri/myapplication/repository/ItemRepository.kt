@@ -23,7 +23,7 @@ class ItemRepository(private val itemDAO: ItemDAO) {
         priceU: Int? = null,
         listedBy: String
     ) {
-        itemDAO.insert(Item(id = null, bought = false, name, description, url, image, priceL, priceU, reservedBy = null, listedBy))
+        itemDAO.insertItem(Item(id = null, bought = false, name, description, url, image, priceL, priceU, reservedBy = null, listedBy))
     }
 
     @WorkerThread
