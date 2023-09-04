@@ -285,7 +285,8 @@ fun NavigationGraph(
                 username = username,
                 paddingValues = paddingValues,
                 onFabClick = { navController.navigate(NavigationScreen.NewItem.name) },
-                navController = navController
+                navController = navController,
+                viewModel = appViewModel
             )
         }
         composable(NavigationScreen.NewItem.name) {

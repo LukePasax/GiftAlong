@@ -10,11 +10,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import com.giacomosirri.myapplication.R
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,14 +28,19 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Secondary
+import com.giacomosirri.myapplication.viewmodel.AppViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.toList
 
 @Composable
 fun WishlistScreen(
     username: String,
     paddingValues: PaddingValues,
     onFabClick: () -> Unit,
-    navController: NavController
+    navController: NavController,
+    viewModel: AppViewModel
 ) {
+    val items = viewModel.getItemsOfUser(username).collectAsState(initial = emptyList())
     Scaffold(
         topBar = {
             NavigationAppBar(
@@ -59,8 +61,20 @@ fun WishlistScreen(
         }
     ) {
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
-            item { WishlistItem(itemId = 0, itemName = "Ciao", username  = username, navController = navController, reservingUser = "Mario") }
-            item { WishlistItem(itemId = 1, itemName = AppContext.getCurrentUser(), username = username, navController = navController) }
+            for (item in items.value) {
+                item {
+                    WishlistItem(
+                        itemId = item.id,
+                        itemName = item.name,
+                        username = username,
+                        priceL = item.priceLowerBound,
+                        priceU = item.priceUpperBound,
+                        reservingUser = item.reservedBy,
+                        navController = navController,
+                        viewModel = viewModel
+                    )
+                }
+            }
         }
     }
 }
@@ -76,10 +90,12 @@ fun WishlistItem(
     itemId: Int,
     itemName: String,
     username: String,
-    price: String? = null,
+    priceL: Double? = null,
+    priceU: Double? = null,
     image: Int = R.drawable.placeholder,
     reservingUser: String? = null,
-    navController: NavController
+    navController: NavController,
+    viewModel: AppViewModel
 ) {
     val openDialog = remember { mutableStateOf(false) }
     val reserved = remember { mutableStateOf(false) }
@@ -89,7 +105,9 @@ fun WishlistItem(
     if (isCancelItemDialogOpen.value) {
         DefinitiveDeletionDialog(
             isDialogOpen = isCancelItemDialogOpen,
-            onAccept = { /*TODO delete item from database */ },
+            onAccept = {
+                       viewModel.deleteItem(itemId)
+            },
             dialogTitle = "Item deletion",
             mainText = "Are you sure you want to delete this item from your wishlist? This operation cannot be undone.",
             acceptText = "Yes",
@@ -153,7 +171,15 @@ fun WishlistItem(
                                 .border(1.dp, Color.Gray, shape = RoundedCornerShape(4.dp))
                                 .padding(10.dp))
                     } else {
-                        Text(text = price ?: "No price", fontSize = 17.sp)
+                        if (priceL != null && priceU != null) {
+                            Text(
+                                text = "€$priceL - €$priceU",
+                                fontSize = 17.sp)
+                        } else {
+                            Text(
+                                text = "No price",
+                                fontSize = 17.sp)
+                        }
                     }
                 }
             },
