@@ -29,5 +29,5 @@ interface EventDAO {
     suspend fun insert(event: Event)
 
     @Delete
-    suspend fun delete(event: Event)
+    suspend fun delete(eventId: Int)
 }
