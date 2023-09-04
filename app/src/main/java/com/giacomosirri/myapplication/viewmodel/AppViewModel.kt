@@ -8,10 +8,9 @@ import com.giacomosirri.myapplication.data.entity.Relationship
 import com.giacomosirri.myapplication.repository.EventRepository
 import com.giacomosirri.myapplication.repository.ItemRepository
 import com.giacomosirri.myapplication.repository.UserRepository
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 
 class AppViewModel(
@@ -165,6 +164,34 @@ class AppViewModel(
 
     suspend fun getItemLowerBoundPriceFromId(id: Int): Int? {
         return itemRepository.getItemFromId(id).priceLowerBound
+    }
+
+    suspend fun getEventNameFromId(id: Int): String {
+        return eventRepository.getEventFromId(id).name
+    }
+
+    suspend fun getEventDressCodeFromId(id: Int): String? {
+        return eventRepository.getEventFromId(id).dressCode
+    }
+
+    suspend fun getEventDateFromId(id: Int): Date {
+        return eventRepository.getEventFromId(id).date
+    }
+
+    suspend fun getFriendsParticipationToEventFromId(id: Int): Boolean {
+        return eventRepository.getEventFromId(id).friendsAllowed
+    }
+
+    suspend fun getPartnersParticipationToEventFromId(id: Int): Boolean {
+        return eventRepository.getEventFromId(id).partnersAllowed
+    }
+
+    suspend fun getFamilyParticipationToEventFromId(id: Int): Boolean {
+        return eventRepository.getEventFromId(id).familyAllowed
+    }
+
+    suspend fun getColleaguesParticipationToEventFromId(id: Int): Boolean {
+        return eventRepository.getEventFromId(id).colleaguesAllowed
     }
 }
 

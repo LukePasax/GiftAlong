@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat.startActivity
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
+import kotlinx.coroutines.runBlocking
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,13 +41,15 @@ fun NewEventScreen(
     var colleagues: Boolean? = null
     if (isInEditMode) {
         // id must exist
-        name = getNameFromEventId(id!!)
-        dressCode = getDressCodeFromEventId(id)
-        date = getDateFromEventId(id)
-        friends = getFriendsAllowedFromEventId(id)
-        partners = getPartnersAllowedFromEventId(id)
-        family = getFamilyAllowedFromEventId(id)
-        colleagues = getColleaguesAllowedFromEventId(id)
+        runBlocking {
+            name = appViewModel.getEventNameFromId(id!!)
+            dressCode = appViewModel.getEventDressCodeFromId(id)
+            date = appViewModel.getEventDateFromId(id)
+            friends = appViewModel.getFriendsParticipationToEventFromId(id)
+            partners = appViewModel.getPartnersParticipationToEventFromId(id)
+            family = appViewModel.getFamilyParticipationToEventFromId(id)
+            colleagues = appViewModel.getColleaguesParticipationToEventFromId(id)
+        }
     }
     Scaffold(
         topBar = {
@@ -206,34 +209,6 @@ fun NewEventScreen(
             )
         }
     }
-}
-
-private fun getDateFromEventId(id: Int): Date {
-    return Date(0L)
-}
-
-private fun getColleaguesAllowedFromEventId(id: Int): Boolean {
-    return true
-}
-
-private fun getFamilyAllowedFromEventId(id: Int): Boolean {
-    return false
-}
-
-private fun getPartnersAllowedFromEventId(id: Int): Boolean {
-    return true
-}
-
-private fun getFriendsAllowedFromEventId(id: Int): Boolean {
-    return false
-}
-
-private fun getDressCodeFromEventId(id: Int): String {
-    return "c"
-}
-
-private fun getNameFromEventId(id: Int): String {
-    return "a"
 }
 
 fun canShowMap(): Boolean {

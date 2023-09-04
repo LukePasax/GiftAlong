@@ -453,7 +453,8 @@ fun EventCard(event: Event, navController: NavController) {
             dateFormat.format(event.date),
             event.dressCode ?: "No dress code",
             openDialog,
-            navController)
+            navController
+        )
     }
 }
 

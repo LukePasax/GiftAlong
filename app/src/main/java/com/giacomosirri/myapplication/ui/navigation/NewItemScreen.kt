@@ -12,11 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewModelScope
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun NewItemScreen(
@@ -34,7 +33,7 @@ fun NewItemScreen(
     var lowerBound: Int? = null
     if (isInEditMode) {
         // id must exist
-        appViewModel.viewModelScope.launch {
+        runBlocking {
             name = appViewModel.getItemNameFromId(id!!)
             description = appViewModel.getItemDescriptionFromId(id)
             link = appViewModel.getItemLinkFromId(id)
