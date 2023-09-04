@@ -306,16 +306,18 @@ fun NavigationGraph(
         }
         composable(NavigationScreen.NewEvent.name) {
             NewEventScreen(
+                appViewModel = appViewModel,
                 paddingValues = paddingValues,
-                onQuit = { navController.navigateUp() },
+                onExit = { navController.navigateUp() },
                 isInEditMode = false
             )
         }
         composable(NavigationScreen.NewEvent.name + "{eventId}") {
             val id = it.arguments?.getInt("eventId")
             NewEventScreen(
+                appViewModel = appViewModel,
                 paddingValues = paddingValues,
-                onQuit = { navController.navigateUp() },
+                onExit = { navController.navigateUp() },
                 isInEditMode = true,
                 id = id
             )

@@ -2,7 +2,6 @@ package com.giacomosirri.myapplication.ui.navigation
 
 import android.content.Context
 import android.content.Intent
-import android.location.Location
 import android.net.Uri
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -17,15 +16,16 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import com.giacomosirri.myapplication.R
-import com.giacomosirri.myapplication.data.entity.Relationship
 import com.giacomosirri.myapplication.ui.AppContext
+import com.giacomosirri.myapplication.viewmodel.AppViewModel
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewEventScreen(
+    appViewModel: AppViewModel,
     paddingValues: PaddingValues,
-    onQuit: () -> Unit,
+    onExit: () -> Unit,
     isInEditMode: Boolean,
     id: Int? = null
 ) {
@@ -186,8 +186,36 @@ fun NewEventScreen(
                 ),
                 isSubmitEnabled = eventTitle.value.trim().isNotEmpty() &&
                         (friendsAllowed.value || partnersAllowed.value || familyAllowed.value || colleaguesAllowed.value),
-                onSubmitClick = {},
-                onCancelClick = onQuit
+                onSubmitClick = {
+                    if (isInEditMode) {
+                        appViewModel.editEvent(
+                            id = id!!,
+                            name = eventTitle.value.trim(),
+                            date = Date(datePickerState.selectedDateMillis!!),
+                            location = null,
+                            organizer = AppContext.getCurrentUser(),
+                            dressCode = eventDressCode.value.trim().ifEmpty { null },
+                            friendsAllowed = friendsAllowed.value,
+                            partnersAllowed = partnersAllowed.value,
+                            familyAllowed = familyAllowed.value,
+                            colleaguesAllowed = colleaguesAllowed.value
+                        )
+                    } else {
+                        appViewModel.addEvent(
+                            name = eventTitle.value.trim(),
+                            date = Date(datePickerState.selectedDateMillis!!),
+                            location = null,
+                            organizer = AppContext.getCurrentUser(),
+                            dressCode = eventDressCode.value.trim().ifEmpty { null },
+                            friendsAllowed = friendsAllowed.value,
+                            partnersAllowed = partnersAllowed.value,
+                            familyAllowed = familyAllowed.value,
+                            colleaguesAllowed = colleaguesAllowed.value
+                        )
+                    }
+                    onExit.invoke()
+                },
+                onCancelClick = onExit
             )
         }
     }
@@ -223,21 +251,6 @@ private fun getDescriptionFromEventId(id: Int): String {
 
 private fun getNameFromEventId(id: Int): String {
     return "a"
-}
-
-fun onSubmit(
-    title: String?,
-    location: Location?,
-    date: Date?,
-    description: String?,
-    invitees: List<Relationship.RelationshipType>?,
-    dressCode: String?
-) {
-    if (title == null || (invitees != null && invitees.isEmpty())) {
-        /* TODO show error dialog */
-    } else {
-        /* TODO launch database insertion query */
-    }
 }
 
 fun canShowMap(): Boolean {

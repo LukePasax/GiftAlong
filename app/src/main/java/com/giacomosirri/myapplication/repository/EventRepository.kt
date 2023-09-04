@@ -5,6 +5,7 @@ import com.giacomosirri.myapplication.data.dao.EventDAO
 import com.giacomosirri.myapplication.data.entity.Event
 import com.giacomosirri.myapplication.data.entity.Relationship
 import kotlinx.coroutines.flow.Flow
+import java.util.*
 
 class EventRepository(private val eventDAO: EventDAO) {
     val allItems: Flow<List<Event>> = eventDAO.getEvents()
@@ -20,12 +21,23 @@ class EventRepository(private val eventDAO: EventDAO) {
     }
 
     @WorkerThread
-    suspend fun insertEvent(event: Event) {
-        eventDAO.insert(event)
+    suspend fun insertEvent(
+        name: String,
+        date: Date,
+        location: String?,
+        organizer: String,
+        dressCode: String?,
+        friendsAllowed: Boolean,
+        familyAllowed: Boolean,
+        partnersAllowed: Boolean,
+        colleaguesAllowed: Boolean
+    ) {
+        eventDAO.insert(Event(name, date, location, organizer, dressCode,
+            friendsAllowed, familyAllowed, partnersAllowed, colleaguesAllowed))
     }
 
     @WorkerThread
-    suspend fun deleteEvent(event: Event) {
-        eventDAO.delete(event)
+    suspend fun deleteEvent(eventId: Int) {
+        eventDAO.delete(eventId)
     }
 }
