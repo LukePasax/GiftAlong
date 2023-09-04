@@ -5,6 +5,7 @@ import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.data.entity.Event
 import com.giacomosirri.myapplication.data.entity.Item
 import com.giacomosirri.myapplication.data.entity.Relationship
+import com.giacomosirri.myapplication.data.entity.User
 import com.giacomosirri.myapplication.repository.EventRepository
 import com.giacomosirri.myapplication.repository.ItemRepository
 import com.giacomosirri.myapplication.repository.UserRepository
@@ -201,6 +202,8 @@ class AppViewModel(
     }
 
     fun getRelationshipsOfUser(username: String): Flow<List<Relationship>> = userRepository.getRelationshipsOfUser(username)
+
+    fun getUsersMatchingPattern(query: String): Flow<List<User>> = userRepository.getAllUsers(query)
 }
 
 class AppViewModelFactory(

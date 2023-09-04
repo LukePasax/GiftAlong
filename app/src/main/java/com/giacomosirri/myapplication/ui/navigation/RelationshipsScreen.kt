@@ -24,31 +24,48 @@ import com.giacomosirri.myapplication.viewmodel.AppViewModel
 fun RelationshipsScreen(
     paddingValues: PaddingValues,
     navController: NavController,
-    viewModel: AppViewModel
+    viewModel: AppViewModel,
+    query: String? = null
 ) {
     Scaffold(
         topBar = {
-            NavigationAppBar(
-                currentScreenName = AppContext.getContext()?.getString(R.string.relationships)!!,
-                hasSearchBar = true,
-                searchBarPlaceholder = "Search any user of this app"
-            )
+            if (query == null) {
+                NavigationAppBar(
+                    currentScreenName = AppContext.getContext()
+                        ?.getString(R.string.relationships)!!,
+                    hasSearchBar = true,
+                    searchBarPlaceholder = "Search any user of this app"
+                )
+            }
         }
     ) {
-        val relationships = viewModel.getRelationshipsOfUser(AppContext.getCurrentUser())
-            .collectAsState(initial = emptyList())
-        LazyColumn(modifier = Modifier.padding(paddingValues)) {
-            for (relationship in relationships.value) {
+        val relationships = viewModel.getRelationshipsOfUser(AppContext.getCurrentUser()).collectAsState(initial = emptyList())
+        if (query == null) {
+            // Show only the users the current user has a relationship with.
+            LazyColumn(modifier = Modifier.padding(paddingValues)) {
+                for (relationship in relationships.value) {
+                    item {
+                        RelationshipListItem(relationship.followed, relationship.type.name, navController)
+                    }
+                }
+            }
+        } else {
+            // Show all the users of the app that match the pattern with the right relationship with the current user.
+            val allUsers = viewModel.getUsersMatchingPattern(query).collectAsState(initial = emptyList())
+            val resultMap = mutableMapOf<String, String>()
+            for (user in allUsers.value) {
+                val relationship = relationships.value.find { it.follower == user.username }
+                resultMap[user.username] = relationship?.type?.name ?: "None"
+            }
+            LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 item {
-                    RelationshipListItem(relationship.followed, relationship.type.name, navController)
+                    for (elem in resultMap) {
+                        RelationshipListItem(elem.key, elem.value, navController)
+                    }
                 }
             }
         }
     }
-}
-
-@Composable
-fun RelationshipsScreen(searchedUsers: String) {
 }
 
 @Composable

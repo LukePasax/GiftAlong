@@ -26,4 +26,6 @@ class UserRepository(private val userDAO: UserDAO, private val relationshipDAO: 
     }
 
     fun getRelationshipsOfUser(username: String): Flow<List<Relationship>> = relationshipDAO.getRelationshipsOfUser(username)
+
+    fun getAllUsers(query: String): Flow<List<User>> = userDAO.getAllUsers(query)
 }
