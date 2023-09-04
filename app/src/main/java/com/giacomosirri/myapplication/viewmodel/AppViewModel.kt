@@ -1,8 +1,8 @@
 package com.giacomosirri.myapplication.viewmodel
 
 import androidx.lifecycle.*
-import androidx.room.ColumnInfo
 import com.giacomosirri.myapplication.data.entity.Event
+import com.giacomosirri.myapplication.data.entity.Item
 import com.giacomosirri.myapplication.data.entity.Relationship
 import com.giacomosirri.myapplication.repository.EventRepository
 import com.giacomosirri.myapplication.repository.ItemRepository
@@ -18,8 +18,32 @@ class AppViewModel(
     private val itemRepository: ItemRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
-    val allItems = eventRepository.allItems
+    // User functions
+    fun registerUser(
+        username: String,
+        password: String,
+        name: String,
+        surname: String,
+        birthday: Date
+    ) {
+        viewModelScope.launch {
+            userRepository.insertUser(username, password, name, surname, birthday)
+        }
+    }
 
+    suspend fun loginUser(username: String, password: String): Boolean {
+        return withContext(viewModelScope.coroutineContext) {
+            userRepository.getUser(username, password)
+        }
+    }
+
+    fun unregisterUser(username: String) {
+        viewModelScope.launch {
+            userRepository.deleteUser(username)
+        }
+    }
+
+    // Event functions
     fun addEvent(
         name: String,
         date: Date,
@@ -43,6 +67,21 @@ class AppViewModel(
         eventRepository.deleteEvent(eventId)
     }
 
+    fun updateEvent(
+        id: Int,
+        name: String,
+        date: Date,
+        location: Nothing?,
+        organizer: String,
+        dressCode: String?,
+        friendsAllowed: Boolean,
+        partnersAllowed: Boolean,
+        familyAllowed: Boolean,
+        colleaguesAllowed: Boolean
+    ) {
+
+    }
+
     private fun isInvitedToEvent(type : Relationship.RelationshipType, event : Event) : Boolean {
         return when(type) {
             Relationship.RelationshipType.FRIEND -> event.friendsAllowed
@@ -61,45 +100,43 @@ class AppViewModel(
         }
     }
 
-    fun registerUser(username: String, password: String, name: String, surname: String, birthday: Date) {
+    // Item functions
+
+    fun getItemsOfUser(username: String): Flow<List<Item>> = itemRepository.getItemsOfUser(username)
+
+    fun addItem(
+        name: String,
+        description: String? = null,
+        url: String? = null,
+        image: String? = null,
+        priceL: Double? = null,
+        priceU: Double? = null,
+        listedBy: String
+    ) {
         viewModelScope.launch {
-            userRepository.insertUser(username, password, name, surname, birthday)
+            itemRepository.insertItem(name, description, url, image, priceL, priceU, listedBy)
         }
-    }
-
-    suspend fun loginUser(username: String, password: String): Boolean {
-        return withContext(viewModelScope.coroutineContext) {
-            userRepository.getUser(username, password)
-        }
-    }
-
-    fun getItemsOfUser(username: String) = itemRepository.getItemsOfUser(username)
-
-    fun addItem(name : String, description : String? = null, url : String? = null, image : String? = null, priceL : Double? = null, priceU : Double? = null, listedBy : String) = viewModelScope.launch {
-        itemRepository.insertItem(name, description, url, image, priceL, priceU, listedBy)
     }
 
     fun deleteItem(id : Int) = viewModelScope.launch {
         itemRepository.deleteItem(id)
     }
 
-    fun updateItem(id : Int, bought : Boolean? = null, name : String? = null, description : String? = null, url : String? = null, image : String? = null, priceL : Double? = null, priceU : Double? = null, reservedBy : String? = null, listedBy : String? = null) = viewModelScope.launch {
-        itemRepository.updateItem(id, bought, name, description, url, image, priceL, priceU, reservedBy, listedBy)
-    }
-
-    fun editEvent(
+    fun updateItem(
         id: Int,
-        name: String,
-        date: Date,
-        location: Nothing?,
-        organizer: String,
-        dressCode: String?,
-        friendsAllowed: Boolean,
-        partnersAllowed: Boolean,
-        familyAllowed: Boolean,
-        colleaguesAllowed: Boolean
+        bought: Boolean? = null,
+        name: String? = null,
+        description: String? = null,
+        url: String? = null,
+        image: String? = null,
+        priceL: Double? = null,
+        priceU: Double? = null,
+        reservedBy: String? = null,
+        listedBy: String? = null
     ) {
-
+        viewModelScope.launch {
+            itemRepository.updateItem(id, bought, name, description, url, image, priceL, priceU, reservedBy, listedBy)
+        }
     }
 }
 
