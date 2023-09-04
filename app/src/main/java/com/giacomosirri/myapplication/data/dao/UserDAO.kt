@@ -12,7 +12,7 @@ interface UserDAO {
     suspend fun getUser(username: String, password: String): User?
 
     @Query("SELECT * FROM users WHERE username = :username")
-    suspend fun getUser(username: String): User
+    suspend fun getUser(username: String): User?
 
     @Delete()
     suspend fun deleteUser(user: User)

@@ -44,6 +44,10 @@ class AppViewModel(
         }
     }
 
+    suspend fun usernameExists(username: String): Boolean {
+        return userRepository.getUser(username)
+    }
+
     // Event functions
     fun getAllEvents(): Flow<List<Event>> = eventRepository.allItems
 
@@ -86,7 +90,8 @@ class AppViewModel(
         colleaguesAllowed: Boolean? = null
     ) {
         viewModelScope.launch {
-            eventRepository.updateEvent(id, name, date, location, dressCode, friendsAllowed, partnersAllowed, familyAllowed, colleaguesAllowed)
+            eventRepository.updateEvent(id, name, date, location, dressCode,
+                friendsAllowed, partnersAllowed, familyAllowed, colleaguesAllowed)
         }
     }
 

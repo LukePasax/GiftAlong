@@ -20,6 +20,7 @@ import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
 import com.giacomosirri.myapplication.viewmodel.SettingsViewModel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -133,12 +134,12 @@ fun RegistrationScreen(
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue, contentColor = Color.White),
                 enabled = username.trim().isNotEmpty() && password.trim().isNotEmpty() && name.trim().isNotEmpty() && surname.trim().isNotEmpty(),
                 onClick = {
-                    /* TODO check if the username already exists in the database */
-                    if (username.trim() == "giacomo") {
+                    val usernameExists = runBlocking { appViewModel.usernameExists(username.trim()) }
+                    if (usernameExists) {
                         appViewModel.viewModelScope.launch {
                             snackbarHostState.showSnackbar(
                                 message = "Username already exists. Please choose another one.",
-                                duration = SnackbarDuration.Long
+                                duration = SnackbarDuration.Short
                             )
                         }
                     } else {

@@ -15,7 +15,10 @@ class UserRepository(private val userDAO: UserDAO) {
     suspend fun getUser(username: String, password: String): Boolean = userDAO.getUser(username, password) != null
 
     @WorkerThread
+    suspend fun getUser(username: String): Boolean = userDAO.getUser(username) != null
+
+    @WorkerThread
     suspend fun deleteUser(username: String) {
-        userDAO.deleteUser(userDAO.getUser(username))
+        userDAO.deleteUser(userDAO.getUser(username)!!)
     }
 }
