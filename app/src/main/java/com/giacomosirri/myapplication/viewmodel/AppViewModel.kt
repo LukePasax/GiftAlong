@@ -76,17 +76,18 @@ class AppViewModel(
 
     fun updateEvent(
         id: Int,
-        name: String,
-        date: Date,
-        location: Nothing?,
-        organizer: String,
-        dressCode: String?,
-        friendsAllowed: Boolean,
-        partnersAllowed: Boolean,
-        familyAllowed: Boolean,
-        colleaguesAllowed: Boolean
+        name: String? = null,
+        date: Date? = null,
+        location: String? = null,
+        dressCode: String? = null,
+        friendsAllowed: Boolean? = null,
+        partnersAllowed: Boolean? = null,
+        familyAllowed: Boolean? = null,
+        colleaguesAllowed: Boolean? = null
     ) {
-
+        viewModelScope.launch {
+            eventRepository.updateEvent(id, name, date, location, dressCode, friendsAllowed, partnersAllowed, familyAllowed, colleaguesAllowed)
+        }
     }
 
     private fun isInvitedToEvent(type : Relationship.RelationshipType, event : Event) : Boolean {

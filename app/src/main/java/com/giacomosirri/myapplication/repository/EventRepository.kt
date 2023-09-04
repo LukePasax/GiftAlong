@@ -45,4 +45,33 @@ class EventRepository(private val eventDAO: EventDAO) {
     suspend fun deleteEvent(eventId: Int) {
         eventDAO.deleteEvent(eventDAO.getEventFromId(eventId))
     }
+
+    @WorkerThread
+    suspend fun updateEvent(
+        id: Int,
+        name: String? = null,
+        date: Date? = null,
+        location: String? = null,
+        dressCode: String? = null,
+        friendsAllowed: Boolean? = null,
+        familyAllowed: Boolean? = null,
+        partnersAllowed: Boolean? = null,
+        colleaguesAllowed: Boolean? = null
+    ) {
+        val oldEvent = eventDAO.getEventFromId(id)
+        val event = Event(
+            id = id,
+            name = name ?: oldEvent.name,
+            date = date ?: oldEvent.date,
+            location = location ?: oldEvent.location,
+            dressCode = dressCode ?: oldEvent.dressCode,
+            // The organizer can never change.
+            organizer = oldEvent.organizer,
+            friendsAllowed = friendsAllowed ?: oldEvent.friendsAllowed,
+            familyAllowed = familyAllowed ?: oldEvent.familyAllowed,
+            partnersAllowed = partnersAllowed ?: oldEvent.partnersAllowed,
+            colleaguesAllowed = colleaguesAllowed ?: oldEvent.colleaguesAllowed
+        )
+        eventDAO.updateEvent(event)
+    }
 }

@@ -183,7 +183,6 @@ fun NewEventScreen(
                             name = eventTitle.value.trim(),
                             date = Date(datePickerState.selectedDateMillis!!),
                             location = null,
-                            organizer = AppContext.getCurrentUser(),
                             dressCode = eventDressCode.value.trim().ifEmpty { null },
                             friendsAllowed = friendsAllowed.value,
                             partnersAllowed = partnersAllowed.value,
