@@ -132,7 +132,7 @@ fun NewItemScreen(
                 }
             }
             if (openDialog.value) {
-                SingleChoiceDialog(title = "Select a currency:", currencies, selected, onSelected, openDialog)
+                SingleChoiceDialog(title = "Select a currency:", currencies, selected, onSelected, openDialog) {}
             }
             // Description
             val maxLength = 100

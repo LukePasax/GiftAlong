@@ -43,7 +43,7 @@ fun RelationshipsScreen(
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 for (relationship in relationships.value) {
                     item {
-                        RelationshipListItem(relationship.followed, relationship.type.name, navController)
+                        RelationshipListItem(relationship.followed, relationship.type.name, navController, viewModel)
                     }
                 }
             }
@@ -58,7 +58,7 @@ fun RelationshipsScreen(
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 item {
                     for (elem in resultMap) {
-                        RelationshipListItem(elem.key, elem.value, navController)
+                        RelationshipListItem(elem.key, elem.value, navController, viewModel)
                     }
                 }
             }
@@ -70,13 +70,20 @@ fun RelationshipsScreen(
 fun RelationshipListItem(
     username: String,
     relationshipType: String,
-    navController: NavController
+    navController: NavController,
+    viewModel: AppViewModel
 ) {
     val isDialogOpen = remember { mutableStateOf(false) }
     val relationshipTypes = listOf("Friend", "Family", "Partner", "Colleague")
     val (selected, onSelected) = remember { mutableStateOf(relationshipType) }
     if (isDialogOpen.value) {
-        SingleChoiceDialog(title = "Select the relationship:", relationshipTypes, selected, onSelected, isDialogOpen)
+        SingleChoiceDialog(
+            title = "Select the relationship:",
+            relationshipTypes,
+            selected,
+            onSelected,
+            isDialogOpen
+        ) { viewModel.updateRelationship(AppContext.getCurrentUser(), username, selected) }
     }
     Column {
         ListItem(

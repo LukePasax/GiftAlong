@@ -337,6 +337,7 @@ fun NavigationGraph(
                 paddingValues = paddingValues,
                 username = username,
                 onWishlistButtonClick = { navController.navigate(NavigationScreen.Wishlist.name + username) },
+                viewModel = appViewModel,
                 navController = navController
             )
         }

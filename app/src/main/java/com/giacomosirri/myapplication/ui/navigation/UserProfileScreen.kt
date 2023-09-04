@@ -16,12 +16,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.giacomosirri.myapplication.R
+import com.giacomosirri.myapplication.ui.AppContext
+import com.giacomosirri.myapplication.viewmodel.AppViewModel
 
 @Composable
 fun UserProfileScreen(
     paddingValues: PaddingValues,
     username: String,
     onWishlistButtonClick: () -> Unit,
+    viewModel: AppViewModel,
     navController: NavController
 ) {
     val openDialog = remember { mutableStateOf(false) }
@@ -99,7 +102,9 @@ fun UserProfileScreen(
             }
         }
         if (openDialog.value) {
-            SingleChoiceDialog(title = "Select the relationship:", relationshipTypes, selected, onSelected, openDialog)
+            SingleChoiceDialog(title = "Select the relationship:", relationshipTypes, selected, onSelected, openDialog) {
+                viewModel.updateRelationship(AppContext.getCurrentUser(), username, selected)
+            }
         }
     }
 }

@@ -542,7 +542,8 @@ fun SingleChoiceDialog(
     items: List<String>,
     selected: String,
     onSelected: (String) -> Unit,
-    openDialog: MutableState<Boolean>
+    openDialog: MutableState<Boolean>,
+    confirmChoice: () -> Unit
 ) {
     Dialog(
         onDismissRequest = { openDialog.value = false },
@@ -586,7 +587,10 @@ fun SingleChoiceDialog(
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
-                        TextButton(onClick = { openDialog.value = false }) {
+                        TextButton(onClick = {
+                            openDialog.value = false
+                            confirmChoice.invoke()
+                        }) {
                             Text(text = "OK")
                         }
                     }
