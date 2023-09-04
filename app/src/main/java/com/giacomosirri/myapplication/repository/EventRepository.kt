@@ -16,7 +16,7 @@ class EventRepository(private val eventDAO: EventDAO) {
     }
 
     @WorkerThread
-    suspend fun getEvent(id : Int) : Event {
+    suspend fun getEvent(id: Int) : Event {
         return eventDAO.getEvent(id)
     }
 
@@ -32,12 +32,12 @@ class EventRepository(private val eventDAO: EventDAO) {
         partnersAllowed: Boolean,
         colleaguesAllowed: Boolean
     ) {
-        eventDAO.insert(Event(name, date, location, organizer, dressCode,
+        eventDAO.insertEvent(Event(name, date, location, organizer, dressCode,
             friendsAllowed, familyAllowed, partnersAllowed, colleaguesAllowed))
     }
 
     @WorkerThread
     suspend fun deleteEvent(eventId: Int) {
-        eventDAO.delete(eventId)
+        eventDAO.deleteEvent(eventId)
     }
 }

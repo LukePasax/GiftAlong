@@ -6,25 +6,41 @@ import com.giacomosirri.myapplication.data.entity.Item
 import kotlinx.coroutines.flow.Flow
 
 class ItemRepository(private val itemDAO: ItemDAO) {
+    @WorkerThread
+    fun getItemsOfUser(username: String) : Flow<List<Item>> = itemDAO.getItemsOfUser(username)
 
     @WorkerThread
-    fun getItemsOfUser(username: String) : Flow<List<Item>> = itemDAO.getItems(username)
-
-    @WorkerThread
-    suspend fun insertItem(name : String, description : String? = null, url : String? = null, image : String? = null, priceL : Double? = null, priceU : Double? = null, listedBy : String) {
-        val item = Item(false, name, description, url, image, priceL, priceU, null, listedBy)
-        itemDAO.insert(item)
+    suspend fun insertItem(
+        name: String,
+        description: String? = null,
+        url: String? = null,
+        image: String? = null,
+        priceL: Double? = null,
+        priceU: Double? = null,
+        listedBy: String
+    ) {
+        itemDAO.insert(Item(bought = false, name, description, url, image, priceL, priceU, reservedBy = null, listedBy))
     }
 
     @WorkerThread
-    suspend fun deleteItem(id : Int) {
-        itemDAO.delete(itemDAO.getItem(id))
+    suspend fun deleteItem(id: Int) {
+        itemDAO.deleteItem(id)
     }
 
-
     @WorkerThread
-    suspend fun updateItem(id : Int, bought : Boolean? = null, name : String? = null, description : String? = null, url : String? = null, image : String? = null, priceL : Double? = null, priceU : Double? = null, reservedBy : String? = null, listedBy : String? = null) {
-        val oldItem = itemDAO.getItem(id)
+    suspend fun updateItem(
+        id: Int,
+        bought: Boolean? = null,
+        name: String? = null,
+        description: String? = null,
+        url: String? = null,
+        image: String? = null,
+        priceL: Double? = null,
+        priceU: Double? = null,
+        reservedBy: String? = null,
+    ) {
+        /* TODO needs fixing */
+        val oldItem = itemDAO.getItemFromId(id)
         val item = Item(
             bought ?: oldItem.bought,
             name ?: oldItem.name,
@@ -36,7 +52,6 @@ class ItemRepository(private val itemDAO: ItemDAO) {
             reservedBy ?: oldItem.reservedBy,
             oldItem.listedBy
         )
-        itemDAO.update(item)
+        itemDAO.updateItem(item)
     }
-
 }
