@@ -106,6 +106,8 @@ class AppViewModel(
 
     fun getItemsOfUser(username: String): Flow<List<Item>> = itemRepository.getItemsOfUser(username)
 
+    suspend fun getItemFromId(id: Int): Item = itemRepository.getItemFromId(id)
+
     fun addItem(
         name: String,
         description: String? = null,

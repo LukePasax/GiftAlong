@@ -7,6 +7,10 @@ import com.giacomosirri.myapplication.data.entity.Item
 import kotlinx.coroutines.flow.Flow
 
 class ItemRepository(private val itemDAO: ItemDAO) {
+
+    @WorkerThread
+    suspend fun getItemFromId(id: Int) : Item = itemDAO.getItemFromId(id)
+
     @WorkerThread
     fun getItemsOfUser(username: String) : Flow<List<Item>> = itemDAO.getItemsOfUser(username)
 

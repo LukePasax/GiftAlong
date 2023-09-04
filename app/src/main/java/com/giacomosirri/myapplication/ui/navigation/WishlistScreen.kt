@@ -25,12 +25,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.giacomosirri.myapplication.data.entity.Item
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Secondary
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 
 @Composable
 fun WishlistScreen(
@@ -67,9 +70,11 @@ fun WishlistScreen(
                         itemId = item.id,
                         itemName = item.name,
                         username = username,
+                        image = item.imageId,
                         priceL = item.priceLowerBound,
                         priceU = item.priceUpperBound,
                         reservingUser = item.reservedBy,
+                        bought = item.bought,
                         navController = navController,
                         viewModel = viewModel
                     )
@@ -92,14 +97,15 @@ fun WishlistItem(
     username: String,
     priceL: Double? = null,
     priceU: Double? = null,
-    image: Int = R.drawable.placeholder,
+    image: Int,
     reservingUser: String? = null,
+    bought: Boolean = false,
     navController: NavController,
     viewModel: AppViewModel
 ) {
     val openDialog = remember { mutableStateOf(false) }
-    val reserved = remember { mutableStateOf(false) }
-    val bought = remember { mutableStateOf(false) }
+    val reserved = remember { mutableStateOf(!reservingUser.isNullOrEmpty()) }
+    val isBought = remember { mutableStateOf(bought) }
     val isMenuOpen = remember { mutableStateOf(false) }
     val isCancelItemDialogOpen = remember { mutableStateOf(false) }
     if (isCancelItemDialogOpen.value) {
@@ -156,14 +162,14 @@ fun WishlistItem(
                         }
                     }
                 } else {
-                    if (reserved.value && !bought.value) {
+                    if (reserved.value && !isBought.value) {
                         Text(
                             text = "Reserved",
                             fontSize = 17.sp,
                             modifier = Modifier
                                 .border(1.dp, Color.Gray, shape = RoundedCornerShape(4.dp))
                                 .padding(10.dp))
-                    } else if (bought.value) {
+                    } else if (isBought.value) {
                         Text(
                             text = "Bought",
                             fontSize = 17.sp,
@@ -198,23 +204,29 @@ fun WishlistItem(
         ListItemDivider()
     }
     if (openDialog.value) {
-        ItemDialog(navController, itemName, openDialog, username, reserved, bought, reservingUser)
+        ItemDialog(navController, itemId, itemName, image, username, reservingUser, reserved, isBought, openDialog, viewModel)
     }
 }
 
 @Composable
 fun ItemDialog(
     navController: NavController,
+    itemId: Int,
     itemName: String,
-    openDialog: MutableState<Boolean>,
+    image: Int,
     username: String,
-    // The user that has ALREADY reserved this item, if it exists.
+    reservingUser: String?,
     reserved: MutableState<Boolean>,
     bought: MutableState<Boolean>,
-    reservingUser: String? = null,
+    openDialog: MutableState<Boolean>,
+    viewModel: AppViewModel
 ) {
-    val description = "This is a description"
-    val url = "www.url.it"
+    var item: Item? = null
+    viewModel.viewModelScope.launch {
+        item = viewModel.getItemFromId(itemId)
+    }
+    val description = item?.description ?: "No description"
+    val url = item?.url ?: "No url"
     val buyButtonText = if (reserved.value && bought.value) "Bought" else "Buy"
     val reserveButtonText = if (reserved.value) "Unreserve" else "Reserve"
     Dialog(
@@ -232,7 +244,7 @@ fun ItemDialog(
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
                 val entryPaddingValues = PaddingValues(horizontal = 15.dp, vertical = 10.dp)
-                DialogImage(imageDescription = "Item Image", imageId = R.drawable.placeholder)
+                DialogImage(imageDescription = "Item Image", imageId = image)
                 DialogTitle(paddingValues = entryPaddingValues, text = itemName)
                 DialogEntry(paddingValues = entryPaddingValues, text = "Link: ", value = url)
                 DialogEntry(
@@ -267,7 +279,14 @@ fun ItemDialog(
                         paddingValues = entryPaddingValues,
                         composable1 = {
                             Button(
-                                onClick = { reserved.value = !reserved.value },
+                                onClick = {
+                                    reserved.value = !reserved.value
+                                    if (reserved.value) {
+                                        viewModel.updateItem(itemId, reservedBy = AppContext.getCurrentUser())
+                                    } else {
+                                        viewModel.updateItem(itemId, reservedBy = null)
+                                    }
+                                },
                                 enabled = !bought.value,
                                 modifier = Modifier.size(120.dp, 45.dp)
                             ) {
@@ -288,5 +307,6 @@ fun ItemDialog(
             }
         }
     }
+
 }
 
