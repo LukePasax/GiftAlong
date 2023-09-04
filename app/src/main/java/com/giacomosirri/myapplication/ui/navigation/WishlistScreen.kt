@@ -126,7 +126,10 @@ fun WishlistItem(
                         ) {
                             DropdownMenuItem(
                                 text = { Text("Edit") },
-                                onClick = { navController.navigate(NavigationScreen.NewItem.name + itemId) }
+                                onClick = {
+                                    isMenuOpen.value = false
+                                    navController.navigate(NavigationScreen.NewItem.name + itemId)
+                                }
                             )
                             DropdownMenuItem(
                                 text = { Text("Delete") },
