@@ -400,8 +400,10 @@ fun NavigationAppBar(
                 when (currentScreenName) {
                     AppContext.getContext()?.getString(R.string.home) -> HomeScreen(query, navigation.navController)
                     AppContext.getContext()?.getString(R.string.wishlist) -> WishlistScreen(query)
-                    AppContext.getContext()?.getString(R.string.relationships) ->
+                    AppContext.getContext()?.getString(R.string.relationships) -> {
+                        navigation.navController.popBackStack()
                         navigation.navController.navigate("${NavigationScreen.Relationships.name}?query=$query")
+                    }
                 }
             }
         }
