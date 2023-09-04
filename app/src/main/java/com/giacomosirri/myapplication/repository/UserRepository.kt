@@ -1,6 +1,7 @@
 package com.giacomosirri.myapplication.repository
 
 import androidx.annotation.WorkerThread
+import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.data.dao.UserDAO
 import com.giacomosirri.myapplication.data.entity.User
 import java.util.*
@@ -8,8 +9,8 @@ import java.util.*
 class UserRepository(private val userDAO: UserDAO) {
 
     @WorkerThread
-    suspend fun insertUser(username: String, password: String, name: String, surname: String, birthday: Date) {
-        userDAO.insertUser(User(username, password, name, surname, birthday, Date()))
+    suspend fun insertUser(username: String, password: String, name: String, surname: String, image : Int, birthday: Date) {
+        userDAO.insertUser(User(username, password, name, surname, birthday, image, Date()))
     }
 
     @WorkerThread

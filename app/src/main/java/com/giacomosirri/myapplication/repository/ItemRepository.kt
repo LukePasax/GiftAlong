@@ -1,6 +1,7 @@
 package com.giacomosirri.myapplication.repository
 
 import androidx.annotation.WorkerThread
+import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.data.dao.ItemDAO
 import com.giacomosirri.myapplication.data.entity.Item
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +15,7 @@ class ItemRepository(private val itemDAO: ItemDAO) {
         name: String,
         description: String? = null,
         url: String? = null,
-        image: String? = null,
+        image: Int,
         priceL: Double? = null,
         priceU: Double? = null,
         listedBy: String
@@ -34,7 +35,7 @@ class ItemRepository(private val itemDAO: ItemDAO) {
         name: String? = null,
         description: String? = null,
         url: String? = null,
-        image: String? = null,
+        image: Int? = null,
         priceL: Double? = null,
         priceU: Double? = null,
         reservedBy: String? = null,

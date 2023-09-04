@@ -147,6 +147,7 @@ fun RegistrationScreen(
                             password.trim(),
                             name.trim(),
                             surname.trim(),
+                            image = R.drawable.placeholder,
                             Date(datePickerState.selectedDateMillis!!)
                         )
                         // The next time the user launches the app from this device,

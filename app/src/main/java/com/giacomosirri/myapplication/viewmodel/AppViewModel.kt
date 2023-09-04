@@ -1,6 +1,7 @@
 package com.giacomosirri.myapplication.viewmodel
 
 import androidx.lifecycle.*
+import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.data.entity.Event
 import com.giacomosirri.myapplication.data.entity.Item
 import com.giacomosirri.myapplication.data.entity.Relationship
@@ -24,10 +25,11 @@ class AppViewModel(
         password: String,
         name: String,
         surname: String,
+        image: Int? = null,
         birthday: Date
     ) {
         viewModelScope.launch {
-            userRepository.insertUser(username, password, name, surname, birthday)
+            userRepository.insertUser(username, password, name, surname, image?: R.drawable.placeholder, birthday)
         }
     }
 
@@ -108,13 +110,13 @@ class AppViewModel(
         name: String,
         description: String? = null,
         url: String? = null,
-        image: String? = null,
+        image: Int? = null,
         priceL: Double? = null,
         priceU: Double? = null,
         listedBy: String
     ) {
         viewModelScope.launch {
-            itemRepository.insertItem(name, description, url, image, priceL, priceU, listedBy)
+            itemRepository.insertItem(name, description, url, image?: R.drawable.placeholder, priceL, priceU, listedBy)
         }
     }
 
@@ -128,7 +130,7 @@ class AppViewModel(
         name: String? = null,
         description: String? = null,
         url: String? = null,
-        image: String? = null,
+        image: Int? = null,
         priceL: Double? = null,
         priceU: Double? = null,
         reservedBy: String? = null
