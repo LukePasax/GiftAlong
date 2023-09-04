@@ -12,7 +12,7 @@ class GiftAlong : Application() {
     // lazy means that the database and the repositories are only created when they are needed.
     private val database by lazy { AppDatabase.getDatabase(this) }
     val itemRepository by lazy { ItemRepository(database.itemDao()) }
-    val userRepository by lazy { UserRepository(database.userDao()) }
+    val userRepository by lazy { UserRepository(database.userDao(), database.relationshipDao()) }
     val eventRepository by lazy { EventRepository(database.eventDao()) }
     val settingsRepository by lazy { SettingsRepository(AppContext.getContext()!!) }
 }

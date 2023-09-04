@@ -302,6 +302,4 @@ fun ItemDialog(
             }
         }
     }
-
 }
-

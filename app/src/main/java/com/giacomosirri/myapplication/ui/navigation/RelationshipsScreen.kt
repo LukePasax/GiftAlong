@@ -18,11 +18,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
+import com.giacomosirri.myapplication.viewmodel.AppViewModel
 
 @Composable
 fun RelationshipsScreen(
     paddingValues: PaddingValues,
-    navController: NavController
+    navController: NavController,
+    viewModel: AppViewModel
 ) {
     Scaffold(
         topBar = {
@@ -33,27 +35,13 @@ fun RelationshipsScreen(
             )
         }
     ) {
+        val relationships = viewModel.getRelationshipsOfUser(AppContext.getCurrentUser())
+            .collectAsState(initial = emptyList())
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
-            item {
-                RelationshipListItem(
-                    username = "chiaaara",
-                    relationshipType = "Friend",
-                    navController = navController
-                )
-            }
-            item {
-                RelationshipListItem(
-                    username = "lukepasax",
-                    relationshipType = "Colleague",
-                    navController = navController
-                )
-            }
-            item {
-                RelationshipListItem(
-                    username = "erzava",
-                    relationshipType = "Friend",
-                    navController = navController
-                )
+            for (relationship in relationships.value) {
+                item {
+                    RelationshipListItem(relationship.followed, relationship.type.name, navController)
+                }
             }
         }
     }
@@ -66,7 +54,6 @@ fun RelationshipsScreen(searchedUsers: String) {
 @Composable
 fun RelationshipListItem(
     username: String,
-    image: Int = R.drawable.placeholder,
     relationshipType: String,
     navController: NavController
 ) {
@@ -98,7 +85,7 @@ fun RelationshipListItem(
             },
             leadingContent = {
                 Image(
-                    painterResource(id = image),
+                    painterResource(id = R.drawable.placeholder),
                     contentDescription = "Wishlist item image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier

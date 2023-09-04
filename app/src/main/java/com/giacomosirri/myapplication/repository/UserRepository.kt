@@ -1,11 +1,14 @@
 package com.giacomosirri.myapplication.repository
 
 import androidx.annotation.WorkerThread
+import com.giacomosirri.myapplication.data.dao.RelationshipDAO
 import com.giacomosirri.myapplication.data.dao.UserDAO
+import com.giacomosirri.myapplication.data.entity.Relationship
 import com.giacomosirri.myapplication.data.entity.User
+import kotlinx.coroutines.flow.Flow
 import java.util.*
 
-class UserRepository(private val userDAO: UserDAO) {
+class UserRepository(private val userDAO: UserDAO, private val relationshipDAO: RelationshipDAO) {
     @WorkerThread
     suspend fun insertUser(username: String, password: String, name: String, surname: String, image : Int, birthday: Date) {
         userDAO.insertUser(User(username, password, name, surname, birthday, image, Date()))
@@ -21,4 +24,6 @@ class UserRepository(private val userDAO: UserDAO) {
     suspend fun deleteUser(username: String) {
         userDAO.deleteUser(userDAO.getUser(username)!!)
     }
+
+    fun getRelationshipsOfUser(username: String): Flow<List<Relationship>> = relationshipDAO.getRelationshipsOfUser(username)
 }

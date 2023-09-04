@@ -199,6 +199,8 @@ class AppViewModel(
     suspend fun getColleaguesParticipationToEventFromId(id: Int): Boolean {
         return eventRepository.getEventFromId(id).colleaguesAllowed
     }
+
+    fun getRelationshipsOfUser(username: String): Flow<List<Relationship>> = userRepository.getRelationshipsOfUser(username)
 }
 
 class AppViewModelFactory(

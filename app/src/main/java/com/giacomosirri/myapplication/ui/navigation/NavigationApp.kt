@@ -342,7 +342,8 @@ fun NavigationGraph(
         composable(NavigationScreen.Relationships.name) {
             RelationshipsScreen(
                 paddingValues = paddingValues,
-                navController = navController
+                navController = navController,
+                viewModel = appViewModel
             )
         }
         composable(NavigationScreen.DataCenter.name) {
