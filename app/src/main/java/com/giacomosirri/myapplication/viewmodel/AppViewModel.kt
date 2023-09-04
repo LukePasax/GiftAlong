@@ -70,7 +70,7 @@ class AppViewModel(
         }
     }
 
-    fun removeEvent(eventId: Int) = viewModelScope.launch {
+    fun deleteEvent(eventId: Int) = viewModelScope.launch {
         eventRepository.deleteEvent(eventId)
     }
 

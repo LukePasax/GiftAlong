@@ -68,7 +68,12 @@ fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit, navControll
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
             for (date in totalEvents) {
                 item {
-                    DayCard(date = dateFormat.format(date.key), events = date.value, navController = navController)
+                    DayCard(
+                        date = dateFormat.format(date.key),
+                        events = date.value,
+                        navController = navController,
+                        viewModel = viewModel
+                    )
                 }
             }
         }
@@ -77,19 +82,10 @@ fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit, navControll
 
 @Composable
 fun HomeScreen(searchedEvents: String, navController: NavController) {
-    LazyColumn(modifier = Modifier.padding(PaddingValues(top = 10.dp))) {
-        items(1) {
-            DayCard(
-                date = "Tuesday, December 21, 2023",
-                events = listOf(),
-                navController = navController
-            )
-        }
-    }
 }
 
 @Composable
-fun DayCard(date: String, events: List<Event>, navController: NavController) {
+fun DayCard(date: String, events: List<Event>, navController: NavController, viewModel: AppViewModel) {
     Column(
         modifier = Modifier
             .padding(horizontal = 5.dp, vertical = 10.dp)
@@ -106,7 +102,7 @@ fun DayCard(date: String, events: List<Event>, navController: NavController) {
             }
         }
         for (event in events) {
-            EventCard(event, navController)
+            EventCard(event, navController, viewModel)
         }
     }
 }

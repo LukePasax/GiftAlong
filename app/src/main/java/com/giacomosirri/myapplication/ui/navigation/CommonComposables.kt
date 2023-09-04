@@ -33,6 +33,7 @@ import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.data.entity.Event
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.*
+import com.giacomosirri.myapplication.viewmodel.AppViewModel
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -430,7 +431,7 @@ fun CheckboxItem(text: String, paddingValues: PaddingValues, state: MutableState
 }
 
 @Composable
-fun EventCard(event: Event, navController: NavController) {
+fun EventCard(event: Event, navController: NavController, viewModel: AppViewModel) {
     val openDialog = remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
@@ -454,7 +455,7 @@ fun EventCard(event: Event, navController: NavController) {
             event.dressCode ?: "No dress code",
             openDialog,
             navController
-        )
+        ) { viewModel.deleteEvent(event.id) }
     }
 }
 
@@ -466,7 +467,8 @@ fun EventDialog(
     date: String,
     dressCode: String,
     openDialog: MutableState<Boolean>,
-    navController: NavController
+    navController: NavController,
+    onEventDeletion: () -> Unit
 ) {
     Dialog(
         onDismissRequest = { openDialog.value = false },
@@ -509,7 +511,7 @@ fun EventDialog(
                             onAccept = {
                                 isCancelEventDialogOpen.value = false
                                 openDialog.value = false
-                                /* TODO delete event from database */
+                                onEventDeletion.invoke()
                             },
                             dialogTitle = "Event Deletion",
                             mainText = "Are you sure you want to delete this event? This action cannot be undone.",
