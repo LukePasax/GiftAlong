@@ -270,7 +270,6 @@ fun ItemDialog(
                             }
                         )
                     }
-                    /* TODO consider changing how these buttons work because it's not great UX now */
                     DialogEntry(
                         paddingValues = entryPaddingValues,
                         composable1 = {

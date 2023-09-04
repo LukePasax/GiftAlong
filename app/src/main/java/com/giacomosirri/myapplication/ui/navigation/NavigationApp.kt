@@ -76,7 +76,7 @@ fun NavigationApp(
     val entryScreenName = navController.currentBackStackEntryAsState().value?.destination?.route ?:
         if (isUserLoggedIn) NavigationScreen.Home.name else NavigationScreen.Login.name
     if (entryScreenName != NavigationScreen.Login.name) {
-        NavigationDrawer(settingsViewModel) {
+        NavigationDrawer(appViewModel, settingsViewModel) {
             Scaffold {
                 NavigationGraph(
                     navController = navController,
@@ -99,7 +99,11 @@ fun NavigationApp(
 }
 
 @Composable
-private fun NavigationDrawer(settingsViewModel: SettingsViewModel, content: @Composable () -> Unit) {
+private fun NavigationDrawer(
+    appViewModel: AppViewModel,
+    settingsViewModel: SettingsViewModel,
+    content: @Composable () -> Unit
+) {
     val navigation = Navigator.getNavigation()
     ModalNavigationDrawer(
         drawerState = navigation.drawerState,
@@ -209,7 +213,7 @@ private fun NavigationDrawer(settingsViewModel: SettingsViewModel, content: @Com
                     QuitScreenDialog(
                         isDialogOpen = isDeleteAccountDialogOpen,
                         onQuit = {
-                            /* TODO remove user from database */
+                            appViewModel.unregisterUser(AppContext.getCurrentUser())
                             navigation.scope.launch { navigation.drawerState.close() }
                             navigation.navController.navigate(NavigationScreen.Login.name)
                         },
