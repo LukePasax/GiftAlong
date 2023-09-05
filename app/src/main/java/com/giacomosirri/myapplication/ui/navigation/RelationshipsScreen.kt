@@ -1,5 +1,6 @@
 package com.giacomosirri.myapplication.ui.navigation
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,8 +11,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -19,6 +22,7 @@ import androidx.navigation.NavController
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun RelationshipsScreen(
@@ -45,10 +49,13 @@ fun RelationshipsScreen(
             // Show only the users the current user has a relationship with.
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 for (relationship in relationships.value) {
+                    var imageUri: String?
+                    runBlocking { imageUri = viewModel.getProfilePicOfUser(relationship.followed) }
                     item {
                         RelationshipListItem(
                             relationship.followed,
                             relationship.type.name,
+                            imageUri,
                             navController,
                             viewModel
                         )
@@ -82,7 +89,9 @@ fun RelationshipsScreen(
             LazyColumn {
                 item {
                     for (elem in resultMap) {
-                        RelationshipListItem(elem.key, elem.value, navController, viewModel, query)
+                        var imageUri: String?
+                        runBlocking { imageUri = viewModel.getProfilePicOfUser(elem.key) }
+                        RelationshipListItem(elem.key, elem.value, imageUri, navController, viewModel, query)
                     }
                 }
             }
@@ -94,6 +103,7 @@ fun RelationshipsScreen(
 fun RelationshipListItem(
     username: String,
     relationshipType: String,
+    profilePic: String?,
     navController: NavController,
     viewModel: AppViewModel,
     query: String? = null
@@ -139,7 +149,11 @@ fun RelationshipListItem(
             },
             leadingContent = {
                 Image(
-                    painterResource(id = R.drawable.placeholder),
+                    bitmap = if (profilePic != null) {
+                        getBitmap(AppContext.getContext()!!.applicationContext.contentResolver, Uri.parse(profilePic)).asImageBitmap()
+                    } else {
+                        ImageBitmap.imageResource(id = R.drawable.placeholder)
+                    },
                     contentDescription = "Wishlist item image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
