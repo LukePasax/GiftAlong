@@ -62,7 +62,7 @@ fun RelationshipsScreen(
             val allUsers = viewModel.getUsersMatchingPattern(query).collectAsState(initial = emptyList())
             val resultMap = mutableMapOf<String, String>()
             for (user in allUsers.value) {
-                val relationship = relationships.value.find { it.follower == user.username }
+                val relationship = relationships.value.find { it.followed == user.username }
                 // The current user must not appear in the research.
                 if (user.username != AppContext.getCurrentUser()) {
                     resultMap[user.username] = relationship?.type?.name ?: "None"
@@ -71,7 +71,7 @@ fun RelationshipsScreen(
             LazyColumn {
                 item {
                     for (elem in resultMap) {
-                        RelationshipListItem(elem.key, elem.value, navController, viewModel)
+                        RelationshipListItem(elem.key, elem.value, navController, viewModel, query)
                     }
                 }
             }
@@ -84,7 +84,8 @@ fun RelationshipListItem(
     username: String,
     relationshipType: String,
     navController: NavController,
-    viewModel: AppViewModel
+    viewModel: AppViewModel,
+    query: String? = null
 ) {
     val isDialogOpen = remember { mutableStateOf(false) }
     val relationshipTypes = listOf("Friend", "Family", "Partner", "Colleague", "None")
@@ -96,7 +97,14 @@ fun RelationshipListItem(
             selected,
             onSelected,
             isDialogOpen
-        ) { viewModel.updateRelationship(AppContext.getCurrentUser(), username, selected) }
+        ) {
+            viewModel.updateRelationship(AppContext.getCurrentUser(), username, selected)
+            // Workaround to show the updated value of the relationship in the outlined button.
+            if (query != null) {
+                navController.popBackStack()
+                navController.navigate("${NavigationScreen.Relationships.name}?query=$query")
+            }
+        }
     }
     Column {
         ListItem(
