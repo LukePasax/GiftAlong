@@ -32,6 +32,7 @@ import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Secondary
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun WishlistScreen(
@@ -218,13 +219,18 @@ fun ItemDialog(
     viewModel: AppViewModel
 ) {
     var item: Item? = null
-    viewModel.viewModelScope.launch {
+    runBlocking {
         item = viewModel.getItemFromId(itemId)
     }
     val description = item?.description ?: "No description"
     val url = item?.url ?: "No url"
     val buyButtonText = if (reserved.value && bought.value) "Bought" else "Buy"
     val reserveButtonText = if (reserved.value) "Unreserve" else "Reserve"
+    val price = if (item?.priceLowerBound != null && item?.priceUpperBound != null) {
+        "€${item?.priceLowerBound} - €${item?.priceUpperBound}"
+    } else {
+        "No price"
+    }
     Dialog(
         onDismissRequest = { openDialog.value = false },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
@@ -246,7 +252,7 @@ fun ItemDialog(
                 DialogEntry(
                     paddingValues = entryPaddingValues,
                     text = "Price Range: ",
-                    value = "10-20€"
+                    value = price
                 )
                 DialogEntry(
                     paddingValues = entryPaddingValues,
