@@ -6,7 +6,6 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,7 +45,6 @@ class Navigation(
     val navController: NavHostController,
     val drawerState: DrawerState,
     val scope: CoroutineScope,
-    val isSearchBarOpen: MutableState<Boolean>
 )
 
 class Navigator private constructor() {
@@ -71,7 +69,6 @@ fun NavigationApp(
         navController = navController,
         drawerState = rememberDrawerState(DrawerValue.Closed),
         scope = rememberCoroutineScope(),
-        isSearchBarOpen = rememberSaveable { mutableStateOf(false) }
     ))
     val entryScreenName = navController.currentBackStackEntryAsState().value?.destination?.route ?:
         if (isUserLoggedIn) NavigationScreen.Home.name else NavigationScreen.Login.name
@@ -155,10 +152,6 @@ private fun NavigationDrawer(
                         onClick = {
                             navigation.scope.launch { navigation.drawerState.close() }
                             selectedItem.value = item.key
-                            // Open the search bar only when the user selects the third option from the drawer,
-                            // which navigates to the find new users screen.
-                            navigation.isSearchBarOpen.value =
-                                selectedItem.value == AppContext.getContext()?.getString(R.string.menu_item3)
                             navigateFromDrawer(selectedItem.value, navigation.navController)
                         },
                         modifier = Modifier.padding(bottom = 6.dp, start = 6.dp, end = 6.dp)
@@ -279,14 +272,19 @@ fun NavigationGraph(
                 viewModel = appViewModel
             )
         }
-        composable(NavigationScreen.Wishlist.name + "{username}") {
+        composable(
+            route = "${NavigationScreen.Wishlist.name}{username}?query={query}",
+            arguments = listOf(navArgument("query") { nullable = true })
+        ) {
             val username = it.arguments?.getString("username") ?: ""
+            val query = it.arguments?.getString("query")
             WishlistScreen(
                 username = username,
                 paddingValues = paddingValues,
                 onFabClick = { navController.navigate(NavigationScreen.NewItem.name) },
                 navController = navController,
-                viewModel = appViewModel
+                viewModel = appViewModel,
+                query = query
             )
         }
         composable(NavigationScreen.NewItem.name) {
@@ -392,7 +390,11 @@ fun NavigationAppBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBar(searchBarPlaceholder: String, content: @Composable ColumnScope.() -> Unit) {
+fun SearchBar(
+    searchBarPlaceholder: String,
+    currentScreen: String,
+    content: @Composable ColumnScope.() -> Unit
+) {
     val navigation = Navigator.getNavigation()
     var query by remember { mutableStateOf("") }
     SearchBar(
@@ -402,13 +404,23 @@ fun SearchBar(searchBarPlaceholder: String, content: @Composable ColumnScope.() 
         placeholder = { Text(searchBarPlaceholder) },
         onSearch = {
             navigation.navController.popBackStack()
-            navigation.navController.navigate("${NavigationScreen.Relationships.name}?query=$it")
+            when (currentScreen) {
+                NavigationScreen.Wishlist.name ->
+                    navigation.navController.navigate("${NavigationScreen.Wishlist.name}${AppContext.getCurrentUser()}?query=$it" )
+                NavigationScreen.Relationships.name ->
+                    navigation.navController.navigate("${NavigationScreen.Relationships.name}?query=$it")
+            }
         },
         leadingIcon = {
             IconButton(
                 onClick = {
                     navigation.navController.popBackStack()
-                    navigation.navController.navigate(NavigationScreen.Relationships.name)
+                    when (currentScreen) {
+                        NavigationScreen.Wishlist.name ->
+                            navigation.navController.navigate(NavigationScreen.Wishlist.name + AppContext.getCurrentUser())
+                        NavigationScreen.Relationships.name ->
+                            navigation.navController.navigate(NavigationScreen.Relationships.name)
+                    }
                 }
             ) {
                 Icon(Icons.Rounded.ArrowBack, "Close icon")
@@ -418,7 +430,12 @@ fun SearchBar(searchBarPlaceholder: String, content: @Composable ColumnScope.() 
             IconButton(onClick = {
                 query = ""
                 navigation.navController.popBackStack()
-                navigation.navController.navigate("${NavigationScreen.Relationships.name}?query=$query")
+                when (currentScreen) {
+                    NavigationScreen.Wishlist.name ->
+                        navigation.navController.navigate("${NavigationScreen.Relationships.name}${AppContext.getCurrentUser()}?query=$query" )
+                    NavigationScreen.Relationships.name ->
+                        navigation.navController.navigate("${NavigationScreen.Relationships.name}?query=$query")
+                }
             }) {
                 Icon(Icons.Rounded.Clear, "Clear icon")
             }

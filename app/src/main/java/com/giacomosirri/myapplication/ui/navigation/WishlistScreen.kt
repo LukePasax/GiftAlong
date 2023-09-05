@@ -25,13 +25,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.giacomosirri.myapplication.data.entity.Item
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Secondary
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 @Composable
@@ -40,52 +38,72 @@ fun WishlistScreen(
     paddingValues: PaddingValues,
     onFabClick: () -> Unit,
     navController: NavController,
-    viewModel: AppViewModel
+    viewModel: AppViewModel,
+    query: String? = null
 ) {
     val items = viewModel.getItemsOfUser(username).collectAsState(initial = emptyList())
-    Scaffold(
-        topBar = {
-            NavigationAppBar(
-                currentScreenName =
+    if (query == null) {
+        Scaffold(
+            topBar = {
+                NavigationAppBar(
+                    currentScreenName =
                     if (username == AppContext.getCurrentUser()) {
                         "Your Wishlist"
                     } else {
                         "$username's Wishlist"
                     },
-                hasSearchBar = true,
-                onSearch = {}
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = onFabClick) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new item")
-            }
-        }
-    ) {
-        LazyColumn(modifier = Modifier.padding(paddingValues)) {
-            for (item in items.value) {
-                item {
-                    WishlistItem(
-                        itemId = item.id!!,
-                        itemName = item.name,
-                        username = username,
-                        image = item.imageId,
-                        priceL = item.priceLowerBound,
-                        priceU = item.priceUpperBound,
-                        reservingUser = item.reservedBy,
-                        bought = item.bought,
-                        navController = navController,
-                        viewModel = viewModel
-                    )
+                    hasSearchBar = true,
+                    onSearch = {
+                        navController.popBackStack()
+                        navController.navigate("${NavigationScreen.Wishlist.name}?query=\"\"")
+                    }
+                )
+            },
+            floatingActionButton = {
+                FloatingActionButton(onClick = onFabClick) {
+                    Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new item")
                 }
             }
+        ) {
+            ItemsList(username, paddingValues, items.value, navController, viewModel)
+        }
+    } else {
+        val itemsToShow = items.value.filter { it.name.startsWith(query) }
+        SearchBar(
+            searchBarPlaceholder = "Search an item by its name",
+            currentScreen = NavigationScreen.Wishlist.name
+        ) {
+            ItemsList(username, PaddingValues(0.dp), itemsToShow, navController, viewModel)
         }
     }
 }
 
 @Composable
-fun WishlistScreen(searchedItems: String) {
-
+fun ItemsList(
+    username: String,
+    paddingValues: PaddingValues,
+    items: List<Item>,
+    navController: NavController,
+    viewModel: AppViewModel
+) {
+    LazyColumn(modifier = Modifier.padding(paddingValues)) {
+        for (item in items) {
+            item {
+                WishlistItem(
+                    itemId = item.id!!,
+                    itemName = item.name,
+                    username = username,
+                    image = item.imageId,
+                    priceL = item.priceLowerBound,
+                    priceU = item.priceUpperBound,
+                    reservingUser = item.reservedBy,
+                    bought = item.bought,
+                    navController = navController,
+                    viewModel = viewModel
+                )
+            }
+        }
+    }
 }
 
 @SuppressLint("UseCompatLoadingForDrawables")
@@ -218,7 +236,7 @@ fun ItemDialog(
     openDialog: MutableState<Boolean>,
     viewModel: AppViewModel
 ) {
-    var item: Item? = null
+    var item: Item?
     runBlocking {
         item = viewModel.getItemFromId(itemId)
     }
