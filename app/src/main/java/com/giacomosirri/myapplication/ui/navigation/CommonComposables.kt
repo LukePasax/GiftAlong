@@ -214,7 +214,7 @@ fun PhotoSelector(
                 .requiredSize(width = 165.dp, height = 140.dp)
                 .clip(RoundedCornerShape(5.dp))
         )
-        TakePhoto(
+        TakePhotoButton(
             modifier = Modifier.padding(start = 10.dp),
             capturedImageUri = capturedImageUri
         ) {
@@ -634,7 +634,7 @@ fun SingleChoiceDialog(
 }
 
 @Composable
-fun TakePhoto(
+fun TakePhotoButton(
     modifier: Modifier,
     capturedImageUri: MutableState<Uri>,
     content: @Composable RowScope.() -> Unit

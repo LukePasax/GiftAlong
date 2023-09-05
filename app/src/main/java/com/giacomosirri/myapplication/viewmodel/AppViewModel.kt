@@ -227,6 +227,12 @@ class AppViewModel(
     }
 
     suspend fun getProfilePicOfUser(username: String): String? = userRepository.getProfilePic(username)
+
+    fun updateProfilePic(username: String, imageUri: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            userRepository.updateImage(username, imageUri)
+        }
+    }
 }
 
 class AppViewModelFactory(

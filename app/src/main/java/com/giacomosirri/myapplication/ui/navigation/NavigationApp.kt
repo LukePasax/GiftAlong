@@ -1,5 +1,6 @@
 package com.giacomosirri.myapplication.ui.navigation
 
+import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -29,6 +30,7 @@ import com.giacomosirri.myapplication.viewmodel.AppViewModel
 import com.giacomosirri.myapplication.viewmodel.SettingsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.util.*
 
 sealed class NavigationScreen(val name: String) {
     object Home: NavigationScreen(AppContext.getContext()?.getString(R.string.home)!!)
@@ -39,6 +41,7 @@ sealed class NavigationScreen(val name: String) {
     object Relationships: NavigationScreen(AppContext.getContext()?.getString(R.string.relationships)!!)
     object Login: NavigationScreen(AppContext.getContext()?.getString(R.string.login)!!)
     object Registration: NavigationScreen(AppContext.getContext()?.getString(R.string.registration)!!)
+    object NewProfilePic: NavigationScreen(AppContext.getContext()?.getString(R.string.new_profile_pic)!!)
 }
 
 class Navigation(
@@ -233,6 +236,8 @@ fun navigateFromDrawer(menuItem: String?, navController: NavHostController) {
             navController.navigate(NavigationScreen.Relationships.name)
         AppContext.getContext()?.getString(R.string.menu_item3) ->
             navController.navigate("${NavigationScreen.Relationships.name}?query=\"\"")
+        AppContext.getContext()?.getString(R.string.menu_item4) ->
+            navController.navigate(NavigationScreen.NewProfilePic.name)
     }
 }
 
@@ -354,6 +359,17 @@ fun NavigationGraph(
                 viewModel = appViewModel,
                 query = query
             )
+        }
+        composable(NavigationScreen.NewProfilePic.name) {
+            val capturedImageUri: MutableState<Uri> = remember { mutableStateOf(Uri.EMPTY) }
+            ChangeProfilePicScreen(
+                capturedImageUri = capturedImageUri
+            )
+            if (capturedImageUri.value.path?.isNotEmpty() == true) {
+                saveImage(AppContext.getContext()!!.applicationContext.contentResolver, capturedImageUri.value)
+                appViewModel.updateProfilePic(AppContext.getCurrentUser(), capturedImageUri.value.toString())
+                navController.navigateUp()
+            }
         }
     }
 }

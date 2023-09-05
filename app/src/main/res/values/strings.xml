@@ -10,6 +10,7 @@
     <string name="relationships">Manage Relationships</string>
     <string name="login">Login</string>
     <string name="registration">Register Now</string>
+    <string name="new_profile_pic">New Profile Pic</string>
 
     <!-- drawer menu items -->
     <string name="menu_item1">Your Wishlist</string>
