@@ -63,7 +63,10 @@ fun RelationshipsScreen(
             val resultMap = mutableMapOf<String, String>()
             for (user in allUsers.value) {
                 val relationship = relationships.value.find { it.follower == user.username }
-                resultMap[user.username] = relationship?.type?.name ?: "None"
+                // The current user must not appear in the research.
+                if (user.username != AppContext.getCurrentUser()) {
+                    resultMap[user.username] = relationship?.type?.name ?: "None"
+                }
             }
             LazyColumn {
                 item {
