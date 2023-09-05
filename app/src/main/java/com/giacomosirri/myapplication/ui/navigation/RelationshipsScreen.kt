@@ -27,27 +27,37 @@ fun RelationshipsScreen(
     viewModel: AppViewModel,
     query: String?
 ) {
-    Scaffold(
-        topBar = {
-            NavigationAppBar(
-                currentScreenName = AppContext.getContext()
-                    ?.getString(R.string.relationships)!!,
-                hasSearchBar = true,
-                searchBarPlaceholder = "Search any user of this app"
-            )
-        }
-    ) {
-        val relationships = viewModel.getRelationshipsOfUser(AppContext.getCurrentUser()).collectAsState(initial = emptyList())
-        if (query == null) {
+    val relationships = viewModel.getRelationshipsOfUser(AppContext.getCurrentUser()).collectAsState(initial = emptyList())
+    if (query == null) {
+        Scaffold(
+            topBar = {
+                NavigationAppBar(
+                    currentScreenName = AppContext.getContext()
+                        ?.getString(R.string.relationships)!!,
+                    hasSearchBar = true,
+                    onSearch = {
+                        navController.popBackStack()
+                        navController.navigate("${NavigationScreen.Relationships.name}?query=\"\"")
+                    }
+                )
+            }
+        ) {
             // Show only the users the current user has a relationship with.
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 for (relationship in relationships.value) {
                     item {
-                        RelationshipListItem(relationship.followed, relationship.type.name, navController, viewModel)
+                        RelationshipListItem(
+                            relationship.followed,
+                            relationship.type.name,
+                            navController,
+                            viewModel
+                        )
                     }
                 }
             }
-        } else {
+        }
+    } else {
+        SearchBar(searchBarPlaceholder = "Search any user of this app") {
             // Show all the users of the app that match the pattern with the right relationship with the current user.
             val allUsers = viewModel.getUsersMatchingPattern(query).collectAsState(initial = emptyList())
             val resultMap = mutableMapOf<String, String>()
@@ -55,7 +65,7 @@ fun RelationshipsScreen(
                 val relationship = relationships.value.find { it.follower == user.username }
                 resultMap[user.username] = relationship?.type?.name ?: "None"
             }
-            LazyColumn(modifier = Modifier.padding(paddingValues)) {
+            LazyColumn {
                 item {
                     for (elem in resultMap) {
                         RelationshipListItem(elem.key, elem.value, navController, viewModel)

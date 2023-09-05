@@ -54,7 +54,7 @@ fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit, navControll
             NavigationAppBar(
                 currentScreenName = AppContext.getContext()?.getString(R.string.home)!!,
                 hasSearchBar = true,
-                searchBarPlaceholder = "Search an event by its title",
+                onSearch = {},
                 isLeadingIconMenu = true,
                 isLeadingIconBackArrow = false
             )

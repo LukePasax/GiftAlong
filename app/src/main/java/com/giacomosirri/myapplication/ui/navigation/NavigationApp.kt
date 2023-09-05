@@ -364,81 +364,78 @@ fun NavigationGraph(
 fun NavigationAppBar(
     currentScreenName: String,
     hasSearchBar: Boolean,
-    searchBarPlaceholder: String? = null,
+    onSearch: (() -> Unit)? = null,
     isLeadingIconMenu: Boolean = false,
     isLeadingIconBackArrow: Boolean = true
 ) {
     val navigation = Navigator.getNavigation()
-    var query by remember { mutableStateOf("") }
-    var displayQueriedEvents by remember { mutableStateOf(false) }
-    val isNavigationBarVisible by derivedStateOf { !navigation.isSearchBarOpen.value }
-    if (navigation.isSearchBarOpen.value) {
-        SearchBar(
-            modifier = Modifier.fillMaxSize(),
-            query = query,
-            onQueryChange = { query = it },
-            placeholder = { Text(searchBarPlaceholder!!) },
-            onSearch = { displayQueriedEvents = true },
-            leadingIcon = {
-                IconButton(onClick = { navigation.isSearchBarOpen.value = false }) {
-                    Icon(Icons.Rounded.ArrowBack, "Close icon")
-                }
-            },
-            trailingIcon = {
-                IconButton(onClick = {
-                    query = ""
-                    displayQueriedEvents = false
-                }) {
-                    Icon(Icons.Rounded.Clear, "Clear icon")
-                }
-            },
-            active = true,
-            onActiveChange = {},
-            colors = SearchBarDefaults.colors(containerColor = Background),
-            shape = ShapeDefaults.ExtraSmall
-        ) {
-            if (displayQueriedEvents) {
-                when (currentScreenName) {
-                    AppContext.getContext()?.getString(R.string.home) -> HomeScreen(query, navigation.navController)
-                    AppContext.getContext()?.getString(R.string.wishlist) -> WishlistScreen(query)
-                    AppContext.getContext()?.getString(R.string.relationships) -> {
-                        navigation.navController.popBackStack()
-                        navigation.navController.navigate("${NavigationScreen.Relationships.name}?query=$query")
-                    }
+    val navIconStrategy = LeadingNavigationIconStrategy(
+        onBackArrow = { navigation.navController.navigateUp() },
+        onMenuIcon = { navigation.scope.launch { navigation.drawerState.open() } }
+    )
+    CenterAlignedTopAppBar(
+        actions = {
+            // Only a handful of screens should have the search icon in the top app bar.
+            if (hasSearchBar) {
+                IconButton(onClick = onSearch!!) {
+                    Icon(Icons.Filled.Search, "Search icon")
                 }
             }
-        }
-    }
-    if (isNavigationBarVisible) {
-        val navIconStrategy = LeadingNavigationIconStrategy(
-            onBackArrow = { navigation.navController.navigateUp() },
-            onMenuIcon = { navigation.scope.launch { navigation.drawerState.open() } }
-        )
-        CenterAlignedTopAppBar(
-            actions = {
-                // Only a handful of screens should have the search icon in the top app bar.
-                if (hasSearchBar) {
-                    IconButton(onClick = { navigation.isSearchBarOpen.value = true }) {
-                        Icon(Icons.Filled.Search, "Search icon")
-                    }
+        },
+        title = { Text(text = currentScreenName, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        navigationIcon = {
+            if (isLeadingIconMenu) {
+                IconButton(onClick = navIconStrategy.onMenuIcon) {
+                    Icon(Icons.Filled.Menu, "Main menu icon")
                 }
-            },
-            title = {
-                Text(text = currentScreenName, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            },
-            navigationIcon = {
-                if (isLeadingIconMenu) {
-                    IconButton(onClick = navIconStrategy.onMenuIcon) {
-                        Icon(Icons.Filled.Menu, "Main menu icon")
-                    }
+            }
+            if(isLeadingIconBackArrow) {
+                IconButton(onClick = navIconStrategy.onBackArrow) {
+                    Icon(Icons.Filled.ArrowBack, "Go back icon")
                 }
-                if(isLeadingIconBackArrow) {
-                    IconButton(onClick = navIconStrategy.onBackArrow) {
-                        Icon(Icons.Filled.ArrowBack, "Go back icon")
-                    }
+            }
+        },
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Primary)
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchBar(searchBarPlaceholder: String, content: @Composable ColumnScope.() -> Unit) {
+    val navigation = Navigator.getNavigation()
+    var query by remember { mutableStateOf("") }
+    SearchBar(
+        modifier = Modifier.fillMaxSize(),
+        query = query,
+        onQueryChange = { query = it },
+        placeholder = { Text(searchBarPlaceholder) },
+        onSearch = {
+            navigation.navController.popBackStack()
+            navigation.navController.navigate("${NavigationScreen.Relationships.name}?query=$it")
+        },
+        leadingIcon = {
+            IconButton(
+                onClick = {
+                    navigation.navController.popBackStack()
+                    navigation.navController.navigate(NavigationScreen.Relationships.name)
                 }
-            },
-            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Primary)
-        )
-    }
+            ) {
+                Icon(Icons.Rounded.ArrowBack, "Close icon")
+            }
+        },
+        trailingIcon = {
+            IconButton(onClick = {
+                query = ""
+                navigation.navController.popBackStack()
+                navigation.navController.navigate("${NavigationScreen.Relationships.name}?query=$query")
+            }) {
+                Icon(Icons.Rounded.Clear, "Clear icon")
+            }
+        },
+        active = true,
+        onActiveChange = {},
+        colors = SearchBarDefaults.colors(containerColor = Background),
+        shape = ShapeDefaults.ExtraSmall,
+        content = content
+    )
 }

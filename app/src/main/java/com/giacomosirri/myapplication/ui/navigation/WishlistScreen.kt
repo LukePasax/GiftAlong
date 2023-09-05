@@ -52,7 +52,7 @@ fun WishlistScreen(
                         "$username's Wishlist"
                     },
                 hasSearchBar = true,
-                searchBarPlaceholder = "Search an item by its name",
+                onSearch = {}
             )
         },
         floatingActionButton = {
