@@ -10,8 +10,10 @@
         </intent>
     </queries>
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera.any"/>
 
     <application
         android:name="com.giacomosirri.myapplication.GiftAlong"
@@ -37,10 +39,9 @@
             android:authorities="com.giacomosirri.myapplication.provider"
             android:exported="false"
             android:grantUriPermissions="true">
-            <!-- ressource file to create -->
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths">
+                android:resource="@xml/path_provider">
             </meta-data>
         </provider>
     </application>

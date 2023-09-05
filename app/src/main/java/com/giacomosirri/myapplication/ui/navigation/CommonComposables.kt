@@ -1,11 +1,19 @@
 package com.giacomosirri.myapplication.ui.navigation
 
-import android.content.Intent
+import android.Manifest
+import android.content.ContentResolver
+import android.content.ContentValues
+import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Environment
+import android.os.Build
+import android.os.SystemClock
 import android.provider.MediaStore
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -26,6 +34,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
@@ -37,9 +46,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.core.content.ContextCompat.startActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.data.entity.Event
 import com.giacomosirri.myapplication.ui.AppContext
@@ -49,34 +60,6 @@ import java.io.File
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
-
-
-const val REQUEST_IMAGE_CAPTURE = 1
-fun getImageDirectory(): File {
-    val imageDir = File(AppContext.getContext()!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "GiftAlong")
-    if (!imageDir.exists()) {
-        imageDir.mkdirs()
-    }
-    return imageDir
-}
-
-val imageDir = getImageDirectory()
-val locationForPhotos: Uri = FileProvider.getUriForFile(
-    AppContext.getContext()!!,
-    "com.giacomosirri.myapplication.provider",
-    imageDir
-)
-
-fun capturePhoto(targetFileName : String) {
-    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
-        putExtra(MediaStore.EXTRA_OUTPUT, Uri.withAppendedPath(locationForPhotos, targetFileName))
-    }
-    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    startActivity(AppContext.getContext()!!, intent,  null)
-}
-
 
 val calendar: Calendar = Calendar.getInstance()
 val currentYear = calendar.get(Calendar.YEAR)
@@ -227,15 +210,7 @@ fun PhotoSelector() {
                 .requiredSize(width = 165.dp, height = 140.dp)
                 .clip(RoundedCornerShape(5.dp))
         )
-        FilledTonalButton(
-            modifier = Modifier.padding(start = 15.dp),
-            onClick = {
-                capturePhoto("test.png")
-                val options = BitmapFactory.Options()
-                options.inPreferredConfig = Bitmap.Config.ARGB_8888
-                image.value = BitmapFactory.decodeFile(locationForPhotos.encodedPath + "/test.png", options)
-            }
-        ) {
+        TakePhoto {
             Icon(
                 modifier = Modifier.padding(end = 5.dp),
                 imageVector = ImageVector.vectorResource(R.drawable.round_camera_alt_24),
@@ -649,4 +624,75 @@ fun SingleChoiceDialog(
             }
         }
     }
+}
+
+@Composable
+fun TakePhoto(content: @Composable RowScope.() -> Unit) {
+    val context = LocalContext.current
+    val file = context.createImageFile()
+    val uri = FileProvider.getUriForFile(Objects.requireNonNull(context), context.packageName + ".provider", file)
+    var capturedImageUri by remember {
+        mutableStateOf<Uri>(Uri.EMPTY)
+    }
+    val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
+        capturedImageUri = uri
+    }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {
+        if (it) {
+            cameraLauncher.launch(uri)
+        } else {
+            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+        }
+    }
+    FilledTonalButton(
+        onClick = {
+            val permissionCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+            if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                cameraLauncher.launch(uri)
+            } else {
+                permissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+        },
+        content = content
+    )
+    if (capturedImageUri.path?.isNotEmpty() == true) {
+        AsyncImage(model = ImageRequest.Builder(context)
+            .data(capturedImageUri)
+            .crossfade(true)
+            .build(), contentDescription = "image taken")
+        saveImage(context.applicationContext.contentResolver, capturedImageUri)
+    }
+}
+
+fun saveImage(contentResolver: ContentResolver, capturedImageUri: Uri) {
+    val bitmap = getBitmap(capturedImageUri, contentResolver)
+    val values = ContentValues()
+    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+    values.put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_${SystemClock.uptimeMillis()}")
+    val imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+    val outputStream = imageUri?.let { contentResolver.openOutputStream(it) }
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream!!)
+    outputStream.close()
+}
+
+fun Context.createImageFile(): File {
+    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+    val imageFileName = "JPEG_" + timeStamp + "_"
+    return File.createTempFile(imageFileName, ".jpg", externalCacheDir)
+}
+
+private fun getBitmap(selectedPhotoUri: Uri, contentResolver: ContentResolver): Bitmap {
+    val bitmap = when {
+        Build.VERSION.SDK_INT < 28 -> MediaStore.Images.Media.getBitmap(
+            contentResolver,
+            selectedPhotoUri
+        )
+        else -> {
+            val source = ImageDecoder.createSource(contentResolver, selectedPhotoUri)
+            ImageDecoder.decodeBitmap(source)
+        }
+    }
+    return bitmap
 }
