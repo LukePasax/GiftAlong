@@ -32,6 +32,10 @@ fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit, navControll
     val eventsOfUser = viewModel.getEventsOfUser(AppContext.getCurrentUser()).collectAsState(initial = emptyList())
     val eventsOrganized = viewModel.getEventsOrganizedByUser(AppContext.getCurrentUser()).collectAsState(initial = emptyList())
     val totalEvents : SortedMap<Date, List<Event>> = sortedMapOf()
+    for (specialEvent in specialEvents) {
+        val eventDate = specialEvent.key
+        totalEvents[eventDate] = listOf()
+    }
     for (event in eventsOfUser.value) {
         val eventDate = event.date
         if (totalEvents.containsKey(eventDate)) {
@@ -66,6 +70,16 @@ fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit, navControll
     ) {
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
             for (date in totalEvents) {
+                if (date.key in specialEvents.keys) {
+                    item {
+                        SpecialEventCard(
+                            date = specialDateFormat.format(date.key),
+                            event = specialEvents[date.key]!!.first,
+                            color = specialEvents[date.key]!!.second
+                        )
+                    }
+                }
+                if (date.value.isEmpty()) continue
                 item {
                     DayCard(
                         date = dateFormat.format(date.key),

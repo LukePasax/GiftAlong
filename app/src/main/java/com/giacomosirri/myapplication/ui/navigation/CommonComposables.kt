@@ -43,6 +43,9 @@ val currentYear = calendar.get(Calendar.YEAR)
 
 fun getSpecialEventDate(year: Int, month: Int, day: Int): Date {
     calendar.set(year, month, day)
+    if (calendar.time < Date()) {
+        calendar[currentYear + 1, month] = day
+    }
     return calendar.time
 }
 
