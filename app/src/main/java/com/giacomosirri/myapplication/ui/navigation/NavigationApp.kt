@@ -241,11 +241,10 @@ fun navigateFromDrawer(menuItem: String?, navController: NavHostController) {
     when(menuItem) {
         AppContext.getContext()?.getString(R.string.menu_item1) ->
             navController.navigate(NavigationScreen.Wishlist.name + AppContext.getCurrentUser())
-        AppContext.getContext()?.getString(R.string.menu_item2),
-        AppContext.getContext()?.getString(R.string.menu_item3) ->
+        AppContext.getContext()?.getString(R.string.menu_item2) ->
             navController.navigate(NavigationScreen.Relationships.name)
-        AppContext.getContext()?.getString(R.string.menu_item4) ->
-            navController.navigate(NavigationScreen.UserProfile.name + AppContext.getCurrentUser())
+        AppContext.getContext()?.getString(R.string.menu_item3) ->
+            navController.navigate("${NavigationScreen.Relationships.name}?query=\"\"")
     }
 }
 
