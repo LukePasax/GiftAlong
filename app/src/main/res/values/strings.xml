@@ -8,7 +8,6 @@
     <string name="new_event">Add New Event</string>
     <string name="user_profile">User Profile</string>
     <string name="relationships">Manage Relationships</string>
-    <string name="data_center">Data Center</string>
     <string name="login">Login</string>
     <string name="registration">Register Now</string>
 
@@ -17,5 +16,4 @@
     <string name="menu_item2">Manage Relationships</string>
     <string name="menu_item3">Find Users</string>
     <string name="menu_item4">Change Your Profile Image</string>
-    <string name="menu_item5">Data Center</string>
 </resources>

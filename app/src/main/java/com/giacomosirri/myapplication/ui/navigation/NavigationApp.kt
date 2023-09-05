@@ -38,7 +38,6 @@ sealed class NavigationScreen(val name: String) {
     object NewEvent: NavigationScreen(AppContext.getContext()?.getString(R.string.new_event)!!)
     object UserProfile: NavigationScreen(AppContext.getContext()?.getString(R.string.user_profile)!!)
     object Relationships: NavigationScreen(AppContext.getContext()?.getString(R.string.relationships)!!)
-    object DataCenter: NavigationScreen(AppContext.getContext()?.getString(R.string.data_center)!!)
     object Login: NavigationScreen(AppContext.getContext()?.getString(R.string.login)!!)
     object Registration: NavigationScreen(AppContext.getContext()?.getString(R.string.registration)!!)
 }
@@ -131,10 +130,6 @@ private fun NavigationDrawer(
                     Pair(
                         AppContext.getContext()?.getString(R.string.menu_item4),
                         ImageVector.vectorResource(R.drawable.round_camera_alt_24)
-                    ),
-                    Pair(
-                        AppContext.getContext()?.getString(R.string.menu_item5),
-                        ImageVector.vectorResource(R.drawable.round_query_stats_24)
                     )
                 )
                 Box(
@@ -169,7 +164,7 @@ private fun NavigationDrawer(
                         modifier = Modifier.padding(bottom = 6.dp, start = 6.dp, end = 6.dp)
                     )
                 }
-                Spacer(Modifier.fillMaxHeight(.57f))
+                Spacer(Modifier.fillMaxHeight(.62f))
                 var darkMode by remember { mutableStateOf(false) }
                 Row(
                     modifier = Modifier.padding(start = 20.dp, end = 25.dp),
@@ -351,9 +346,6 @@ fun NavigationGraph(
                 viewModel = appViewModel,
                 query = query
             )
-        }
-        composable(NavigationScreen.DataCenter.name) {
-            DataCenterScreen(paddingValues)
         }
     }
 }
