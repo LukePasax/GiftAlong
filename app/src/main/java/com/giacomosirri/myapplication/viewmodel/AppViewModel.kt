@@ -225,6 +225,8 @@ class AppViewModel(
             viewModelScope.launch { userRepository.updateRelationship(follower, followed, relationship) }
         }
     }
+
+    suspend fun getProfilePicOfUser(username: String): String? = userRepository.getProfilePic(username)
 }
 
 class AppViewModelFactory(
