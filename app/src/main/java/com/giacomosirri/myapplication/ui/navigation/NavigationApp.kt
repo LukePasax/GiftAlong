@@ -393,6 +393,8 @@ fun NavigationAppBar(
 fun SearchBar(
     searchBarPlaceholder: String,
     currentScreen: String,
+    onGoBack: () -> Unit,
+    onClear: () -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val navigation = Navigator.getNavigation()
@@ -412,31 +414,12 @@ fun SearchBar(
             }
         },
         leadingIcon = {
-            IconButton(
-                onClick = {
-                    navigation.navController.popBackStack()
-                    when (currentScreen) {
-                        NavigationScreen.Wishlist.name ->
-                            navigation.navController.navigate(NavigationScreen.Wishlist.name + AppContext.getCurrentUser())
-                        NavigationScreen.Relationships.name ->
-                            navigation.navController.navigate(NavigationScreen.Relationships.name)
-                    }
-                }
-            ) {
+            IconButton(onClick = onGoBack) {
                 Icon(Icons.Rounded.ArrowBack, "Close icon")
             }
         },
         trailingIcon = {
-            IconButton(onClick = {
-                query = ""
-                navigation.navController.popBackStack()
-                when (currentScreen) {
-                    NavigationScreen.Wishlist.name ->
-                        navigation.navController.navigate("${NavigationScreen.Relationships.name}${AppContext.getCurrentUser()}?query=$query" )
-                    NavigationScreen.Relationships.name ->
-                        navigation.navController.navigate("${NavigationScreen.Relationships.name}?query=$query")
-                }
-            }) {
+            IconButton(onClick = onClear) {
                 Icon(Icons.Rounded.Clear, "Clear icon")
             }
         },

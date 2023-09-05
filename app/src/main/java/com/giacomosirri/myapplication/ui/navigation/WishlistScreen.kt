@@ -71,7 +71,15 @@ fun WishlistScreen(
         val itemsToShow = items.value.filter { it.name.startsWith(query) }
         SearchBar(
             searchBarPlaceholder = "Search an item by its name",
-            currentScreen = NavigationScreen.Wishlist.name
+            currentScreen = NavigationScreen.Wishlist.name,
+            onGoBack = {
+                navController.popBackStack()
+                navController.navigate(NavigationScreen.Wishlist.name + AppContext.getCurrentUser())
+            },
+            onClear = {
+                navController.popBackStack()
+                navController.navigate("${NavigationScreen.Wishlist.name}${AppContext.getCurrentUser()}?query=\"\"" )
+            }
         ) {
             ItemsList(username, PaddingValues(0.dp), itemsToShow, navController, viewModel)
         }

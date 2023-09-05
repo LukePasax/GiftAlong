@@ -59,7 +59,15 @@ fun RelationshipsScreen(
     } else {
         SearchBar(
             searchBarPlaceholder = "Search any user of this app",
-            currentScreen = NavigationScreen.Relationships.name
+            currentScreen = NavigationScreen.Relationships.name,
+            onGoBack = {
+                navController.popBackStack()
+                navController.navigate(NavigationScreen.Relationships.name)
+            },
+            onClear = {
+                navController.popBackStack()
+                navController.navigate("${NavigationScreen.Relationships.name}?query=\"\"")
+            }
         ) {
             // Show all the users of the app that match the pattern with the right relationship with the current user.
             val allUsers = viewModel.getUsersMatchingPattern(query).collectAsState(initial = emptyList())
