@@ -53,7 +53,7 @@ class ItemRepository(private val itemDAO: ItemDAO) {
             imageId = image ?: oldItem.imageId,
             priceLowerBound = if (priceL == -1) null else priceL ?: oldItem.priceLowerBound,
             priceUpperBound = if (priceU == -1) null else priceU ?: oldItem.priceUpperBound,
-            reservedBy = reservedBy ?: oldItem.reservedBy,
+            reservedBy = if (reservedBy == "") null else reservedBy ?: oldItem.reservedBy,
             oldItem.listedBy
         )
         itemDAO.updateItem(item)
