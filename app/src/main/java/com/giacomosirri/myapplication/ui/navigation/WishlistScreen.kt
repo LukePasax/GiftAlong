@@ -261,20 +261,28 @@ fun ItemDialog(
                 )
                 if (username != AppContext.getCurrentUser()) {
                     if (reservingUser != null) {
-                        DialogEntry(
-                            paddingValues = PaddingValues(horizontal = 15.dp),
-                            text = "Reserved by:",
-                            value = {
-                                OutlinedButton(
-                                    onClick = {
-                                        openDialog.value = false
-                                        navController.navigate(NavigationScreen.UserProfile.name + reservingUser)
+                        if (reservingUser != AppContext.getCurrentUser()) {
+                            DialogEntry(
+                                paddingValues = PaddingValues(horizontal = 15.dp),
+                                text = "Reserved by:",
+                                value = {
+                                    OutlinedButton(
+                                        onClick = {
+                                            openDialog.value = false
+                                            navController.navigate(NavigationScreen.UserProfile.name + reservingUser)
+                                        }
+                                    ) {
+                                        Text(text = reservingUser)
                                     }
-                                ) {
-                                    Text(text = reservingUser)
                                 }
-                            }
-                        )
+                            )
+                        } else {
+                            DialogEntry(
+                                paddingValues = PaddingValues(horizontal = 15.dp),
+                                text = "Reserved by:",
+                                value = "You"
+                            )
+                        }
                     }
                     DialogEntry(
                         paddingValues = entryPaddingValues,
@@ -285,7 +293,7 @@ fun ItemDialog(
                                     if (reserved.value) {
                                         viewModel.updateItem(itemId, reservedBy = AppContext.getCurrentUser())
                                     } else {
-                                        viewModel.updateItem(itemId, reservedBy = null)
+                                        viewModel.updateItem(itemId, reservedBy = "")
                                     }
                                 },
                                 enabled = !bought.value,
@@ -296,7 +304,14 @@ fun ItemDialog(
                         },
                         composable2 = {
                             Button(
-                                onClick = { bought.value = !bought.value },
+                                onClick = {
+                                    bought.value = !bought.value
+                                    if (bought.value) {
+                                        viewModel.updateItem(itemId, bought = true)
+                                    } else {
+                                        viewModel.updateItem(itemId, bought = false)
+                                    }
+                                          },
                                 enabled = reserved.value,
                                 modifier = Modifier.size(120.dp, 45.dp)
                             ) {
