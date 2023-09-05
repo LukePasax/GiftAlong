@@ -1,6 +1,7 @@
 package com.giacomosirri.myapplication.ui.navigation
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,9 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -214,7 +217,11 @@ fun WishlistItem(
             },
             leadingContent = {
                 Image(
-                    painterResource(id = R.drawable.placeholder),
+                    bitmap = if (image != null) {
+                        getBitmap(AppContext.getContext()!!.applicationContext.contentResolver, Uri.parse(image)).asImageBitmap()
+                    } else {
+                        ImageBitmap.imageResource(id = R.drawable.placeholder)
+                    },
                     contentDescription = "Wishlist item image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -272,7 +279,7 @@ fun ItemDialog(
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
                 val entryPaddingValues = PaddingValues(horizontal = 15.dp, vertical = 10.dp)
-                DialogImage(imageDescription = "Item Image", imageId = R.drawable.placeholder)
+                DialogImage(imageDescription = "Item Image", imageUri = image)
                 DialogTitle(paddingValues = entryPaddingValues, text = itemName)
                 DialogEntry(paddingValues = entryPaddingValues, text = "Link: ", value = url)
                 DialogEntry(

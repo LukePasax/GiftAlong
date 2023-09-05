@@ -1,6 +1,6 @@
 package com.giacomosirri.myapplication.ui.navigation
 
-import android.provider.ContactsContract.Profile
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,17 +10,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.*
 
@@ -36,9 +36,11 @@ fun UserProfileScreen(
     val relationshipTypes = listOf("Friend", "Family", "Partner", "Colleague", "None")
     val (selected, onSelected) = remember { mutableStateOf(relationshipTypes[0]) }
     val commonEvents = viewModel.getCommonEvents(username).collectAsState(initial = emptyList())
-    var subscriptionDate : Date? = null
+    var subscriptionDate: Date?
+    var profilePic: String?
     runBlocking {
         subscriptionDate = viewModel.getSubscriptionDate(username)
+        profilePic = viewModel.getProfilePicOfUser(username)
     }
     Scaffold(
         topBar = {
@@ -67,7 +69,11 @@ fun UserProfileScreen(
             }
             // Profile pic
             Image(
-                painterResource(id = R.drawable.placeholder),
+                bitmap = if (profilePic != null) {
+                    getBitmap(AppContext.getContext()!!.applicationContext.contentResolver, Uri.parse(profilePic)).asImageBitmap()
+                } else {
+                    ImageBitmap.imageResource(id = R.drawable.placeholder)
+                },
                 contentDescription = "Profile pic",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
