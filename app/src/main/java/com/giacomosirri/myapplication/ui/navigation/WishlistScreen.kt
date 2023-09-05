@@ -101,7 +101,7 @@ fun ItemsList(
                     itemId = item.id!!,
                     itemName = item.name,
                     username = username,
-                    image = item.imageId,
+                    image = item.imageUri,
                     priceL = item.priceLowerBound,
                     priceU = item.priceUpperBound,
                     reservingUser = item.reservedBy,
@@ -122,7 +122,7 @@ fun WishlistItem(
     username: String,
     priceL: Int? = null,
     priceU: Int? = null,
-    image: Int,
+    image: String? = null,
     reservingUser: String? = null,
     bought: Boolean = false,
     navController: NavController,
@@ -214,7 +214,7 @@ fun WishlistItem(
             },
             leadingContent = {
                 Image(
-                    painterResource(id = image),
+                    painterResource(id = R.drawable.placeholder),
                     contentDescription = "Wishlist item image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -236,7 +236,7 @@ fun ItemDialog(
     navController: NavController,
     itemId: Int,
     itemName: String,
-    image: Int,
+    image: String?,
     username: String,
     reservingUser: String?,
     reserved: MutableState<Boolean>,
@@ -272,7 +272,7 @@ fun ItemDialog(
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
                 val entryPaddingValues = PaddingValues(horizontal = 15.dp, vertical = 10.dp)
-                DialogImage(imageDescription = "Item Image", imageId = image)
+                DialogImage(imageDescription = "Item Image", imageId = R.drawable.placeholder)
                 DialogTitle(paddingValues = entryPaddingValues, text = itemName)
                 DialogEntry(paddingValues = entryPaddingValues, text = "Link: ", value = url)
                 DialogEntry(

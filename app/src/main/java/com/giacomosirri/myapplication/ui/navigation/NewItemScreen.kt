@@ -96,7 +96,6 @@ fun NewItemScreen(
                 singleLine = true
             )
             // Price range
-            val openDialog = remember { mutableStateOf(false) }
             Row(
                 modifier = Modifier
                     .padding(lateralPadding)
@@ -162,19 +161,21 @@ fun NewItemScreen(
                     if (isInEditMode) {
                         appViewModel.updateItem(
                             id = id!!,
-                            name = itemName.value.trim().ifEmpty { null },
-                            description = itemDescription.value.trim().ifEmpty { null },
-                            url = itemLink.value.trim().ifEmpty { null },
-                            priceL = try { lowerBoundPrice.value.toInt() } catch (e: NumberFormatException) { null },
-                            priceU = try { upperBoundPrice.value.toInt() } catch (e: NumberFormatException) { null }
+                            name = itemName.value.trim(),
+                            description = itemDescription.value.trim().ifEmpty { "" },
+                            url = itemLink.value.trim().ifEmpty { "" },
+                            image = if (capturedImageUri.value.path?.isNotEmpty() == true) capturedImageUri.value.path!! else null,
+                            priceL = try { lowerBoundPrice.value.toInt() } catch (e: NumberFormatException) { -1 },
+                            priceU = try { upperBoundPrice.value.toInt() } catch (e: NumberFormatException) { -1 },
                         )
                     } else {
                         appViewModel.addItem(
                             name = itemName.value.trim(),
-                            description = itemDescription.value.trim().ifEmpty { "" },
-                            url = itemLink.value.trim().ifEmpty { "" },
-                            priceL = try { lowerBoundPrice.value.toInt() } catch (e: NumberFormatException) { -1 },
-                            priceU = try { upperBoundPrice.value.toInt() } catch (e: NumberFormatException) { -1 },
+                            description = itemDescription.value.trim().ifEmpty { null },
+                            url = itemLink.value.trim().ifEmpty { null },
+                            image = if (capturedImageUri.value.path?.isNotEmpty() == true) capturedImageUri.value.path!! else null,
+                            priceL = try { lowerBoundPrice.value.toInt() } catch (e: NumberFormatException) { null },
+                            priceU = try { upperBoundPrice.value.toInt() } catch (e: NumberFormatException) { null },
                             listedBy = AppContext.getCurrentUser()
                         )
                     }

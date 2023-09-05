@@ -13,7 +13,7 @@ data class Item(
     val description: String?,
     val url: String?,
     @ColumnInfo("image")
-    val imageId: Int,
+    val imageUri: String?,
     @ColumnInfo("price_lower")
     val priceLowerBound: Int?,
     @ColumnInfo("price_upper")

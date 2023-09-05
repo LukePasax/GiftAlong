@@ -194,14 +194,18 @@ fun DialogTitle(
 fun PhotoSelector(
     capturedImageUri: MutableState<Uri>
 ) {
-    val image = remember { mutableStateOf<Bitmap?>(null) }
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
+
         Image(
-            bitmap = image.value?.asImageBitmap() ?: ImageBitmap.imageResource(id = R.drawable.placeholder),
+            bitmap = (if (capturedImageUri.value.path?.isNotEmpty() == true) {
+                getBitmap(LocalContext.current.contentResolver, capturedImageUri.value).asImageBitmap()
+            } else {
+                ImageBitmap.imageResource(id = R.drawable.placeholder)
+            }),
             contentDescription = "Item image",
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -666,10 +670,7 @@ fun TakePhoto(
 }
 
 fun saveImage(contentResolver: ContentResolver, capturedImageUri: Uri) {
-    val bitmap = when {
-        Build.VERSION.SDK_INT < 28 -> MediaStore.Images.Media.getBitmap(contentResolver, capturedImageUri)
-        else -> ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, capturedImageUri))
-    }
+    val bitmap = getBitmap(contentResolver, capturedImageUri)
     val values = ContentValues()
     values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
     values.put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_${SystemClock.uptimeMillis()}")
@@ -677,4 +678,11 @@ fun saveImage(contentResolver: ContentResolver, capturedImageUri: Uri) {
     val outputStream = imageUri?.let { contentResolver.openOutputStream(it) }
     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream!!)
     outputStream.close()
+}
+
+fun getBitmap(contentResolver: ContentResolver, capturedImageUri: Uri): Bitmap {
+    return when {
+        Build.VERSION.SDK_INT < 28 -> MediaStore.Images.Media.getBitmap(contentResolver, capturedImageUri)
+        else -> ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, capturedImageUri))
+    }
 }
