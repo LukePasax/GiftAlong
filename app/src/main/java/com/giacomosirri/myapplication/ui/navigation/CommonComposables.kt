@@ -3,7 +3,6 @@ package com.giacomosirri.myapplication.ui.navigation
 import android.Manifest
 import android.content.ContentResolver
 import android.content.ContentValues
-import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -49,8 +48,6 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.data.entity.Event
 import com.giacomosirri.myapplication.ui.AppContext
@@ -77,8 +74,7 @@ val specialEvents = mapOf(
     Pair(getSpecialEventDate(currentYear, Calendar.DECEMBER, 31), Pair("New Year's Eve", Color.Blue)),
     Pair(getSpecialEventDate(currentYear, Calendar.FEBRUARY, 14), Pair("Valentine's Day", Color.Magenta)),
     Pair(getSpecialEventDate(currentYear, Calendar.OCTOBER, 31), Pair("Halloween", Color.Cyan)),
-
-    )
+)
 
 val specialDateFormat : SimpleDateFormat = SimpleDateFormat("dd MMMM", Locale.ENGLISH)
 val dateFormat : SimpleDateFormat = SimpleDateFormat("EEEE, MMMM dd, yyyy", Locale.ENGLISH)
@@ -210,7 +206,7 @@ fun PhotoSelector() {
                 .requiredSize(width = 165.dp, height = 140.dp)
                 .clip(RoundedCornerShape(5.dp))
         )
-        TakePhoto {
+        TakePhoto(Modifier.padding(start = 10.dp)) {
             Icon(
                 modifier = Modifier.padding(end = 5.dp),
                 imageVector = ImageVector.vectorResource(R.drawable.round_camera_alt_24),
@@ -627,26 +623,29 @@ fun SingleChoiceDialog(
 }
 
 @Composable
-fun TakePhoto(content: @Composable RowScope.() -> Unit) {
+fun TakePhoto(modifier: Modifier, content: @Composable RowScope.() -> Unit) {
     val context = LocalContext.current
-    val file = context.createImageFile()
+    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+    val imageFileName = "JPEG_" + timeStamp + "_"
+    val file = File.createTempFile(imageFileName, ".jpg", context.externalCacheDir)
     val uri = FileProvider.getUriForFile(Objects.requireNonNull(context), context.packageName + ".provider", file)
-    var capturedImageUri by remember {
-        mutableStateOf<Uri>(Uri.EMPTY)
-    }
+    var capturedImageUri by remember { mutableStateOf<Uri>(Uri.EMPTY) }
     val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
         capturedImageUri = uri
     }
-    val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) {
+    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
         if (it) {
             cameraLauncher.launch(uri)
         } else {
             Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
         }
     }
+    if (capturedImageUri.path?.isNotEmpty() == true) {
+        Text(capturedImageUri.path!!)
+        saveImage(context.applicationContext.contentResolver, capturedImageUri)
+    }
     FilledTonalButton(
+        modifier = modifier,
         onClick = {
             val permissionCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
             if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
@@ -657,17 +656,13 @@ fun TakePhoto(content: @Composable RowScope.() -> Unit) {
         },
         content = content
     )
-    if (capturedImageUri.path?.isNotEmpty() == true) {
-        AsyncImage(model = ImageRequest.Builder(context)
-            .data(capturedImageUri)
-            .crossfade(true)
-            .build(), contentDescription = "image taken")
-        saveImage(context.applicationContext.contentResolver, capturedImageUri)
-    }
 }
 
 fun saveImage(contentResolver: ContentResolver, capturedImageUri: Uri) {
-    val bitmap = getBitmap(capturedImageUri, contentResolver)
+    val bitmap = when {
+        Build.VERSION.SDK_INT < 28 -> MediaStore.Images.Media.getBitmap(contentResolver, capturedImageUri)
+        else -> ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, capturedImageUri))
+    }
     val values = ContentValues()
     values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
     values.put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_${SystemClock.uptimeMillis()}")
@@ -675,24 +670,4 @@ fun saveImage(contentResolver: ContentResolver, capturedImageUri: Uri) {
     val outputStream = imageUri?.let { contentResolver.openOutputStream(it) }
     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream!!)
     outputStream.close()
-}
-
-fun Context.createImageFile(): File {
-    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-    val imageFileName = "JPEG_" + timeStamp + "_"
-    return File.createTempFile(imageFileName, ".jpg", externalCacheDir)
-}
-
-private fun getBitmap(selectedPhotoUri: Uri, contentResolver: ContentResolver): Bitmap {
-    val bitmap = when {
-        Build.VERSION.SDK_INT < 28 -> MediaStore.Images.Media.getBitmap(
-            contentResolver,
-            selectedPhotoUri
-        )
-        else -> {
-            val source = ImageDecoder.createSource(contentResolver, selectedPhotoUri)
-            ImageDecoder.decodeBitmap(source)
-        }
-    }
-    return bitmap
 }
