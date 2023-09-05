@@ -416,6 +416,7 @@ fun CheckboxItem(text: String, paddingValues: PaddingValues, state: MutableState
         Text(
             text = text,
             style = MaterialTheme.typography.bodyLarge,
+            fontSize = 14.sp,
             modifier = Modifier.padding(start = 8.dp)
         )
     }

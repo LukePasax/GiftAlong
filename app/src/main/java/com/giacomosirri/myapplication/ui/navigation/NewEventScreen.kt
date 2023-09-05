@@ -69,9 +69,9 @@ fun NewEventScreen(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(top = 8.dp)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(35.dp),
+                .padding(top = 16.dp, bottom = 18.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val eventTitle = remember { mutableStateOf(name ?: "") }

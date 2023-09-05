@@ -2,17 +2,18 @@ package com.giacomosirri.myapplication.ui.navigation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
@@ -60,9 +61,9 @@ fun NewItemScreen(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(top = 8.dp)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(27.dp),
+                .padding(top = 16.dp, bottom = 18.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val itemName = remember { mutableStateOf(name ?: "") }
@@ -94,8 +95,6 @@ fun NewItemScreen(
             )
             // Price range
             val openDialog = remember { mutableStateOf(false) }
-            val currencies = listOf("$", "€", "£")
-            val (selected, onSelected) = remember { mutableStateOf(currencies[0]) }
             Row(
                 modifier = Modifier
                     .padding(lateralPadding)
@@ -105,7 +104,7 @@ fun NewItemScreen(
                 Text(text = "Price range:")
                 OutlinedTextField(
                     modifier = Modifier
-                        .requiredWidth(100.dp)
+                        .requiredWidth(115.dp)
                         .padding(PaddingValues(horizontal = 10.dp)),
                     value = lowerBoundPrice.value,
                     onValueChange = { lowerBoundPrice.value = it },
@@ -116,7 +115,7 @@ fun NewItemScreen(
                 Text(text = "-")
                 OutlinedTextField(
                     modifier = Modifier
-                        .requiredWidth(100.dp)
+                        .requiredWidth(115.dp)
                         .padding(PaddingValues(horizontal = 10.dp)),
                     value = upperBoundPrice.value,
                     onValueChange = { upperBoundPrice.value = it },
@@ -124,15 +123,12 @@ fun NewItemScreen(
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
-                OutlinedButton(
-                    onClick = { openDialog.value = true },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("$")
-                }
-            }
-            if (openDialog.value) {
-                SingleChoiceDialog(title = "Select a currency:", currencies, selected, onSelected, openDialog) {}
+                Text(
+                    modifier = Modifier.padding(start = 7.dp),
+                    text = "€",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
             // Description
             val maxLength = 100
