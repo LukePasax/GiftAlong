@@ -31,7 +31,7 @@ import java.util.*
 fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit, navController: NavController, viewModel: AppViewModel) {
     val eventsOfUser = viewModel.getEventsOfUser(AppContext.getCurrentUser()).collectAsState(initial = emptyList())
     val eventsOrganized = viewModel.getEventsOrganizedByUser(AppContext.getCurrentUser()).collectAsState(initial = emptyList())
-    val totalEvents : MutableMap<Date, List<Event>> = mutableMapOf()
+    val totalEvents : SortedMap<Date, List<Event>> = sortedMapOf()
     for (event in eventsOfUser.value) {
         val eventDate = event.date
         if (totalEvents.containsKey(eventDate)) {
@@ -48,7 +48,6 @@ fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit, navControll
             totalEvents[eventDate] = listOf(event)
         }
     }
-    totalEvents.toSortedMap(compareBy { it.time })
     Scaffold(
         topBar = {
             NavigationAppBar(
