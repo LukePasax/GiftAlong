@@ -272,6 +272,16 @@ fun NavigationGraph(
                 viewModel = appViewModel
             )
         }
+        composable(NavigationScreen.Home.name + "{query}") {
+            val query = it.arguments?.getString("query")
+            HomeScreen(
+                paddingValues = paddingValues,
+                onFabClick = { navController.navigate(NavigationScreen.NewEvent.name) },
+                navController = navController,
+                viewModel = appViewModel,
+                query = query
+            )
+        }
         composable(
             route = "${NavigationScreen.Wishlist.name}{username}?query={query}",
             arguments = listOf(navArgument("query") { nullable = true })
@@ -334,7 +344,7 @@ fun NavigationGraph(
             )
         }
         composable(
-            route ="${NavigationScreen.Relationships.name}?query={query}",
+            route = "${NavigationScreen.Relationships.name}?query={query}",
             arguments = listOf(navArgument("query") { nullable = true })
         ) {
             val query = it.arguments?.getString("query")
@@ -378,7 +388,7 @@ fun NavigationAppBar(
                     Icon(Icons.Filled.Menu, "Main menu icon")
                 }
             }
-            if(isLeadingIconBackArrow) {
+            if (isLeadingIconBackArrow) {
                 IconButton(onClick = navIconStrategy.onBackArrow) {
                     Icon(Icons.Filled.ArrowBack, "Go back icon")
                 }
@@ -411,6 +421,8 @@ fun SearchBar(
                     navigation.navController.navigate("${NavigationScreen.Wishlist.name}${AppContext.getCurrentUser()}?query=$it" )
                 NavigationScreen.Relationships.name ->
                     navigation.navController.navigate("${NavigationScreen.Relationships.name}?query=$it")
+                NavigationScreen.Home.name ->
+                    navigation.navController.navigate(NavigationScreen.Home.name + query)
             }
         },
         leadingIcon = {

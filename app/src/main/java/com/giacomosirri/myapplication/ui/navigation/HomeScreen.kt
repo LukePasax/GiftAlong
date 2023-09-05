@@ -24,14 +24,19 @@ import com.giacomosirri.myapplication.data.entity.Event
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.*
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
-import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
-fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit, navController: NavController, viewModel: AppViewModel) {
+fun HomeScreen(
+    paddingValues: PaddingValues, 
+    onFabClick: () -> Unit, 
+    navController: NavController, 
+    viewModel: AppViewModel,
+    query: String? = null
+) {
     val eventsOfUser = viewModel.getEventsOfUser(AppContext.getCurrentUser()).collectAsState(initial = emptyList())
     val eventsOrganized = viewModel.getEventsOrganizedByUser(AppContext.getCurrentUser()).collectAsState(initial = emptyList())
-    val totalEvents : SortedMap<Date, List<Event>> = sortedMapOf()
+    val totalEvents: SortedMap<Date, List<Event>> = sortedMapOf()
     for (specialEvent in specialEvents) {
         val eventDate = specialEvent.key
         totalEvents[eventDate] = listOf()
@@ -52,49 +57,94 @@ fun HomeScreen(paddingValues: PaddingValues, onFabClick: () -> Unit, navControll
             totalEvents[eventDate] = listOf(event)
         }
     }
-    Scaffold(
-        topBar = {
-            NavigationAppBar(
-                currentScreenName = AppContext.getContext()?.getString(R.string.home)!!,
-                hasSearchBar = true,
-                onSearch = {},
-                isLeadingIconMenu = true,
-                isLeadingIconBackArrow = false
+    if (query == null) {
+        Scaffold(
+            topBar = {
+                NavigationAppBar(
+                    currentScreenName = AppContext.getContext()?.getString(R.string.home)!!,
+                    hasSearchBar = true,
+                    onSearch = {
+                        navController.popBackStack()
+                        navController.navigate(NavigationScreen.Home.name + " ")
+                    },
+                    isLeadingIconMenu = true,
+                    isLeadingIconBackArrow = false
+                )
+            },
+            floatingActionButton = {
+                FloatingActionButton(onClick = onFabClick) {
+                    Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new event")
+                }
+            }
+        ) {
+            EventsList(
+                paddingValues = paddingValues,
+                totalEvents = totalEvents,
+                navController = navController,
+                viewModel = viewModel
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = onFabClick) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new event")
+        }
+    } else {
+        val filteredEvents: SortedMap<Date, List<Event>> = sortedMapOf()
+        totalEvents.forEach { (date, eventsList) ->
+            val filteredList = eventsList.filter { event ->
+                event.name.startsWith(query)
+            }
+            if (filteredList.isNotEmpty()) {
+                filteredEvents[date] = filteredList
             }
         }
-    ) {
-        LazyColumn(modifier = Modifier.padding(paddingValues)) {
-            for (date in totalEvents) {
-                if (date.key in specialEvents.keys) {
-                    item {
-                        SpecialEventCard(
-                            date = specialDateFormat.format(date.key),
-                            event = specialEvents[date.key]!!.first,
-                            color = specialEvents[date.key]!!.second
-                        )
-                    }
-                }
-                if (date.value.isEmpty()) continue
-                item {
-                    DayCard(
-                        date = dateFormat.format(date.key),
-                        events = date.value,
-                        navController = navController,
-                        viewModel = viewModel
-                    )
-                }
+        SearchBar(
+            searchBarPlaceholder = "Search an event by its title",
+            currentScreen = NavigationScreen.Home.name,
+            onGoBack = {
+                navController.popBackStack()
+                navController.navigate(NavigationScreen.Home.name)
+            },
+            onClear = {
+                navController.popBackStack()
+                navController.navigate(NavigationScreen.Home.name + " ")
             }
+        ) {
+            EventsList(
+                paddingValues = PaddingValues(0.dp),
+                totalEvents = filteredEvents,
+                navController = navController,
+                viewModel = viewModel
+            )
         }
     }
 }
 
 @Composable
-fun HomeScreen(searchedEvents: String, navController: NavController) {
+fun EventsList(
+    paddingValues: PaddingValues,
+    totalEvents: SortedMap<Date, List<Event>>,
+    navController: NavController,
+    viewModel: AppViewModel
+) {
+    LazyColumn(modifier = Modifier.padding(paddingValues)) {
+        for (date in totalEvents) {
+            if (date.key in specialEvents.keys) {
+                item {
+                    SpecialEventCard(
+                        date = specialDateFormat.format(date.key),
+                        event = specialEvents[date.key]!!.first,
+                        color = specialEvents[date.key]!!.second
+                    )
+                }
+            }
+            if (date.value.isEmpty()) continue
+            item {
+                DayCard(
+                    date = dateFormat.format(date.key),
+                    events = date.value,
+                    navController = navController,
+                    viewModel = viewModel
+                )
+            }
+        }
+    }
 }
 
 @Composable
