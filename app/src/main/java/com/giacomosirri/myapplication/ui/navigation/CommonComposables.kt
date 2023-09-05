@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -163,13 +162,17 @@ fun DialogEntry(
 @Composable
 fun DialogImage(
     imageDescription: String,
-    imageId: Int
+    imageUri: String?
 ) {
     Image(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(.35f),
-        painter = painterResource(id = imageId),
+        bitmap = if (imageUri != null) {
+            getBitmap(AppContext.getContext()!!.applicationContext.contentResolver, Uri.parse(imageUri)).asImageBitmap()
+        } else {
+            ImageBitmap.imageResource(id = R.drawable.placeholder)
+        },
         contentDescription = imageDescription,
         contentScale = ContentScale.Crop,
     )
@@ -199,10 +202,9 @@ fun PhotoSelector(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         Image(
             bitmap = (if (capturedImageUri.value.path?.isNotEmpty() == true) {
-                getBitmap(LocalContext.current.contentResolver, capturedImageUri.value).asImageBitmap()
+                getBitmap(AppContext.getContext()!!.applicationContext.contentResolver, capturedImageUri.value).asImageBitmap()
             } else {
                 ImageBitmap.imageResource(id = R.drawable.placeholder)
             }),
@@ -506,7 +508,7 @@ fun EventDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 val entryPaddingValues = PaddingValues(horizontal = 15.dp, vertical = 10.dp)
-                DialogImage(imageDescription = "Event Position", imageId = R.drawable.placeholder)
+                DialogImage(imageDescription = "Event Position", imageUri = null)
                 DialogTitle(paddingValues = entryPaddingValues, text = eventName)
                 if (organizer != AppContext.getCurrentUser()) {
                     DialogEntry(
