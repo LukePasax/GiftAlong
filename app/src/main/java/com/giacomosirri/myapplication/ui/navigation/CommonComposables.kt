@@ -444,7 +444,7 @@ fun EventCard(event: Event, navController: NavController, viewModel: AppViewMode
     if (openDialog.value) {
         EventDialog(
             event.id!!,
-            AppContext.getCurrentUser(),
+            event.organizer,
             event.name,
             dateFormat.format(event.date),
             event.dressCode ?: "No dress code",
