@@ -8,14 +8,14 @@
             <data android:scheme="geo" />
             <category android:name="android.intent.category.DEFAULT" />
         </intent>
-    </queries>
-
-    <queries>
         <intent>
             <action android:name="android.settings.APPLICATION_DETAILS_SETTINGS"/>
         </intent>
         <intent>
             <action android:name="android.settings.LOCATION_SOURCE_SETTINGS"/>
+        </intent>
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
         </intent>
     </queries>
 

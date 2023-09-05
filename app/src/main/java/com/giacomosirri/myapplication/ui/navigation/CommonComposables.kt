@@ -1,8 +1,8 @@
 package com.giacomosirri.myapplication.ui.navigation
 
 import android.Manifest
-import android.content.ContentResolver
-import android.content.ContentValues
+import android.app.Activity
+import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -12,6 +12,7 @@ import android.os.SystemClock
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -640,16 +641,12 @@ fun TakePhotoButton(
     content: @Composable RowScope.() -> Unit
 ) {
     val context = LocalContext.current
-    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-    val imageFileName = "JPEG_" + timeStamp + "_"
-    val file = File.createTempFile(imageFileName, ".jpg", context.externalCacheDir)
-    val uri = FileProvider.getUriForFile(Objects.requireNonNull(context), context.packageName + ".provider", file)
-    val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
-        capturedImageUri.value = uri
+    val cameraOrGalleryLauncher = rememberLauncherForActivityResult(TakePictureFromCameraOrGalley()) {
+        capturedImageUri.value = it ?: capturedImageUri.value
     }
     val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
         if (it) {
-            cameraLauncher.launch(uri)
+            cameraOrGalleryLauncher.launch(Unit)
         } else {
             Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
         }
@@ -662,7 +659,7 @@ fun TakePhotoButton(
         onClick = {
             val permissionCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
             if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-                cameraLauncher.launch(uri)
+                cameraOrGalleryLauncher.launch(Unit)
             } else {
                 permissionLauncher.launch(Manifest.permission.CAMERA)
             }
@@ -670,6 +667,52 @@ fun TakePhotoButton(
         content = content
     )
 }
+
+class TakePictureFromCameraOrGalley: ActivityResultContract<Unit, Uri?>() {
+    private var photoUri: Uri? = null
+
+    override fun createIntent(context: Context, input: Unit): Intent {
+        return openImageIntent(context)
+    }
+
+    override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
+        if (resultCode != Activity.RESULT_OK) return null
+        return intent?.data ?: photoUri
+    }
+
+    private fun openImageIntent(context: Context): Intent {
+        val camIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        photoUri = createPhotoTakenUri(context)
+        // Write the captured image to a file.
+        camIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+        val gallIntent = Intent(Intent.ACTION_GET_CONTENT)
+        gallIntent.type = "image/*"
+        // Look for available intents.
+        val yourIntentsList = ArrayList<Intent>()
+        val packageManager = context.packageManager
+        packageManager.queryIntentActivities(camIntent, 0).forEach{
+            val finalIntent = Intent(camIntent)
+            finalIntent.component = ComponentName(it.activityInfo.packageName, it.activityInfo.name)
+            yourIntentsList.add(finalIntent)
+        }
+        packageManager.queryIntentActivities(gallIntent, 0).forEach {
+            val finalIntent = Intent(gallIntent)
+            finalIntent.component = ComponentName(it.activityInfo.packageName, it.activityInfo.name)
+            yourIntentsList.add(finalIntent)
+        }
+        val chooser = Intent.createChooser(gallIntent, "Select source:")
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, yourIntentsList.toTypedArray())
+        return chooser
+    }
+
+    private fun createPhotoTakenUri(context: Context): Uri {
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val imageFileName = "JPEG_" + timeStamp + "_"
+        val file = File.createTempFile(imageFileName, ".jpg", context.externalCacheDir)
+        return FileProvider.getUriForFile(Objects.requireNonNull(context), context.packageName + ".provider", file)
+    }
+}
+
 
 fun saveImage(contentResolver: ContentResolver, capturedImageUri: Uri) {
     val bitmap = getBitmap(contentResolver, capturedImageUri)
