@@ -48,11 +48,11 @@ class ItemRepository(private val itemDAO: ItemDAO) {
             id = id,
             bought = bought ?: oldItem.bought,
             name = name ?: oldItem.name,
-            description = description ?: oldItem.description,
-            url = url ?: oldItem.url,
+            description = if (description == "") null else description ?: oldItem.description,
+            url = if (url == "") null else url ?: oldItem.url,
             imageId = image ?: oldItem.imageId,
-            priceLowerBound = priceL ?: oldItem.priceLowerBound,
-            priceUpperBound = priceU ?: oldItem.priceUpperBound,
+            priceLowerBound = if (priceL == -1) null else priceL ?: oldItem.priceLowerBound,
+            priceUpperBound = if (priceU == -1) null else priceU ?: oldItem.priceUpperBound,
             reservedBy = reservedBy ?: oldItem.reservedBy,
             oldItem.listedBy
         )

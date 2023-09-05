@@ -169,10 +169,10 @@ fun NewItemScreen(
                     } else {
                         appViewModel.addItem(
                             name = itemName.value.trim(),
-                            description = itemDescription.value.trim().ifEmpty { null },
-                            url = itemLink.value.trim().ifEmpty { null },
-                            priceL = try { lowerBoundPrice.value.toInt() } catch (e: NumberFormatException) { null },
-                            priceU = try { upperBoundPrice.value.toInt() } catch (e: NumberFormatException) { null },
+                            description = itemDescription.value.trim().ifEmpty { "" },
+                            url = itemLink.value.trim().ifEmpty { "" },
+                            priceL = try { lowerBoundPrice.value.toInt() } catch (e: NumberFormatException) { -1 },
+                            priceU = try { upperBoundPrice.value.toInt() } catch (e: NumberFormatException) { -1 },
                             listedBy = AppContext.getCurrentUser()
                         )
                     }

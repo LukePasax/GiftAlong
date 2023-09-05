@@ -185,7 +185,7 @@ fun NewEventScreen(
                             name = eventTitle.value.trim(),
                             date = Date(datePickerState.selectedDateMillis!!),
                             location = null,
-                            dressCode = eventDressCode.value.trim().ifEmpty { null },
+                            dressCode = eventDressCode.value.trim().ifEmpty { "" },
                             friendsAllowed = friendsAllowed.value,
                             partnersAllowed = partnersAllowed.value,
                             familyAllowed = familyAllowed.value,

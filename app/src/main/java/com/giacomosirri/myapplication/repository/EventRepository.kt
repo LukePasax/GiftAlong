@@ -64,7 +64,8 @@ class EventRepository(private val eventDAO: EventDAO) {
             name = name ?: oldEvent.name,
             date = date ?: oldEvent.date,
             location = location ?: oldEvent.location,
-            dressCode = dressCode ?: oldEvent.dressCode,
+            // If the user leaves this field blank in the UI, it means that it must be brought back to null.
+            dressCode = if (dressCode == "") null else dressCode ?: oldEvent.dressCode,
             // The organizer can never change.
             organizer = oldEvent.organizer,
             friendsAllowed = friendsAllowed ?: oldEvent.friendsAllowed,
