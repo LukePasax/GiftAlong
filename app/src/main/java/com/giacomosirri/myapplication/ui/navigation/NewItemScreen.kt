@@ -162,7 +162,7 @@ fun NewItemScreen(
                             id = id!!,
                             name = itemName.value.trim().ifEmpty { null },
                             description = itemDescription.value.trim().ifEmpty { null },
-                            url = itemDescription.value.trim().ifEmpty { null },
+                            url = itemLink.value.trim().ifEmpty { null },
                             priceL = try { lowerBoundPrice.value.toInt() } catch (e: NumberFormatException) { null },
                             priceU = try { upperBoundPrice.value.toInt() } catch (e: NumberFormatException) { null }
                         )
@@ -170,7 +170,7 @@ fun NewItemScreen(
                         appViewModel.addItem(
                             name = itemName.value.trim(),
                             description = itemDescription.value.trim().ifEmpty { null },
-                            url = itemDescription.value.trim().ifEmpty { null },
+                            url = itemLink.value.trim().ifEmpty { null },
                             priceL = try { lowerBoundPrice.value.toInt() } catch (e: NumberFormatException) { null },
                             priceU = try { upperBoundPrice.value.toInt() } catch (e: NumberFormatException) { null },
                             listedBy = AppContext.getCurrentUser()
