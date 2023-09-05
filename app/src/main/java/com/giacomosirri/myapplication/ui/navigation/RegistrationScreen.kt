@@ -150,7 +150,7 @@ fun RegistrationScreen(
                             password.trim(),
                             name.trim(),
                             surname.trim(),
-                            if (capturedImageUri.value.path?.isNotEmpty() == true) capturedImageUri.value.path else null,
+                            if (capturedImageUri.value.path?.isNotEmpty() == true) capturedImageUri.value.toString() else null,
                             Date(datePickerState.selectedDateMillis!!)
                         )
                         // The next time the user launches the app from this device,

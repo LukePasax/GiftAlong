@@ -164,7 +164,7 @@ fun NewItemScreen(
                             name = itemName.value.trim(),
                             description = itemDescription.value.trim().ifEmpty { "" },
                             url = itemLink.value.trim().ifEmpty { "" },
-                            image = if (capturedImageUri.value.path?.isNotEmpty() == true) capturedImageUri.value.path!! else null,
+                            image = if (capturedImageUri.value.path?.isNotEmpty() == true) capturedImageUri.value.toString() else null,
                             priceL = try { lowerBoundPrice.value.toInt() } catch (e: NumberFormatException) { -1 },
                             priceU = try { upperBoundPrice.value.toInt() } catch (e: NumberFormatException) { -1 },
                         )
@@ -173,7 +173,7 @@ fun NewItemScreen(
                             name = itemName.value.trim(),
                             description = itemDescription.value.trim().ifEmpty { null },
                             url = itemLink.value.trim().ifEmpty { null },
-                            image = if (capturedImageUri.value.path?.isNotEmpty() == true) capturedImageUri.value.path!! else null,
+                            image = if (capturedImageUri.value.path?.isNotEmpty() == true) capturedImageUri.value.toString() else null,
                             priceL = try { lowerBoundPrice.value.toInt() } catch (e: NumberFormatException) { null },
                             priceU = try { upperBoundPrice.value.toInt() } catch (e: NumberFormatException) { null },
                             listedBy = AppContext.getCurrentUser()
