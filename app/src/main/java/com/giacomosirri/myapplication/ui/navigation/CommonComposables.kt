@@ -1,5 +1,11 @@
 package com.giacomosirri.myapplication.ui.navigation
 
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Environment
+import android.provider.MediaStore
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -16,8 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
@@ -28,17 +37,48 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.content.ContextCompat.startActivity
+import androidx.core.content.FileProvider
 import androidx.navigation.NavController
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.data.entity.Event
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.*
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
+import java.io.File
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-val calendar = Calendar.getInstance()
+
+const val REQUEST_IMAGE_CAPTURE = 1
+fun getImageDirectory(): File {
+    val imageDir = File(AppContext.getContext()!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "GiftAlong")
+    if (!imageDir.exists()) {
+        imageDir.mkdirs()
+    }
+    return imageDir
+}
+
+val imageDir = getImageDirectory()
+val locationForPhotos: Uri = FileProvider.getUriForFile(
+    AppContext.getContext()!!,
+    "com.giacomosirri.myapplication.provider",
+    imageDir
+)
+
+fun capturePhoto(targetFileName : String) {
+    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+        putExtra(MediaStore.EXTRA_OUTPUT, Uri.withAppendedPath(locationForPhotos, targetFileName))
+    }
+    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    startActivity(AppContext.getContext()!!, intent,  null)
+}
+
+
+val calendar: Calendar = Calendar.getInstance()
 val currentYear = calendar.get(Calendar.YEAR)
 
 fun getSpecialEventDate(year: Int, month: Int, day: Int): Date {
@@ -59,6 +99,7 @@ val specialEvents = mapOf(
 
 val specialDateFormat : SimpleDateFormat = SimpleDateFormat("dd MMMM", Locale.ENGLISH)
 val dateFormat : SimpleDateFormat = SimpleDateFormat("EEEE, MMMM dd, yyyy", Locale.ENGLISH)
+val profileDateFormat : SimpleDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
 
 @Composable
 fun DialogCard(
@@ -172,13 +213,14 @@ fun DialogTitle(
 
 @Composable
 fun PhotoSelector() {
+    val image = remember { mutableStateOf<Bitmap?>(null) }
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painterResource(id = R.drawable.placeholder),
+            bitmap = image.value?.asImageBitmap() ?: ImageBitmap.imageResource(id = R.drawable.placeholder),
             contentDescription = "Item image",
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -187,7 +229,12 @@ fun PhotoSelector() {
         )
         FilledTonalButton(
             modifier = Modifier.padding(start = 15.dp),
-            onClick = { /* TODO select an image from the gallery */ }
+            onClick = {
+                capturePhoto("test.png")
+                val options = BitmapFactory.Options()
+                options.inPreferredConfig = Bitmap.Config.ARGB_8888
+                image.value = BitmapFactory.decodeFile(locationForPhotos.encodedPath + "/test.png", options)
+            }
         ) {
             Icon(
                 modifier = Modifier.padding(end = 5.dp),
