@@ -22,6 +22,9 @@ class UserRepository(private val userDAO: UserDAO, private val relationshipDAO: 
     suspend fun getUser(username: String): Boolean = userDAO.getUser(username) != null
 
     @WorkerThread
+    suspend fun getSubscriptionDate(username: String): Date = userDAO.getUser(username)!!.subscriptionDate
+
+    @WorkerThread
     suspend fun deleteUser(username: String) {
         userDAO.deleteUser(userDAO.getUser(username)!!)
     }

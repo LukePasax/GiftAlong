@@ -9,8 +9,10 @@ import com.giacomosirri.myapplication.data.entity.User
 import com.giacomosirri.myapplication.repository.EventRepository
 import com.giacomosirri.myapplication.repository.ItemRepository
 import com.giacomosirri.myapplication.repository.UserRepository
+import com.giacomosirri.myapplication.ui.AppContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import java.util.*
 
@@ -47,6 +49,10 @@ class AppViewModel(
 
     suspend fun usernameExists(username: String): Boolean {
         return userRepository.getUser(username)
+    }
+
+    suspend fun getSubscriptionDate(username: String): Date {
+        return userRepository.getSubscriptionDate(username)
     }
 
     // Event functions
@@ -111,6 +117,14 @@ class AppViewModel(
             map.filter { (event, type) ->
                 isInvitedToEvent(type, event)
             }.keys
+        }
+    }
+
+    fun getCommonEvents(username: String) : Flow<Set<Event>> {
+        val currentUserEvents = getEventsOfUser(AppContext.getCurrentUser())
+        val otherUserEvents = getEventsOfUser(username)
+        return currentUserEvents.combine(otherUserEvents) { current, other ->
+            current.intersect(other)
         }
     }
 
