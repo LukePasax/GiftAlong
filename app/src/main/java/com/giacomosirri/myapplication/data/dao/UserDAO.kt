@@ -20,4 +20,7 @@ interface UserDAO {
 
     @Delete
     suspend fun deleteUser(user: User)
+
+    @Update
+    fun updateUser(newUser: User)
 }

@@ -1,5 +1,6 @@
 package com.giacomosirri.myapplication.ui.navigation
 
+import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
@@ -82,7 +83,8 @@ fun NewItemScreen(
                 singleLine = true
             )
             // Photo
-            PhotoSelector()
+            val capturedImageUri: MutableState<Uri> = remember { mutableStateOf(Uri.EMPTY) }
+            PhotoSelector(capturedImageUri)
             // Link
             OutlinedTextField(
                 modifier = Modifier

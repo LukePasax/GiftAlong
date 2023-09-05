@@ -6,13 +6,20 @@ import com.giacomosirri.myapplication.data.dao.UserDAO
 import com.giacomosirri.myapplication.data.entity.Relationship
 import com.giacomosirri.myapplication.data.entity.User
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.runBlocking
 import java.util.*
 
 class UserRepository(private val userDAO: UserDAO, private val relationshipDAO: RelationshipDAO) {
     @WorkerThread
-    suspend fun insertUser(username: String, password: String, name: String, surname: String, image : Int, birthday: Date) {
-        userDAO.insertUser(User(username, password, name, surname, birthday, image, Date()))
+    suspend fun insertUser(username: String, password: String, name: String, surname: String, imageUri: String?, birthday: Date) {
+        userDAO.insertUser(User(username, password, name, surname, birthday, imageUri, Date()))
+    }
+
+    @WorkerThread
+    suspend fun updateImage(username: String, imageUri: String) {
+        val oldUser = userDAO.getUser(username)!!
+        val newUser = User(oldUser.username, oldUser.password, oldUser.name, oldUser.surname,
+                            oldUser.birthday, imageUri, oldUser.subscriptionDate)
+        userDAO.updateUser(newUser)
     }
 
     @WorkerThread

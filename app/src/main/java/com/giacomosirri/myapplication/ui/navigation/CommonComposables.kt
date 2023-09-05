@@ -191,7 +191,9 @@ fun DialogTitle(
 }
 
 @Composable
-fun PhotoSelector() {
+fun PhotoSelector(
+    capturedImageUri: MutableState<Uri>
+) {
     val image = remember { mutableStateOf<Bitmap?>(null) }
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -206,7 +208,10 @@ fun PhotoSelector() {
                 .requiredSize(width = 165.dp, height = 140.dp)
                 .clip(RoundedCornerShape(5.dp))
         )
-        TakePhoto(Modifier.padding(start = 10.dp)) {
+        TakePhoto(
+            modifier = Modifier.padding(start = 10.dp),
+            capturedImageUri = capturedImageUri
+        ) {
             Icon(
                 modifier = Modifier.padding(end = 5.dp),
                 imageVector = ImageVector.vectorResource(R.drawable.round_camera_alt_24),
@@ -623,15 +628,18 @@ fun SingleChoiceDialog(
 }
 
 @Composable
-fun TakePhoto(modifier: Modifier, content: @Composable RowScope.() -> Unit) {
+fun TakePhoto(
+    modifier: Modifier,
+    capturedImageUri: MutableState<Uri>,
+    content: @Composable RowScope.() -> Unit
+) {
     val context = LocalContext.current
     val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
     val imageFileName = "JPEG_" + timeStamp + "_"
     val file = File.createTempFile(imageFileName, ".jpg", context.externalCacheDir)
     val uri = FileProvider.getUriForFile(Objects.requireNonNull(context), context.packageName + ".provider", file)
-    var capturedImageUri by remember { mutableStateOf<Uri>(Uri.EMPTY) }
     val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
-        capturedImageUri = uri
+        capturedImageUri.value = uri
     }
     val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
         if (it) {
@@ -640,9 +648,8 @@ fun TakePhoto(modifier: Modifier, content: @Composable RowScope.() -> Unit) {
             Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
         }
     }
-    if (capturedImageUri.path?.isNotEmpty() == true) {
-        Text(capturedImageUri.path!!)
-        saveImage(context.applicationContext.contentResolver, capturedImageUri)
+    if (capturedImageUri.value.path?.isNotEmpty() == true) {
+        saveImage(context.applicationContext.contentResolver, capturedImageUri.value)
     }
     FilledTonalButton(
         modifier = modifier,

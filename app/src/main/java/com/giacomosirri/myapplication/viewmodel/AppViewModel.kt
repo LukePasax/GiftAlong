@@ -27,11 +27,11 @@ class AppViewModel(
         password: String,
         name: String,
         surname: String,
-        image: Int? = null,
+        imageUri: String? = null,
         birthday: Date
     ) {
         viewModelScope.launch {
-            userRepository.insertUser(username, password, name, surname, image?: R.drawable.placeholder, birthday)
+            userRepository.insertUser(username, password, name, surname, imageUri, birthday)
         }
     }
 

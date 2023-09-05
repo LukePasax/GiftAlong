@@ -1,5 +1,6 @@
 package com.giacomosirri.myapplication.ui.navigation
 
+import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -87,7 +88,8 @@ fun RegistrationScreen(
                 label = { Text("Surname *") }
             )
             // Photo
-            PhotoSelector()
+            val capturedImageUri: MutableState<Uri> = remember { mutableStateOf(Uri.EMPTY) }
+            PhotoSelector(capturedImageUri)
             // Username
             OutlinedTextField(
                 modifier = Modifier
@@ -148,7 +150,7 @@ fun RegistrationScreen(
                             password.trim(),
                             name.trim(),
                             surname.trim(),
-                            image = R.drawable.placeholder,
+                            if (capturedImageUri.value.path?.isNotEmpty() == true) capturedImageUri.value.path else null,
                             Date(datePickerState.selectedDateMillis!!)
                         )
                         // The next time the user launches the app from this device,

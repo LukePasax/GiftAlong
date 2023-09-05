@@ -14,7 +14,7 @@ data class User(
     val surname: String,
     val birthday: Date,
     @ColumnInfo("image")
-    val imageId: Int,
+    val imageUri: String?,
     @ColumnInfo("subscription_date")
     val subscriptionDate: Date,
 )
