@@ -114,7 +114,7 @@ private fun NavigationDrawer(
                 modifier = Modifier
                     .fillMaxWidth(.8f)
                     .fillMaxHeight(),
-                drawerContainerColor = Background
+                drawerContainerColor = MaterialTheme.colorScheme.background
             ) {
                 val items = mapOf(
                     Pair(
