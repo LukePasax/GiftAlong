@@ -410,6 +410,7 @@ fun FormButtons(
         Button(
             modifier = Modifier
                 .fillMaxWidth(.5f)
+                .requiredHeight(45.dp)
                 .padding(end = 5.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red, contentColor = Color.White),
             onClick = { isCancelDialogOpen.value = true }
@@ -419,6 +420,7 @@ fun FormButtons(
         Button(
             modifier = Modifier
                 .fillMaxWidth()
+                .requiredHeight(45.dp)
                 .padding(start = 5.dp),
             enabled = isSubmitEnabled,
             colors = ButtonDefaults.buttonColors(containerColor = Color.Blue, contentColor = Color.White),
@@ -644,7 +646,12 @@ fun TakePhotoButton(
     val cameraOrGalleryLauncher = rememberLauncherForActivityResult(TakePictureFromCameraOrGalley()) {
         capturedImageUri.value = it ?: capturedImageUri.value
     }
-    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
+    val permissionCameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
+        if (!it) {
+            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+        }
+    }
+    val permissionWriteLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
         if (it) {
             cameraOrGalleryLauncher.launch(Unit)
         } else {
@@ -658,10 +665,13 @@ fun TakePhotoButton(
         modifier = modifier,
         onClick = {
             val permissionCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
-            if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+            val permissionWriteCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            if (permissionCheckResult == PackageManager.PERMISSION_GRANTED &&
+                permissionWriteCheckResult == PackageManager.PERMISSION_GRANTED) {
                 cameraOrGalleryLauncher.launch(Unit)
             } else {
-                permissionLauncher.launch(Manifest.permission.CAMERA)
+                permissionCameraLauncher.launch(Manifest.permission.CAMERA)
+                permissionWriteLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             }
         },
         content = content
@@ -686,6 +696,7 @@ class TakePictureFromCameraOrGalley: ActivityResultContract<Unit, Uri?>() {
         // Write the captured image to a file.
         camIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
         val gallIntent = Intent(Intent.ACTION_GET_CONTENT)
+        gallIntent.action = Intent.ACTION_GET_CONTENT
         gallIntent.type = "image/*"
         // Look for available intents.
         val yourIntentsList = ArrayList<Intent>()
@@ -712,7 +723,6 @@ class TakePictureFromCameraOrGalley: ActivityResultContract<Unit, Uri?>() {
         return FileProvider.getUriForFile(Objects.requireNonNull(context), context.packageName + ".provider", file)
     }
 }
-
 
 fun saveImage(contentResolver: ContentResolver, capturedImageUri: Uri) {
     val bitmap = getBitmap(contentResolver, capturedImageUri)
