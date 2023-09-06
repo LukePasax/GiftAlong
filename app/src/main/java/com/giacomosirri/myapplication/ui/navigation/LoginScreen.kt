@@ -54,6 +54,7 @@ fun LoginScreen(
                 Text(text = "GiftAlong",
                     fontFamily = FontFamily.Cursive,
                     fontWeight = FontWeight.ExtraBold,
+                    color = MaterialTheme.colorScheme.primary,
                     fontSize = 44.sp,
                 )
             }
@@ -66,6 +67,7 @@ fun LoginScreen(
                         .padding(bottom = 60.dp),
                     onClick = onRegisterClick,
                     style = TextStyle(
+                        color = MaterialTheme.colorScheme.primary,
                         fontSize = 16.sp,
                         textDecoration = TextDecoration.Underline,
                         fontWeight = FontWeight.Bold,
@@ -79,7 +81,11 @@ fun LoginScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "GiftAlong", style = Typography.headlineLarge)
+                Text(
+                    text = "GiftAlong",
+                    style = Typography.headlineLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
                 Spacer(modifier = Modifier.height(20.dp))
                 // Username
                 OutlinedTextField(

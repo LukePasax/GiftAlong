@@ -22,7 +22,6 @@ import androidx.navigation.NavController
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.data.entity.Event
 import com.giacomosirri.myapplication.ui.AppContext
-import com.giacomosirri.myapplication.ui.theme.*
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
 import java.util.*
 
@@ -123,7 +122,7 @@ fun EventsList(
     navController: NavController,
     viewModel: AppViewModel
 ) {
-    LazyColumn(modifier = Modifier.padding(paddingValues)) {
+    LazyColumn(modifier = Modifier.padding(paddingValues).padding(top = 5.dp).padding(horizontal = 4.dp)) {
         for (date in totalEvents) {
             if (date.key in specialEvents.keys) {
                 item {

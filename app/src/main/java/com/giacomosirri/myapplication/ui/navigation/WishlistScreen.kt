@@ -271,7 +271,6 @@ fun ItemDialog(
             minHeight = 300.dp,
             maxHeight = 600.dp,
             elevations = 10.dp,
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer, contentColor = MaterialTheme.colorScheme.onPrimaryContainer)
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,

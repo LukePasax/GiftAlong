@@ -88,7 +88,6 @@ fun DialogCard(
     minHeight: Dp,
     maxHeight: Dp,
     elevations: Dp,
-    colors: CardColors,
     border: BorderStroke? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -478,7 +477,7 @@ fun EventCard(event: Event, navController: NavController, viewModel: AppViewMode
             event.id!!,
             event.organizer,
             event.name,
-            dateFormat.format(event.date),
+            profileDateFormat.format(event.date),
             event.dressCode ?: "No dress code",
             openDialog,
             navController
@@ -505,7 +504,6 @@ fun EventDialog(
             minHeight = 300.dp,
             maxHeight = 600.dp,
             elevations = 10.dp,
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
