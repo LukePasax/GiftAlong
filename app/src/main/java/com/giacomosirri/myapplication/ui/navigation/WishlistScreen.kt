@@ -31,7 +31,6 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.giacomosirri.myapplication.data.entity.Item
 import com.giacomosirri.myapplication.ui.AppContext
-import com.giacomosirri.myapplication.ui.theme.Secondary
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
 import kotlinx.coroutines.runBlocking
 
@@ -272,7 +271,7 @@ fun ItemDialog(
             minHeight = 300.dp,
             maxHeight = 600.dp,
             elevations = 10.dp,
-            colors = CardDefaults.cardColors(containerColor = Secondary)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer, contentColor = MaterialTheme.colorScheme.onPrimaryContainer)
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,

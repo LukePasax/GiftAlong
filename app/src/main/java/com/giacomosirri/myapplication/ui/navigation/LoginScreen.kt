@@ -23,7 +23,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.giacomosirri.myapplication.ui.AppContext
-import com.giacomosirri.myapplication.ui.theme.Primary
 import com.giacomosirri.myapplication.ui.theme.Typography
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
 import com.giacomosirri.myapplication.viewmodel.SettingsViewModel
@@ -56,7 +55,6 @@ fun LoginScreen(
                     fontFamily = FontFamily.Cursive,
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 44.sp,
-                    color = Primary
                 )
             }
         } else {
@@ -71,7 +69,6 @@ fun LoginScreen(
                         fontSize = 16.sp,
                         textDecoration = TextDecoration.Underline,
                         fontWeight = FontWeight.Bold,
-                        color = Primary
                     )
                 )
             }
@@ -82,7 +79,7 @@ fun LoginScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "GiftAlong", style = Typography.headlineLarge, color = Primary)
+                Text(text = "GiftAlong", style = Typography.headlineLarge)
                 Spacer(modifier = Modifier.height(20.dp))
                 // Username
                 OutlinedTextField(
@@ -142,7 +139,6 @@ fun LoginScreen(
                         enabled = username.value.text.trim()
                             .isNotEmpty() && password.value.text.trim()
                             .isNotEmpty(),
-                        colors = ButtonDefaults.buttonColors(containerColor = Primary),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)

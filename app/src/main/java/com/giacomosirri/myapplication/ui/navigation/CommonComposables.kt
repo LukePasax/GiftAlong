@@ -71,9 +71,12 @@ fun getSpecialEventDate(year: Int, month: Int, day: Int): Date {
 
 val specialEvents = mapOf(
     Pair(getSpecialEventDate(currentYear, Calendar.DECEMBER, 25), Pair("Christmas", Color.Red)),
-    Pair(getSpecialEventDate(currentYear, Calendar.DECEMBER, 31), Pair("New Year's Eve", Color.Blue)),
+    Pair(getSpecialEventDate(currentYear, Calendar.DECEMBER, 31), Pair("New Year's Eve", Color(
+        0xFF2196F3
+    )
+    )),
     Pair(getSpecialEventDate(currentYear, Calendar.FEBRUARY, 14), Pair("Valentine's Day", Color.Magenta)),
-    Pair(getSpecialEventDate(currentYear, Calendar.OCTOBER, 31), Pair("Halloween", Color.Cyan)),
+    Pair(getSpecialEventDate(currentYear, Calendar.OCTOBER, 31), Pair("Halloween", Color(0xFFFF9800))),
 )
 
 val specialDateFormat : SimpleDateFormat = SimpleDateFormat("dd MMMM", Locale.ENGLISH)
@@ -101,7 +104,6 @@ fun DialogCard(
             hoveredElevation = elevations
         ),
         border = border,
-        colors = colors,
         content = content
     )
 }
@@ -302,7 +304,6 @@ private fun CommonErrorDialog(
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
                 .heightIn(130.dp, 400.dp),
-            colors = CardDefaults.cardColors(containerColor = ErrorBackground)
         ) {
             Column(modifier = Modifier.padding(start = 20.dp, top = 20.dp, end = 10.dp, bottom = 10.dp)) {
                 if (!dialogTitle.isNullOrEmpty()) {
@@ -319,7 +320,7 @@ private fun CommonErrorDialog(
                         onClick = { isDialogOpen.value = false },
                         modifier = Modifier.padding(end = 10.dp)
                     ) {
-                        Text(text = refuseText!!, color = Error)
+                        Text(text = refuseText!!)
                     }
                     TextButton(
                         onClick = {
@@ -327,7 +328,7 @@ private fun CommonErrorDialog(
                             onAccept?.invoke()
                         }
                     ) {
-                        Text(text = acceptText, color = Error)
+                        Text(text = acceptText)
                     }
                 }
             }
@@ -466,8 +467,7 @@ fun EventCard(event: Event, navController: NavController, viewModel: AppViewMode
             .padding(top = 5.dp)
             .height(50.dp)
             .clickable { openDialog.value = true },
-        border = BorderStroke(1.dp, Primary),
-        colors = CardDefaults.cardColors(containerColor = EventCardBackground)
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Text(event.name, Modifier.align(Alignment.Center))
@@ -505,7 +505,7 @@ fun EventDialog(
             minHeight = 300.dp,
             maxHeight = 600.dp,
             elevations = 10.dp,
-            colors = CardDefaults.cardColors(containerColor = Secondary)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,

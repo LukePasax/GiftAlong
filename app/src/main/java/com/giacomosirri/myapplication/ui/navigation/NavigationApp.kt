@@ -23,8 +23,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
-import com.giacomosirri.myapplication.ui.theme.Background
-import com.giacomosirri.myapplication.ui.theme.Primary
 import com.giacomosirri.myapplication.ui.theme.Typography
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
 import com.giacomosirri.myapplication.viewmodel.SettingsViewModel
@@ -142,7 +140,6 @@ private fun NavigationDrawer(
                 ) {
                     Text(
                         text = AppContext.getContext()?.getString(R.string.app_name).toString(),
-                        color = Primary,
                         style = Typography.headlineLarge
                     )
                 }
@@ -412,7 +409,12 @@ fun NavigationAppBar(
                 }
             }
         },
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Primary)
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary,
+            actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
+            navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+        )
     )
 }
 
@@ -455,7 +457,6 @@ fun SearchBar(
         },
         active = true,
         onActiveChange = {},
-        colors = SearchBarDefaults.colors(containerColor = Background),
         shape = ShapeDefaults.ExtraSmall,
         content = content
     )

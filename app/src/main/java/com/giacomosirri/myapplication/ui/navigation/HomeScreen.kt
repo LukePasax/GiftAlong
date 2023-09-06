@@ -157,8 +157,8 @@ fun DayCard(date: String, events: List<Event>, navController: NavController, vie
         Card(
             modifier = Modifier
                 .height(35.dp),
-            border = BorderStroke(1.dp, Primary),
-            colors = CardDefaults.cardColors(containerColor = DayCardBackground)
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer, contentColor = MaterialTheme.colorScheme.onPrimaryContainer)
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 Text(date, Modifier.align(Alignment.Center), fontWeight = FontWeight.Bold)
@@ -176,8 +176,8 @@ fun SpecialEventCard(date: String, event: String, color: Color) {
         modifier = Modifier
             .padding(horizontal = 5.dp, vertical = 10.dp)
             .height(75.dp),
-        border = BorderStroke(1.dp, Primary),
-        colors = CardDefaults.cardColors(containerColor = color)
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+        colors = CardDefaults.cardColors(contentColor = color, containerColor = MaterialTheme.colorScheme.primaryContainer)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Text(
@@ -189,7 +189,7 @@ fun SpecialEventCard(date: String, event: String, color: Color) {
             Text(
                 text = date,
                 modifier = Modifier.align(Alignment.BottomCenter),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
                 fontSize = 13.sp,
             )
         }
