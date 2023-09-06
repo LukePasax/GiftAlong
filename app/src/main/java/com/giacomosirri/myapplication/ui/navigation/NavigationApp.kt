@@ -66,7 +66,8 @@ fun NavigationApp(
     paddingValues: PaddingValues,
     isUserLoggedIn: Boolean,
     appViewModel: AppViewModel,
-    settingsViewModel: SettingsViewModel
+    settingsViewModel: SettingsViewModel,
+    darkModeOn: Boolean
 ) {
     Navigator.setNavigation(Navigation(
         navController = navController,
@@ -76,7 +77,7 @@ fun NavigationApp(
     val entryScreenName = navController.currentBackStackEntryAsState().value?.destination?.route ?:
         if (isUserLoggedIn) NavigationScreen.Home.name else NavigationScreen.Login.name
     if (entryScreenName != NavigationScreen.Login.name) {
-        NavigationDrawer(appViewModel, settingsViewModel) {
+        NavigationDrawer(appViewModel, settingsViewModel, darkModeOn) {
             Scaffold {
                 NavigationGraph(
                     navController = navController,
@@ -102,6 +103,7 @@ fun NavigationApp(
 private fun NavigationDrawer(
     appViewModel: AppViewModel,
     settingsViewModel: SettingsViewModel,
+    darkModeOn: Boolean,
     content: @Composable () -> Unit
 ) {
     val navigation = Navigator.getNavigation()
@@ -161,7 +163,7 @@ private fun NavigationDrawer(
                     )
                 }
                 Spacer(Modifier.fillMaxHeight(.62f))
-                var darkMode by remember { mutableStateOf(false) }
+                var darkMode by remember { mutableStateOf(darkModeOn) }
                 Row(
                     modifier = Modifier.padding(start = 20.dp, end = 25.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -172,7 +174,7 @@ private fun NavigationDrawer(
                         checked = darkMode,
                         onCheckedChange = {
                             darkMode = it
-                            if (darkMode) settingsViewModel.deactivateDarkMode() else settingsViewModel.activateDarkMode()
+                            if (darkMode) settingsViewModel.activateDarkMode() else settingsViewModel.deactivateDarkMode()
                         }
                     )
                 }

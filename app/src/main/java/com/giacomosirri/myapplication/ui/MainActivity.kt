@@ -114,7 +114,8 @@ class MainActivity : ComponentActivity() {
                         paddingValues = PaddingValues(top = 70.dp),
                         appViewModel = appViewModel,
                         settingsViewModel = settingsViewModel,
-                        isUserLoggedIn = isAutoAuthActive
+                        isUserLoggedIn = isAutoAuthActive,
+                        darkModeOn = darkModeOn
                     )
                 }
             }
