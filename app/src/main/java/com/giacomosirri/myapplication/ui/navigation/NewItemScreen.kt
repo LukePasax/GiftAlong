@@ -167,7 +167,6 @@ fun NewItemScreen(
                         val uri = Uri.parse(itemLink.value.trim())
                         val intent = Intent(Intent.ACTION_VIEW, uri)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        AppContext.getContext()!!.startActivity(intent)
                         if (intent.resolveActivity(AppContext.getContext()!!.packageManager) == null) {
                             isValid = false
                             appViewModel.viewModelScope.launch {
