@@ -3,6 +3,8 @@ package com.giacomosirri.myapplication.ui.navigation
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -17,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
+import com.giacomosirri.myapplication.ui.MapActivity
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
 import kotlinx.coroutines.runBlocking
 import java.time.Instant
@@ -110,9 +113,13 @@ fun NewEventScreen(
                 .padding(top = 4.dp),
                 contentAlignment = Alignment.Center
             ) {
+                val mapActivityLauncher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.StartActivityForResult()
+                ) {
+                }
                 FilledTonalButton(
                     enabled = canShowMap(),
-                    onClick = { showMap() }
+                    onClick = { mapActivityLauncher.launch(Intent(AppContext.getContext()!!, MapActivity::class.java)) }
                 ) {
                     Icon(
                         modifier = Modifier.padding(end = 2.dp),
