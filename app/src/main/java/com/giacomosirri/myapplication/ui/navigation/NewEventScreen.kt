@@ -19,6 +19,8 @@ import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
 import kotlinx.coroutines.runBlocking
+import java.time.Instant
+import java.time.ZoneId
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,7 +79,7 @@ fun NewEventScreen(
             val eventTitle = remember { mutableStateOf(name ?: "") }
             val eventDressCode = remember { mutableStateOf(dressCode ?: "") }
             val datePickerState = rememberDatePickerState(
-                initialSelectedDateMillis = date?.time ?: Date().time,
+                initialSelectedDateMillis = date?.time?.plus(3600*2000) ?: Date().time,
                 // An event can only be scheduled for the future.
                 selectableDates = object: SelectableDates {
                     override fun isSelectableDate(utcTimeMillis: Long): Boolean {
@@ -183,8 +185,9 @@ fun NewEventScreen(
                         appViewModel.updateEvent(
                             id = id!!,
                             name = eventTitle.value.trim(),
-                            date = Date(datePickerState.selectedDateMillis!!),
-                            location = null,
+                            // The code below accounts for time zones when setting the date.
+                            date = Date(datePickerState.selectedDateMillis!! + 1000 * ZoneId.systemDefault().rules.getOffset(
+                                Instant.ofEpochMilli(datePickerState.selectedDateMillis!!)).totalSeconds),                            location = null,
                             dressCode = eventDressCode.value.trim().ifEmpty { "" },
                             friendsAllowed = friendsAllowed.value,
                             partnersAllowed = partnersAllowed.value,
@@ -194,7 +197,9 @@ fun NewEventScreen(
                     } else {
                         appViewModel.addEvent(
                             name = eventTitle.value.trim(),
-                            date = Date(datePickerState.selectedDateMillis!!),
+                            // The code below accounts for time zones when setting the date.
+                            date = Date(datePickerState.selectedDateMillis!! + 1000 * ZoneId.systemDefault().rules.getOffset(
+                                Instant.ofEpochMilli(datePickerState.selectedDateMillis!!)).totalSeconds),
                             location = null,
                             organizer = AppContext.getCurrentUser(),
                             dressCode = eventDressCode.value.trim().ifEmpty { null },
