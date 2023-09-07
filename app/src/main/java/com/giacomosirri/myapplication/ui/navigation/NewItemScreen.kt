@@ -1,11 +1,10 @@
 package com.giacomosirri.myapplication.ui.navigation
 
+import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,9 +14,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 @Composable
@@ -29,6 +30,7 @@ fun NewItemScreen(
     id: Int? = null
 ) {
     val lateralPadding = PaddingValues(horizontal = 20.dp)
+    val snackbarHostState = remember { SnackbarHostState() }
     var name: String? = null
     var description: String? = null
     var link: String? = null
@@ -57,7 +59,8 @@ fun NewItemScreen(
                 isLeadingIconMenu = false,
                 isLeadingIconBackArrow = false
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) {
         Column(
             modifier = Modifier
@@ -158,28 +161,64 @@ fun NewItemScreen(
                 ),
                 isSubmitEnabled = itemName.value.trim().isNotEmpty() && lowerBoundPrice.value <= upperBoundPrice.value,
                 onSubmitClick = {
-                    if (isInEditMode) {
-                        appViewModel.updateItem(
-                            id = id!!,
-                            name = itemName.value.trim(),
-                            description = itemDescription.value.trim().ifEmpty { "" },
-                            url = itemLink.value.trim().ifEmpty { "" },
-                            image = if (capturedImageUri.value.path?.isNotEmpty() == true) capturedImageUri.value.toString() else null,
-                            priceL = try { lowerBoundPrice.value.toInt() } catch (e: NumberFormatException) { -1 },
-                            priceU = try { upperBoundPrice.value.toInt() } catch (e: NumberFormatException) { -1 },
-                        )
-                    } else {
-                        appViewModel.addItem(
-                            name = itemName.value.trim(),
-                            description = itemDescription.value.trim().ifEmpty { null },
-                            url = itemLink.value.trim().ifEmpty { null },
-                            image = if (capturedImageUri.value.path?.isNotEmpty() == true) capturedImageUri.value.toString() else null,
-                            priceL = try { lowerBoundPrice.value.toInt() } catch (e: NumberFormatException) { null },
-                            priceU = try { upperBoundPrice.value.toInt() } catch (e: NumberFormatException) { null },
-                            listedBy = AppContext.getCurrentUser()
-                        )
+                    var isValid = true
+                    if (itemLink.value.trim().isNotEmpty()) {
+                        // Test that the URL provided by the user is valid.
+                        val uri = Uri.parse(itemLink.value.trim())
+                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        AppContext.getContext()!!.startActivity(intent)
+                        if (intent.resolveActivity(AppContext.getContext()!!.packageManager) == null) {
+                            isValid = false
+                            appViewModel.viewModelScope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = "The link you provided is not a valid URL. " +
+                                            "Please input another one or remove it altogether.",
+                                    duration = SnackbarDuration.Short
+                                )
+                            }
+                        }
                     }
-                    onExit.invoke()
+                    if (isValid) {
+                        if (isInEditMode) {
+                            appViewModel.updateItem(
+                                id = id!!,
+                                name = itemName.value.trim(),
+                                description = itemDescription.value.trim().ifEmpty { "" },
+                                url = itemLink.value.trim().ifEmpty { "" },
+                                image = if (capturedImageUri.value.path?.isNotEmpty() == true) capturedImageUri.value.toString() else null,
+                                priceL = try {
+                                    lowerBoundPrice.value.toInt()
+                                } catch (e: NumberFormatException) {
+                                    -1
+                                },
+                                priceU = try {
+                                    upperBoundPrice.value.toInt()
+                                } catch (e: NumberFormatException) {
+                                    -1
+                                },
+                            )
+                        } else {
+                            appViewModel.addItem(
+                                name = itemName.value.trim(),
+                                description = itemDescription.value.trim().ifEmpty { null },
+                                url = itemLink.value.trim().ifEmpty { null },
+                                image = if (capturedImageUri.value.path?.isNotEmpty() == true) capturedImageUri.value.toString() else null,
+                                priceL = try {
+                                    lowerBoundPrice.value.toInt()
+                                } catch (e: NumberFormatException) {
+                                    null
+                                },
+                                priceU = try {
+                                    upperBoundPrice.value.toInt()
+                                } catch (e: NumberFormatException) {
+                                    null
+                                },
+                                listedBy = AppContext.getCurrentUser()
+                            )
+                        }
+                        onExit.invoke()
+                    }
                 },
                 onCancelClick = onExit
             )
