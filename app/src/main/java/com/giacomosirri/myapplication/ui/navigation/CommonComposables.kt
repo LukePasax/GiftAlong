@@ -120,7 +120,7 @@ fun DialogEntry(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = text, fontWeight = FontWeight.Bold)
+        Text(modifier = Modifier.padding(end = 8.dp), text = text, fontWeight = FontWeight.Bold)
         Text(text = value)
     }
 }
@@ -138,7 +138,7 @@ fun DialogEntry(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = text, fontWeight = FontWeight.Bold)
+        Text(modifier = Modifier.padding(end = 8.dp), text = text, fontWeight = FontWeight.Bold)
         value()
     }
 }
