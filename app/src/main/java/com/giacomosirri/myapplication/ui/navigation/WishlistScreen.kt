@@ -1,6 +1,7 @@
 package com.giacomosirri.myapplication.ui.navigation
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -279,7 +280,27 @@ fun ItemDialog(
                 val entryPaddingValues = PaddingValues(horizontal = 15.dp, vertical = 10.dp)
                 DialogImage(imageDescription = "Item Image", imageUri = image)
                 DialogTitle(paddingValues = entryPaddingValues, text = itemName)
-                DialogEntry(paddingValues = entryPaddingValues, text = "Link: ", value = url)
+                if (url == "No url") {
+                    DialogEntry(paddingValues = entryPaddingValues, text = "Link: ", value = url)
+                } else {
+                    DialogEntry(
+                        paddingValues = entryPaddingValues,
+                        text = "Link: ",
+                        value = {
+                            OutlinedButton(
+                                onClick = {
+                                    val uri = Uri.parse(url)
+                                    val intent = Intent(Intent.ACTION_VIEW, uri)
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    AppContext.getContext()?.startActivity(intent)
+                                }
+                            ) {
+                                Text(text = "Open")
+                            }
+                        }
+                    )
+                }
+
                 DialogEntry(
                     paddingValues = entryPaddingValues,
                     text = "Price Range: ",
