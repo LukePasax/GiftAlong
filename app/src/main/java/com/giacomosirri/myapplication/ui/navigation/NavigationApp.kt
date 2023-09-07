@@ -75,7 +75,7 @@ fun NavigationApp(
     val entryScreenName = navController.currentBackStackEntryAsState().value?.destination?.route ?:
         if (isUserLoggedIn) NavigationScreen.Home.name else NavigationScreen.Login.name
     if (entryScreenName != NavigationScreen.Login.name) {
-        NavigationDrawer(appViewModel, settingsViewModel, darkModeOn) {
+        NavigationDrawer(appViewModel, settingsViewModel, darkModeOn, entryScreenName == NavigationScreen.Home.name) {
             Scaffold {
                 NavigationGraph(
                     navController = navController,
@@ -102,11 +102,13 @@ private fun NavigationDrawer(
     appViewModel: AppViewModel,
     settingsViewModel: SettingsViewModel,
     darkModeOn: Boolean,
+    canOpenDrawer: Boolean,
     content: @Composable () -> Unit
 ) {
     val navigation = Navigator.getNavigation()
     ModalNavigationDrawer(
         drawerState = navigation.drawerState,
+        gesturesEnabled = canOpenDrawer,
         drawerContent = {
             ModalDrawerSheet(
                 modifier = Modifier
