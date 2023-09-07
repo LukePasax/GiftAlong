@@ -2,19 +2,147 @@
     <string name="app_name">GiftAlong</string>
 
     <!-- screen name, which works as a screen identifier (as it's unique) -->
-    <string name="home">Upcoming Events</string>
-    <string name="wishlist">Wishlist</string>
-    <string name="new_item">Add New Item</string>
-    <string name="new_event">Add New Event</string>
-    <string name="user_profile">User Profile</string>
-    <string name="relationships">Manage Relationships</string>
-    <string name="login">Login</string>
-    <string name="registration">Register Now</string>
-    <string name="new_profile_pic">New Profile Pic</string>
+    <string name="title_home">Upcoming Events</string>
+    <string name="title_wishlist">Wishlist</string>
+    <string name="title_new_item">Add New Item</string>
+    <string name="title_new_event">Add New Event</string>
+    <string name="title_edit">Edit</string>
+    <string name="title_user_profile">User Profile</string>
+    <string name="title_relationships">Manage Relationships</string>
+    <string name="title_login">Login</string>
+    <string name="title_registration">Register Now</string>
+    <string name="title_new_profile_pic">New Profile Pic</string>
+    <string name="title_user_wishlist">Your Wishlist</string>
+    <string name="title_other_user_wishlist">%s\'s Wishlist</string>
 
     <!-- drawer menu items -->
-    <string name="menu_item1">Your Wishlist</string>
-    <string name="menu_item2">Manage Relationships</string>
-    <string name="menu_item3">Find Users</string>
-    <string name="menu_item4">Change Your Profile Image</string>
+    <string name="menu_item_wishlist">Your Wishlist</string>
+    <string name="menu_item_relationships">Manage Relationships</string>
+    <string name="menu_item_users">Find Users</string>
+    <string name="menu_item_change_profile_pic">Change Your Profile Image</string>
+
+    <!-- search bar hint -->
+    <string name="search_hint_event">Search an event by its title</string>
+    <string name="search_hint_item">Search an item by its name</string>
+    <string name="search_hint_user">Search any user by their username</string>
+
+    <!-- button names -->
+    <string name="btn_login">Login</string>
+    <string name="btn_register">Don\'t have an account yet? Register now!</string>
+    <string name="btn_register_now">Register Now</string>
+    <string name="btn_logout">Logout</string>
+    <string name="btn_delete_account">Delete Account</string>
+    <string name="btn_dont_logout">Don\'t Logout</string>
+    <string name="btn_dont_delete">Don\'t Delete</string>
+    <string name="btn_photo_select">Select a Photo</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_done">Done</string>
+    <string name="btn_yes">Yes</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_quit">Quit</string>
+    <string name="btn_quit_anyway">Quit Anyway</string>
+    <string name="btn_edit_event">Edit Event</string>
+    <string name="btn_delete_event">Delete Event</string>
+    <string name="btn_dark_mode">Dark Mode</string>
+    <string name="btn_add_location">Add Location</string>
+    <string name="btn_select_date">Select a Date</string>
+    <string name="btn_select_birthday">Select your Birthday</string>
+    <string name="btn_view_wishlist">View Wishlist</string>
+    <string name="btn_buy">Buy</string>
+    <string name="btn_reserve">Reserve</string>
+    <string name="btn_bought">Bought</string>
+    <string name="btn_unreserve">Unreserve</string>
+    <string name="btn_open_link">Open</string>
+
+    <!-- Dialog text -->
+    <string name="dialog_quit">Are you sure you want to quit? All your inputs will be lost.</string>
+    <string name="dialog_event_delete_title">Delete Event</string>
+    <string name="dialog_event_delete">Are you sure you want to delete this event? This action cannot be undone.</string>
+    <string name="dialog_item_delete_title">Delete Item</string>
+    <string name="dialog_item_delete">Are you sure you want to delete this item from your wishlist? This action cannot be undone.</string>
+    <string name="dialog_logout_title">Logout</string>
+    <string name="dialog_logout">Are you sure you want to logout?</string>
+    <string name="dialog_account_delete_title">Delete Account</string>
+    <string name="dialog_account_delete">Are you really sure you want to delete your account? This action cannot be undone.</string>
+    <string name="dialog_relationship_select_title">Select the Relationship</string>
+    <string name="dialog_relationship_select">Select the Relationship:</string>
+
+    <!-- form labels -->
+    <string name="label_title">Title</string>
+    <string name="label_description">Description</string>
+    <string name="label_dress_code">Dress Code</string>
+    <string name="label_invite">Invite</string>
+    <string name="label_link">Link</string>
+    <string name="label_price_range">Price Range:</string>
+    <string name="label_price_lower">Lower</string>
+    <string name="label_price_upper">Upper</string>
+    <string name="label_first_name">First Name</string>
+    <string name="label_surname">Surname</string>
+    <string name="label_username">Username</string>
+    <string name="label_password">Password</string>
+
+    <!-- user profile labels -->
+    <string name="label_registered_since">Registered Since</string>
+    <string name="label_select_relationship_status">Select Relationship Status: </string>
+    <string name="label_common_upcoming_events">Common Upcoming Events: </string>
+
+    <!-- dropdown menu items -->
+    <string name="dropdown_item_delete">Delete</string>
+    <string name="dropdown_item_edit">Edit</string>
+
+    <!-- relationship types -->
+    <string name="relationship_type_family">Family</string>
+    <string name="relationship_type_friend">Friend</string>
+    <string name="relationship_type_colleague">Colleague</string>
+    <string name="relationship_type_partner">Partner</string>
+    <string name="relationship_type_none">None</string>
+
+    <!-- special events -->
+    <string name="christmas">Christmas</string>
+    <string name="new_year">New Year\'s eve</string>
+    <string name="halloween">Halloween</string>
+    <string name="valentines">Valentine\'s Day</string>
+
+    <!-- event descriptions -->
+    <string name="event_position">Event Position</string>
+    <string name="event_organizer">Organizer: </string>
+    <string name="event_date">Date: </string>
+    <string name="event_dress_code">Dress Code: </string>
+    <string name="event_no_dress_code">No dress code</string>
+
+    <!-- item descriptions -->
+    <string name="item_no_price">No price</string>
+    <string name="item_price_range">Price Range: </string>
+    <string name="item_description">Description: </string>
+    <string name="item_link">Link: </string>
+    <string name="item_no_link">No Link</string>
+    <string name="item_no_description">No Description</string>
+    <string name="item_status_reserved">Reserved</string>
+    <string name="item_status_bought">Bought</string>
+    <string name="item_reserved_by">Reserved by: </string>
+    <string name="item_you_reserved">You</string>
+
+
+    <!-- image and icon descriptions -->
+    <string name="description_item_image">Item Image</string>
+    <string name="description_profile_picture">Profile Picture</string>
+    <string name="description_search_icon">Search Icon</string>
+    <string name="description_main_menu_icon">Main Menu Icon</string>
+    <string name="description_go_back_icon">Go Back Icon</string>
+    <string name="description_close_icon">Close Icon</string>
+    <string name="description_clear_icon">Clear Icon</string>
+    <string name="description_item_menu_icon">Item Menu Icon</string>
+    <string name="description_fab_home_screen">Add New Event</string>
+    <string name="description_fab_wishlist_screen">Add New Item</string>
+    <string name="description_password_show">Show Password</string>
+    <string name="description_password_hide">Hide Password</string>
+
+    <!-- error messages -->
+    <string name="error_permission_denied">Permission denied.</string>
+    <string name="error_wrong_credentials">Wrong username or password. Please try again.</string>
+    <string name="error_invalid_url">The link you provided is not a valid URL. Please input another one or remove it altogether.</string>
+    <string name="error_username_taken">The username you provided is already taken. Please choose another one.</string>
+
+    <string name="select_source">Select Source: </string>
+    <string name="open_with">Open With: </string>
 </resources>

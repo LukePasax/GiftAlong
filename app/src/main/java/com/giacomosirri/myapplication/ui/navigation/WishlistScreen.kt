@@ -51,9 +51,9 @@ fun WishlistScreen(
                 NavigationAppBar(
                     currentScreenName =
                     if (username == AppContext.getCurrentUser()) {
-                        "Your Wishlist"
+                        AppContext.getContext()!!.getString(R.string.title_user_wishlist)
                     } else {
-                        "$username's Wishlist"
+                        AppContext.getContext()!!.getString(R.string.title_other_user_wishlist, username)
                     },
                     hasSearchBar = true,
                     onSearch = {
@@ -64,7 +64,7 @@ fun WishlistScreen(
             },
             floatingActionButton = {
                 FloatingActionButton(onClick = onFabClick) {
-                    Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new item")
+                    Icon(imageVector = Icons.Filled.Add, contentDescription = AppContext.getContext()!!.getString(R.string.description_fab_wishlist_screen))
                 }
             }
         ) {
@@ -73,7 +73,7 @@ fun WishlistScreen(
     } else {
         val itemsToShow = items.value.filter { it.name.startsWith(query) }
         SearchBar(
-            searchBarPlaceholder = "Search an item by its name",
+            searchBarPlaceholder = AppContext.getContext()!!.getString(R.string.search_hint_item),
             currentScreen = NavigationScreen.Wishlist.name,
             onGoBack = {
                 navController.popBackStack()
@@ -140,10 +140,10 @@ fun WishlistItem(
         DefinitiveDeletionDialog(
             isDialogOpen = isCancelItemDialogOpen,
             onAccept = { viewModel.deleteItem(itemId) },
-            dialogTitle = "Item deletion",
-            mainText = "Are you sure you want to delete this item from your wishlist? This operation cannot be undone.",
-            acceptText = "Yes",
-            refuseText = "Don't delete"
+            dialogTitle = AppContext.getContext()!!.getString(R.string.dialog_item_delete_title),
+            mainText = AppContext.getContext()!!.getString(R.string.dialog_item_delete),
+            acceptText = AppContext.getContext()!!.getString(R.string.btn_yes),
+            refuseText = AppContext.getContext()!!.getString(R.string.btn_dont_delete)
         )
     }
     Column {
@@ -167,7 +167,7 @@ fun WishlistItem(
                         IconButton(onClick = { isMenuOpen.value = true }) {
                             Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.baseline_more_horiz_24),
-                                contentDescription = "Item Menu"
+                                contentDescription = AppContext.getContext()!!.getString(R.string.description_item_menu_icon)
                             )
                         }
                         DropdownMenu(
@@ -175,14 +175,14 @@ fun WishlistItem(
                             onDismissRequest = { isMenuOpen.value = false }
                         ) {
                             DropdownMenuItem(
-                                text = { Text("Edit") },
+                                text = { Text(AppContext.getContext()!!.getString(R.string.dropdown_item_edit)) },
                                 onClick = {
                                     isMenuOpen.value = false
                                     navController.navigate(NavigationScreen.NewItem.name + itemId)
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("Delete") },
+                                text = { Text(AppContext.getContext()!!.getString(R.string.dropdown_item_delete)) },
                                 onClick = { isCancelItemDialogOpen.value = true }
                             )
                         }
@@ -190,14 +190,14 @@ fun WishlistItem(
                 } else {
                     if (reserved.value && !isBought.value) {
                         Text(
-                            text = "Reserved",
+                            text = AppContext.getContext()!!.getString(R.string.item_status_reserved),
                             fontSize = 17.sp,
                             modifier = Modifier
                                 .border(1.dp, Color.Gray, shape = RoundedCornerShape(4.dp))
                                 .padding(10.dp))
                     } else if (isBought.value) {
                         Text(
-                            text = "Bought",
+                            text = AppContext.getContext()!!.getString(R.string.item_status_bought),
                             fontSize = 17.sp,
                             modifier = Modifier
                                 .border(1.dp, Color.Gray, shape = RoundedCornerShape(4.dp))
@@ -209,7 +209,7 @@ fun WishlistItem(
                                 fontSize = 17.sp)
                         } else {
                             Text(
-                                text = "No price",
+                                text = AppContext.getContext()!!.getString(R.string.item_no_price),
                                 fontSize = 17.sp)
                         }
                     }
@@ -222,7 +222,7 @@ fun WishlistItem(
                     } else {
                         ImageBitmap.imageResource(id = R.drawable.placeholder)
                     },
-                    contentDescription = "Wishlist item image",
+                    contentDescription = AppContext.getContext()!!.getString(R.string.description_item_image),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxHeight(.85f)
@@ -255,14 +255,14 @@ fun ItemDialog(
     runBlocking {
         item = viewModel.getItemFromId(itemId)
     }
-    val description = item?.description ?: "No description"
-    val url = item?.url ?: "No url"
-    val buyButtonText = if (reserved.value && bought.value) "Bought" else "Buy"
-    val reserveButtonText = if (reserved.value) "Unreserve" else "Reserve"
+    val description = item?.description ?: AppContext.getContext()!!.getString(R.string.item_no_description)
+    val url = item?.url ?: AppContext.getContext()!!.getString(R.string.item_no_link)
+    val buyButtonText = if (reserved.value && bought.value) AppContext.getContext()!!.getString(R.string.btn_bought) else AppContext.getContext()!!.getString(R.string.btn_buy)
+    val reserveButtonText = if (reserved.value) AppContext.getContext()!!.getString(R.string.btn_unreserve) else AppContext.getContext()!!.getString(R.string.btn_reserve)
     val price = if (item?.priceLowerBound != null && item?.priceUpperBound != null) {
         "€${item?.priceLowerBound} - €${item?.priceUpperBound}"
     } else {
-        "No price"
+        AppContext.getContext()!!.getString(R.string.item_no_price)
     }
     Dialog(
         onDismissRequest = { openDialog.value = false },
@@ -278,14 +278,14 @@ fun ItemDialog(
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
                 val entryPaddingValues = PaddingValues(horizontal = 15.dp, vertical = 10.dp)
-                DialogImage(imageDescription = "Item Image", imageUri = image)
+                DialogImage(imageDescription = AppContext.getContext()!!.getString(R.string.description_item_image), imageUri = image)
                 DialogTitle(paddingValues = entryPaddingValues, text = itemName)
-                if (url == "No url") {
+                if (url == AppContext.getContext()!!.getString(R.string.item_no_link)) {
                     DialogEntry(paddingValues = entryPaddingValues, text = "Link: ", value = url)
                 } else {
                     DialogEntry(
                         paddingValues = entryPaddingValues,
-                        text = "Link: ",
+                        text = AppContext.getContext()!!.getString(R.string.item_link),
                         value = {
                             OutlinedButton(
                                 onClick = {
@@ -295,7 +295,7 @@ fun ItemDialog(
                                     AppContext.getContext()?.startActivity(intent)
                                 }
                             ) {
-                                Text(text = "Open")
+                                Text(text = AppContext.getContext()!!.getString(R.string.btn_open_link))
                             }
                         }
                     )
@@ -303,12 +303,12 @@ fun ItemDialog(
 
                 DialogEntry(
                     paddingValues = entryPaddingValues,
-                    text = "Price Range: ",
+                    text = AppContext.getContext()!!.getString(R.string.item_price_range),
                     value = price
                 )
                 DialogEntry(
                     paddingValues = entryPaddingValues,
-                    text = "Description:",
+                    text = AppContext.getContext()!!.getString(R.string.item_description),
                     value = description
                 )
                 if (username != AppContext.getCurrentUser()) {
@@ -316,7 +316,7 @@ fun ItemDialog(
                         if (reservingUser != AppContext.getCurrentUser()) {
                             DialogEntry(
                                 paddingValues = PaddingValues(horizontal = 15.dp),
-                                text = "Reserved by:",
+                                text = AppContext.getContext()!!.getString(R.string.item_reserved_by),
                                 value = {
                                     OutlinedButton(
                                         onClick = {
@@ -331,8 +331,8 @@ fun ItemDialog(
                         } else {
                             DialogEntry(
                                 paddingValues = PaddingValues(horizontal = 15.dp),
-                                text = "Reserved by:",
-                                value = "You"
+                                text = AppContext.getContext()!!.getString(R.string.item_reserved_by),
+                                value = AppContext.getContext()!!.getString(R.string.item_you_reserved)
                             )
                         }
                     }

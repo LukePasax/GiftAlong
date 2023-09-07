@@ -31,15 +31,15 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 sealed class NavigationScreen(val name: String) {
-    object Home: NavigationScreen(AppContext.getContext()?.getString(R.string.home)!!)
-    object Wishlist: NavigationScreen(AppContext.getContext()?.getString(R.string.wishlist)!!)
-    object NewItem: NavigationScreen(AppContext.getContext()?.getString(R.string.new_item)!!)
-    object NewEvent: NavigationScreen(AppContext.getContext()?.getString(R.string.new_event)!!)
-    object UserProfile: NavigationScreen(AppContext.getContext()?.getString(R.string.user_profile)!!)
-    object Relationships: NavigationScreen(AppContext.getContext()?.getString(R.string.relationships)!!)
-    object Login: NavigationScreen(AppContext.getContext()?.getString(R.string.login)!!)
-    object Registration: NavigationScreen(AppContext.getContext()?.getString(R.string.registration)!!)
-    object NewProfilePic: NavigationScreen(AppContext.getContext()?.getString(R.string.new_profile_pic)!!)
+    object Home: NavigationScreen(AppContext.getContext()?.getString(R.string.title_home)!!)
+    object Wishlist: NavigationScreen(AppContext.getContext()?.getString(R.string.title_wishlist)!!)
+    object NewItem: NavigationScreen(AppContext.getContext()?.getString(R.string.title_new_item)!!)
+    object NewEvent: NavigationScreen(AppContext.getContext()?.getString(R.string.title_new_event)!!)
+    object UserProfile: NavigationScreen(AppContext.getContext()?.getString(R.string.title_user_profile)!!)
+    object Relationships: NavigationScreen(AppContext.getContext()?.getString(R.string.title_relationships)!!)
+    object Login: NavigationScreen(AppContext.getContext()?.getString(R.string.title_login)!!)
+    object Registration: NavigationScreen(AppContext.getContext()?.getString(R.string.title_registration)!!)
+    object NewProfilePic: NavigationScreen(AppContext.getContext()?.getString(R.string.title_new_profile_pic)!!)
 }
 
 class Navigation(
@@ -118,19 +118,19 @@ private fun NavigationDrawer(
             ) {
                 val items = mapOf(
                     Pair(
-                        AppContext.getContext()?.getString(R.string.menu_item1),
+                        AppContext.getContext()?.getString(R.string.menu_item_wishlist),
                         ImageVector.vectorResource(R.drawable.round_card_giftcard_24)
                     ),
                     Pair(
-                        AppContext.getContext()?.getString(R.string.menu_item2),
+                        AppContext.getContext()?.getString(R.string.menu_item_relationships),
                         Icons.Rounded.Favorite
                     ),
                     Pair(
-                        AppContext.getContext()?.getString(R.string.menu_item3),
+                        AppContext.getContext()?.getString(R.string.menu_item_users),
                         ImageVector.vectorResource(R.drawable.round_group_24)
                     ),
                     Pair(
-                        AppContext.getContext()?.getString(R.string.menu_item4),
+                        AppContext.getContext()?.getString(R.string.menu_item_change_profile_pic),
                         ImageVector.vectorResource(R.drawable.round_camera_alt_24)
                     )
                 )
@@ -167,7 +167,7 @@ private fun NavigationDrawer(
                     modifier = Modifier.padding(start = 20.dp, end = 25.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Dark Mode")
+                    Text(AppContext.getContext()!!.getString(R.string.btn_dark_mode))
                     Spacer(modifier = Modifier.fillMaxWidth(.8f))
                     Switch(
                         checked = darkMode,
@@ -186,10 +186,10 @@ private fun NavigationDrawer(
                             settingsViewModel.deactivateAutomaticAuthentication()
                             navigation.navController.navigate(NavigationScreen.Login.name)
                         },
-                        dialogTitle = "Logout",
-                        mainText = "Are you sure you want to logout?",
-                        quitText = "Yes",
-                        stayText = "Don't logout"
+                        dialogTitle = AppContext.getContext()!!.getString(R.string.dialog_logout_title),
+                        mainText = AppContext.getContext()!!.getString(R.string.dialog_logout),
+                        quitText = AppContext.getContext()!!.getString(R.string.btn_yes),
+                        stayText = AppContext.getContext()!!.getString(R.string.btn_dont_logout)
                     )
                 }
                 TextButton(
@@ -199,7 +199,7 @@ private fun NavigationDrawer(
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)
                 ) {
-                    Text(text = "Logout", fontSize = 16.sp)
+                    Text(text = AppContext.getContext()!!.getString(R.string.btn_logout), fontSize = 16.sp)
                 }
                 val isDeleteAccountDialogOpen = remember { mutableStateOf(false) }
                 if (isDeleteAccountDialogOpen.value) {
@@ -210,10 +210,10 @@ private fun NavigationDrawer(
                             navigation.scope.launch { navigation.drawerState.close() }
                             navigation.navController.navigate(NavigationScreen.Login.name)
                         },
-                        dialogTitle = "Delete Account",
-                        mainText = "Are you really sure you want to delete your account? This operation cannot be undone.",
-                        quitText = "Yes",
-                        stayText = "Don't delete"
+                        dialogTitle = AppContext.getContext()!!.getString(R.string.dialog_account_delete_title),
+                        mainText = AppContext.getContext()!!.getString(R.string.dialog_account_delete),
+                        quitText = AppContext.getContext()!!.getString(R.string.btn_yes),
+                        stayText = AppContext.getContext()!!.getString(R.string.btn_dont_delete)
                     )
                 }
                 TextButton(
@@ -221,7 +221,7 @@ private fun NavigationDrawer(
                     onClick = { isDeleteAccountDialogOpen.value = true },
                     colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)
                 ) {
-                    Text(text = "Delete Account", fontSize = 16.sp)
+                    Text(text = AppContext.getContext()!!.getString(R.string.btn_delete_account), fontSize = 16.sp)
                 }
             }
         },
@@ -231,13 +231,13 @@ private fun NavigationDrawer(
 
 fun navigateFromDrawer(menuItem: String?, navController: NavHostController) {
     when(menuItem) {
-        AppContext.getContext()?.getString(R.string.menu_item1) ->
+        AppContext.getContext()?.getString(R.string.menu_item_wishlist) ->
             navController.navigate(NavigationScreen.Wishlist.name + AppContext.getCurrentUser())
-        AppContext.getContext()?.getString(R.string.menu_item2) ->
+        AppContext.getContext()?.getString(R.string.menu_item_relationships) ->
             navController.navigate(NavigationScreen.Relationships.name)
-        AppContext.getContext()?.getString(R.string.menu_item3) ->
+        AppContext.getContext()?.getString(R.string.menu_item_users) ->
             navController.navigate("${NavigationScreen.Relationships.name}?query=\"\"")
-        AppContext.getContext()?.getString(R.string.menu_item4) ->
+        AppContext.getContext()?.getString(R.string.menu_item_change_profile_pic) ->
             navController.navigate(NavigationScreen.NewProfilePic.name)
     }
 }
@@ -394,7 +394,7 @@ fun NavigationAppBar(
             // Only a handful of screens should have the search icon in the top app bar.
             if (hasSearchBar) {
                 IconButton(onClick = onSearch!!) {
-                    Icon(Icons.Filled.Search, "Search icon")
+                    Icon(Icons.Filled.Search, AppContext.getContext()!!.getString(R.string.description_search_icon))
                 }
             }
         },
@@ -402,12 +402,12 @@ fun NavigationAppBar(
         navigationIcon = {
             if (isLeadingIconMenu) {
                 IconButton(onClick = navIconStrategy.onMenuIcon) {
-                    Icon(Icons.Filled.Menu, "Main menu icon")
+                    Icon(Icons.Filled.Menu, AppContext.getContext()!!.getString(R.string.description_main_menu_icon))
                 }
             }
             if (isLeadingIconBackArrow) {
                 IconButton(onClick = navIconStrategy.onBackArrow) {
-                    Icon(Icons.Filled.ArrowBack, "Go back icon")
+                    Icon(Icons.Filled.ArrowBack, AppContext.getContext()!!.getString(R.string.description_go_back_icon))
                 }
             }
         },
@@ -449,12 +449,12 @@ fun SearchBar(
         },
         leadingIcon = {
             IconButton(onClick = onGoBack) {
-                Icon(Icons.Rounded.ArrowBack, "Close icon")
+                Icon(Icons.Rounded.ArrowBack, AppContext.getContext()!!.getString(R.string.description_close_icon))
             }
         },
         trailingIcon = {
             IconButton(onClick = onClear) {
-                Icon(Icons.Rounded.Clear, "Clear icon")
+                Icon(Icons.Rounded.Clear, AppContext.getContext()!!.getString(R.string.description_clear_icon))
             }
         },
         active = true,

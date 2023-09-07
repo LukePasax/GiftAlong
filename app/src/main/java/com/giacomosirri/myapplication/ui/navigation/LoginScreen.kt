@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.Typography
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
@@ -51,7 +52,7 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "GiftAlong",
+                Text(text = AppContext.getContext()!!.getString(R.string.app_name),
                     fontFamily = FontFamily.Cursive,
                     fontWeight = FontWeight.ExtraBold,
                     color = MaterialTheme.colorScheme.primary,
@@ -61,7 +62,7 @@ fun LoginScreen(
         } else {
             Box(modifier = Modifier.fillMaxSize()) {
                 ClickableText(
-                    text = AnnotatedString("Don't have an account yet? Register now!"),
+                    text = AnnotatedString(AppContext.getContext()!!.getString(R.string.btn_register)),
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 60.dp),
@@ -82,14 +83,14 @@ fun LoginScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "GiftAlong",
+                    text = AppContext.getContext()!!.getString(R.string.app_name),
                     style = Typography.headlineLarge,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 // Username
                 OutlinedTextField(
-                    label = { Text(text = "Username") },
+                    label = { Text(text = AppContext.getContext()!!.getString(R.string.label_username)) },
                     value = username.value,
                     singleLine = true,
                     onValueChange = { username.value = it }
@@ -97,7 +98,7 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(20.dp))
                 // Password
                 OutlinedTextField(
-                    label = { Text(text = "Password") },
+                    label = { Text(text = AppContext.getContext()!!.getString(R.string.label_password)) },
                     value = password.value,
                     singleLine = true,
                     visualTransformation =
@@ -110,7 +111,7 @@ fun LoginScreen(
                                 if (passwordHidden.value) Icons.Rounded.Visibility else Icons.Filled.VisibilityOff
                             // Please provide localized description for accessibility services
                             val description =
-                                if (passwordHidden.value) "Show password" else "Hide password"
+                                if (passwordHidden.value) AppContext.getContext()!!.getString(R.string.description_password_show) else AppContext.getContext()!!.getString(R.string.description_password_hide)
                             Icon(imageVector = visibilityIcon, contentDescription = description)
                         }
                     }
@@ -130,7 +131,7 @@ fun LoginScreen(
                             username.value = TextFieldValue()
                             password.value = TextFieldValue()
                             snackbarHostState.showSnackbar(
-                                message = "Wrong username or password. Please try again.",
+                                message = AppContext.getContext()!!.getString(R.string.error_wrong_credentials),
                                 duration = SnackbarDuration.Short
                             )
                             isLoginButtonClicked.value = false
@@ -149,7 +150,7 @@ fun LoginScreen(
                             .fillMaxWidth()
                             .height(50.dp)
                     ) {
-                        Text(text = "Login")
+                        Text(text = AppContext.getContext()!!.getString(R.string.btn_login))
                     }
                 }
             }

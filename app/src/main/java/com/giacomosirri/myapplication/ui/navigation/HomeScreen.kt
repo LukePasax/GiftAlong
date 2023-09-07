@@ -60,7 +60,7 @@ fun HomeScreen(
         Scaffold(
             topBar = {
                 NavigationAppBar(
-                    currentScreenName = AppContext.getContext()?.getString(R.string.home)!!,
+                    currentScreenName = AppContext.getContext()?.getString(R.string.title_home)!!,
                     hasSearchBar = true,
                     onSearch = {
                         navController.popBackStack()
@@ -72,7 +72,7 @@ fun HomeScreen(
             },
             floatingActionButton = {
                 FloatingActionButton(onClick = onFabClick) {
-                    Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new event")
+                    Icon(imageVector = Icons.Filled.Add, contentDescription = AppContext.getContext()!!.getString(R.string.description_fab_home_screen))
                 }
             }
         ) {
@@ -94,7 +94,7 @@ fun HomeScreen(
             }
         }
         SearchBar(
-            searchBarPlaceholder = "Search an event by its title",
+            searchBarPlaceholder = AppContext.getContext()!!.getString(R.string.search_hint_event),
             currentScreen = NavigationScreen.Home.name,
             onGoBack = {
                 navController.popBackStack()

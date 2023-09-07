@@ -58,9 +58,9 @@ fun NewEventScreen(
             NavigationAppBar(
                 currentScreenName =
                 if (isInEditMode) {
-                    "Edit $name"
+                    AppContext.getContext()!!.getString(R.string.title_edit) + " $name"
                 } else {
-                    AppContext.getContext()?.getString(R.string.new_event)!!
+                    AppContext.getContext()?.getString(R.string.title_new_event)!!
                 },
                 hasSearchBar = false,
                 isLeadingIconMenu = false,
@@ -98,7 +98,7 @@ fun NewEventScreen(
                     .fillMaxWidth(),
                 value = eventTitle.value,
                 onValueChange = { eventTitle.value = it },
-                label = { Text("Title *") },
+                label = { Text(AppContext.getContext()!!.getString(R.string.label_title) + " *") },
                 singleLine = true
             )
             // Location
@@ -119,13 +119,13 @@ fun NewEventScreen(
                         imageVector = Icons.Rounded.LocationOn,
                         contentDescription = null
                     )
-                    Text("Add location")
+                    Text(AppContext.getContext()!!.getString(R.string.btn_add_location))
                 }
             }
             // Date dialog
             DateSelector(
                 paddingValues = lateralPadding,
-                buttonText = "Select a date *",
+                buttonText = AppContext.getContext()!!.getString(R.string.btn_select_date) + " *",
                 datePickerState = datePickerState
             )
             // Dress code
@@ -135,7 +135,7 @@ fun NewEventScreen(
                     .fillMaxWidth(),
                 value = eventDressCode.value,
                 onValueChange = { eventDressCode.value = it },
-                label = { Text("Dress code") },
+                label = { Text(AppContext.getContext()!!.getString(R.string.label_dress_code)) },
                 singleLine = true
             )
             // Invite
@@ -147,7 +147,7 @@ fun NewEventScreen(
             ) {
                 Text(
                     modifier = Modifier.padding(bottom = 8.dp),
-                    text = "Invite *",
+                    text = AppContext.getContext()!!.getString(R.string.label_invite) + " *",
                     style = MaterialTheme.typography.bodyLarge,
                 )
                 Row(
@@ -160,14 +160,14 @@ fun NewEventScreen(
                     Column(
                         modifier = Modifier.requiredWidth(150.dp),
                     ) {
-                        CheckboxItem("Friends", pv, friendsAllowed)
-                        CheckboxItem("Partner", pv, partnersAllowed)
+                        CheckboxItem(AppContext.getContext()!!.getString(R.string.relationship_type_friend) + "s", pv, friendsAllowed)
+                        CheckboxItem(AppContext.getContext()!!.getString(R.string.relationship_type_partner), pv, partnersAllowed)
                     }
                     Column(
                         modifier = Modifier.requiredWidth(150.dp),
                     ) {
-                        CheckboxItem("Family", pv, familyAllowed)
-                        CheckboxItem("Colleagues", pv, colleaguesAllowed)
+                        CheckboxItem(AppContext.getContext()!!.getString(R.string.relationship_type_family), pv, familyAllowed)
+                        CheckboxItem(AppContext.getContext()!!.getString(R.string.relationship_type_colleague) + "s", pv, colleaguesAllowed)
                     }
                 }
             }
@@ -229,7 +229,7 @@ fun showMap() {
         data = geoLocation
     }
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    val chooserIntent = Intent.createChooser(intent, "Open With")
+    val chooserIntent = Intent.createChooser(intent, AppContext.getContext()!!.getString(R.string.open_with))
     chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     val context: Context = AppContext.getContext()!!
     startActivity(context, chooserIntent, null)

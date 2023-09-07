@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
+import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
 import java.io.File
@@ -33,7 +34,7 @@ fun ChangeProfilePicScreen(
         if (it) {
             cameraLauncher.launch(uri)
         } else {
-            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, AppContext.getContext()!!.getString(R.string.error_permission_denied), Toast.LENGTH_SHORT).show()
         }
     }
     val permissionCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)

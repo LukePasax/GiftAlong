@@ -33,7 +33,12 @@ fun UserProfileScreen(
     navController: NavController
 ) {
     val openDialog = remember { mutableStateOf(false) }
-    val relationshipTypes = listOf("Friend", "Family", "Partner", "Colleague", "None")
+    val relationshipTypes = listOf(
+        AppContext.getContext()!!.getString(R.string.relationship_type_friend),
+        AppContext.getContext()!!.getString(R.string.relationship_type_family),
+        AppContext.getContext()!!.getString(R.string.relationship_type_partner),
+        AppContext.getContext()!!.getString(R.string.relationship_type_colleague),
+        AppContext.getContext()!!.getString(R.string.relationship_type_none))
     val (selected, onSelected) = remember { mutableStateOf(relationshipTypes[0]) }
     val commonEvents = viewModel.getCommonEvents(username).collectAsState(initial = emptyList())
     var subscriptionDate: Date?
@@ -45,7 +50,7 @@ fun UserProfileScreen(
     Scaffold(
         topBar = {
             NavigationAppBar(
-                currentScreenName = "$username's Profile",
+                currentScreenName = username,
                 hasSearchBar = false,
             )
         }
@@ -65,7 +70,7 @@ fun UserProfileScreen(
                     .padding(top = 10.dp),
                 shape = RoundedCornerShape(5.dp)
             ) {
-                Text(text = "View wishlist")
+                Text(text = AppContext.getContext()!!.getString(R.string.btn_view_wishlist))
             }
             // Profile pic
             Image(
@@ -74,7 +79,7 @@ fun UserProfileScreen(
                 } else {
                     ImageBitmap.imageResource(id = R.drawable.placeholder)
                 },
-                contentDescription = "Profile pic",
+                contentDescription = AppContext.getContext()!!.getString(R.string.description_profile_picture),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .requiredSize(width = 350.dp, height = 350.dp)
@@ -82,7 +87,7 @@ fun UserProfileScreen(
             )
             // Registration date
             Text(
-                text = "Registered since ${subscriptionDate?.let { profileDateFormat.format(it) }}",
+                text = AppContext.getContext()!!.getString(R.string.label_registered_since) + " ${subscriptionDate?.let { profileDateFormat.format(it) }}",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -95,7 +100,7 @@ fun UserProfileScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Select relationship status: ",
+                    text = AppContext.getContext()!!.getString(R.string.label_select_relationship_status),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -112,7 +117,7 @@ fun UserProfileScreen(
                     horizontalArrangement = Arrangement.Start
                 ) {
                     Text(
-                        text = "Common upcoming events: ",
+                        text = AppContext.getContext()!!.getString(R.string.label_common_upcoming_events),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold)
                 }
@@ -126,7 +131,7 @@ fun UserProfileScreen(
             }
         }
         if (openDialog.value) {
-            SingleChoiceDialog(title = "Select the relationship:", relationshipTypes, selected, onSelected, openDialog) {
+            SingleChoiceDialog(title = AppContext.getContext()!!.getString(R.string.dialog_relationship_select_title), relationshipTypes, selected, onSelected, openDialog) {
                 viewModel.updateRelationship(AppContext.getCurrentUser(), username, selected)
             }
         }

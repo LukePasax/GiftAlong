@@ -37,7 +37,7 @@ fun RegistrationScreen(
     Scaffold(
         topBar = {
             NavigationAppBar(
-                currentScreenName = AppContext.getContext()?.getString(R.string.registration)!!,
+                currentScreenName = AppContext.getContext()?.getString(R.string.title_registration)!!,
                 hasSearchBar = false,
                 isLeadingIconMenu = false,
                 isLeadingIconBackArrow = true
@@ -75,7 +75,7 @@ fun RegistrationScreen(
                 value = name,
                 onValueChange = { name = it },
                 singleLine = true,
-                label = { Text("First name *") }
+                label = { Text(AppContext.getContext()!!.getString(R.string.label_first_name) + " *") }
             )
             // Surname
             OutlinedTextField(
@@ -85,7 +85,7 @@ fun RegistrationScreen(
                 value = surname,
                 onValueChange = { surname = it },
                 singleLine = true,
-                label = { Text("Surname *") }
+                label = { Text(AppContext.getContext()!!.getString(R.string.label_surname) + " *") }
             )
             // Photo
             val capturedImageUri: MutableState<Uri> = remember { mutableStateOf(Uri.EMPTY) }
@@ -98,7 +98,7 @@ fun RegistrationScreen(
                 value = username,
                 onValueChange = { username = it },
                 singleLine = true,
-                label = { Text("Username *") }
+                label = { Text(AppContext.getContext()!!.getString(R.string.label_username) + " *") }
             )
             // Password
             OutlinedTextField(
@@ -108,7 +108,7 @@ fun RegistrationScreen(
                 value = password,
                 onValueChange = { password = it },
                 singleLine = true,
-                label = { Text("Password *") },
+                label = { Text(AppContext.getContext()!!.getString(R.string.label_password) + " *") },
                 visualTransformation =
                     if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -116,7 +116,7 @@ fun RegistrationScreen(
                     IconButton(onClick = { passwordHidden = !passwordHidden }) {
                         val visibilityIcon = if (passwordHidden) Icons.Rounded.Visibility else Icons.Filled.VisibilityOff
                         // Please provide localized description for accessibility services
-                        val description = if (passwordHidden) "Show password" else "Hide password"
+                        val description = if (passwordHidden) AppContext.getContext()!!.getString(R.string.description_password_show) else AppContext.getContext()!!.getString(R.string.description_password_hide)
                         Icon(imageVector = visibilityIcon, contentDescription = description)
                     }
                 }
@@ -124,7 +124,7 @@ fun RegistrationScreen(
             // Date dialog
             DateSelector(
                 paddingValues = lateralPadding,
-                buttonText = "Select your birthday *",
+                buttonText = AppContext.getContext()!!.getString(R.string.btn_select_birthday) +" *",
                 datePickerState = datePickerState
             )
             // Register button
@@ -140,7 +140,7 @@ fun RegistrationScreen(
                     if (usernameExists) {
                         appViewModel.viewModelScope.launch {
                             snackbarHostState.showSnackbar(
-                                message = "Username already exists. Please choose another one.",
+                                message = AppContext.getContext()!!.getString(R.string.error_username_taken),
                                 duration = SnackbarDuration.Short
                             )
                         }
@@ -162,7 +162,7 @@ fun RegistrationScreen(
                     }
                 }
             ) {
-                Text(text = "Register")
+                Text(text = AppContext.getContext()!!.getString(R.string.btn_register))
             }
         }
     }

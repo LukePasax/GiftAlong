@@ -51,9 +51,9 @@ fun NewItemScreen(
             NavigationAppBar(
                 currentScreenName =
                 if (isInEditMode) {
-                    "Edit $name"
+                    AppContext.getContext()!!.getString(R.string.title_edit) + " $name"
                 } else {
-                    AppContext.getContext()?.getString(R.string.new_item)!!
+                    AppContext.getContext()?.getString(R.string.title_new_item)!!
                 },
                 hasSearchBar = false,
                 isLeadingIconMenu = false,
@@ -82,7 +82,7 @@ fun NewItemScreen(
                     .fillMaxWidth(),
                 value = itemName.value,
                 onValueChange = { itemName.value = it },
-                label = { Text("Title *") },
+                label = { Text(AppContext.getContext()!!.getString(R.string.label_title) + " *") },
                 singleLine = true
             )
             // Photo
@@ -95,7 +95,7 @@ fun NewItemScreen(
                     .fillMaxWidth(),
                 value = itemLink.value,
                 onValueChange = { itemLink.value = it },
-                label = { Text("Link") },
+                label = { Text(AppContext.getContext()!!.getString(R.string.label_link)) },
                 singleLine = true
             )
             // Price range
@@ -105,14 +105,14 @@ fun NewItemScreen(
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Price range:")
+                Text(text = AppContext.getContext()!!.getString(R.string.label_price_range))
                 OutlinedTextField(
                     modifier = Modifier
                         .requiredWidth(115.dp)
                         .padding(PaddingValues(horizontal = 10.dp)),
                     value = lowerBoundPrice.value,
                     onValueChange = { lowerBoundPrice.value = it },
-                    label = { Text("Lower") },
+                    label = { Text(AppContext.getContext()!!.getString(R.string.label_price_lower)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
@@ -123,7 +123,7 @@ fun NewItemScreen(
                         .padding(PaddingValues(horizontal = 10.dp)),
                     value = upperBoundPrice.value,
                     onValueChange = { upperBoundPrice.value = it },
-                    label = { Text("Upper") },
+                    label = { Text(AppContext.getContext()!!.getString(R.string.label_price_upper)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
@@ -150,7 +150,7 @@ fun NewItemScreen(
                 },
                 value = itemDescription.value,
                 onValueChange = { if (it.length <= maxLength) itemDescription.value = it },
-                label = { Text("Description") },
+                label = { Text(AppContext.getContext()!!.getString(R.string.label_description)) },
             )
             // Buttons
             FormButtons(
@@ -171,8 +171,7 @@ fun NewItemScreen(
                             isValid = false
                             appViewModel.viewModelScope.launch {
                                 snackbarHostState.showSnackbar(
-                                    message = "The link you provided is not a valid URL. " +
-                                            "Please input another one or remove it altogether.",
+                                    message = AppContext.getContext()!!.getString(R.string.error_invalid_url),
                                     duration = SnackbarDuration.Short
                                 )
                             }

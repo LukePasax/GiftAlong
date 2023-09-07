@@ -70,13 +70,13 @@ fun getSpecialEventDate(year: Int, month: Int, day: Int): Date {
 }
 
 val specialEvents = mapOf(
-    Pair(getSpecialEventDate(currentYear, Calendar.DECEMBER, 25), Pair("Christmas", Color.Red)),
-    Pair(getSpecialEventDate(currentYear, Calendar.DECEMBER, 31), Pair("New Year's Eve", Color(
+    Pair(getSpecialEventDate(currentYear, Calendar.DECEMBER, 25), Pair(AppContext.getContext()!!.getString(R.string.christmas), Color.Red)),
+    Pair(getSpecialEventDate(currentYear, Calendar.DECEMBER, 31), Pair(AppContext.getContext()!!.getString(R.string.new_year), Color(
         0xFF2196F3
     )
     )),
-    Pair(getSpecialEventDate(currentYear, Calendar.FEBRUARY, 14), Pair("Valentine's Day", Color.Magenta)),
-    Pair(getSpecialEventDate(currentYear, Calendar.OCTOBER, 31), Pair("Halloween", Color(0xFFFF9800))),
+    Pair(getSpecialEventDate(currentYear, Calendar.FEBRUARY, 14), Pair(AppContext.getContext()!!.getString(R.string.valentines), Color.Magenta)),
+    Pair(getSpecialEventDate(currentYear, Calendar.OCTOBER, 31), Pair(AppContext.getContext()!!.getString(R.string.halloween), Color(0xFFFF9800))),
 )
 
 val specialDateFormat : SimpleDateFormat = SimpleDateFormat("dd MMMM", Locale.ENGLISH)
@@ -210,7 +210,7 @@ fun PhotoSelector(
             } else {
                 ImageBitmap.imageResource(id = R.drawable.placeholder)
             }),
-            contentDescription = "Item image",
+            contentDescription = AppContext.getContext()!!.getString(R.string.description_item_image),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .requiredSize(width = 165.dp, height = 140.dp)
@@ -225,7 +225,7 @@ fun PhotoSelector(
                 imageVector = ImageVector.vectorResource(R.drawable.round_camera_alt_24),
                 contentDescription = null
             )
-            Text("Select a photo")
+            Text(AppContext.getContext()!!.getString(R.string.btn_photo_select))
         }
     }
 }
@@ -253,12 +253,12 @@ fun DateSelector(
                     onClick = { isDateDialogOpen.value = false },
                     enabled = confirmEnabled.value
                 ) {
-                    Text("OK")
+                    Text(AppContext.getContext()!!.getString(R.string.btn_ok))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { isDateDialogOpen.value = false }) {
-                    Text("Cancel")
+                    Text(AppContext.getContext()!!.getString(R.string.btn_cancel))
                 }
             }
         ) {
@@ -402,9 +402,9 @@ fun FormButtons(
                 isDialogOpen = isCancelDialogOpen,
                 onQuit = onCancelClick,
                 dialogTitle = null,
-                mainText = "Are you sure you want to quit? All your inputs will be lost.",
-                quitText = "Quit anyway",
-                stayText = "Cancel"
+                mainText = AppContext.getContext()!!.getString(R.string.dialog_quit),
+                quitText = AppContext.getContext()!!.getString(R.string.btn_quit_anyway),
+                stayText = AppContext.getContext()!!.getString(R.string.btn_cancel)
             )
         }
         Button(
@@ -415,7 +415,7 @@ fun FormButtons(
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red, contentColor = Color.White),
             onClick = { isCancelDialogOpen.value = true }
         ) {
-            Text(text = "Quit")
+            Text(text = AppContext.getContext()!!.getString(R.string.btn_quit))
         }
         Button(
             modifier = Modifier
@@ -426,7 +426,7 @@ fun FormButtons(
             colors = ButtonDefaults.buttonColors(containerColor = Color.Blue, contentColor = Color.White),
             onClick = onSubmitClick
         ) {
-            Text(text = "Done")
+            Text(text = AppContext.getContext()!!.getString(R.string.btn_done))
         }
     }
 }
@@ -478,7 +478,7 @@ fun EventCard(event: Event, navController: NavController, viewModel: AppViewMode
             event.organizer,
             event.name,
             profileDateFormat.format(event.date),
-            event.dressCode ?: "No dress code",
+            event.dressCode ?: AppContext.getContext()!!.getString(R.string.event_no_dress_code),
             openDialog,
             navController
         ) { viewModel.deleteEvent(event.id) }
@@ -509,12 +509,12 @@ fun EventDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 val entryPaddingValues = PaddingValues(horizontal = 15.dp, vertical = 10.dp)
-                DialogImage(imageDescription = "Event Position", imageUri = null)
+                DialogImage(imageDescription = AppContext.getContext()!!.getString(R.string.event_position), imageUri = null)
                 DialogTitle(paddingValues = entryPaddingValues, text = eventName)
                 if (organizer != AppContext.getCurrentUser()) {
                     DialogEntry(
                         paddingValues = PaddingValues(horizontal = 15.dp),
-                        text = "Organizer: ",
+                        text = AppContext.getContext()!!.getString(R.string.event_organizer),
                         value = {
                             OutlinedButton(
                                 onClick = {
@@ -526,8 +526,8 @@ fun EventDialog(
                             }
                         })
                 }
-                DialogEntry(paddingValues = entryPaddingValues, text = "Date: ", value = date)
-                DialogEntry(paddingValues = entryPaddingValues, text = "Dress Code: ", value = dressCode)
+                DialogEntry(paddingValues = entryPaddingValues, text = AppContext.getContext()!!.getString(R.string.event_date), value = date)
+                DialogEntry(paddingValues = entryPaddingValues, text = AppContext.getContext()!!.getString(R.string.event_dress_code), value = dressCode)
                 if (organizer == AppContext.getCurrentUser()) {
                     val isCancelEventDialogOpen = remember { mutableStateOf(false) }
                     if (isCancelEventDialogOpen.value) {
@@ -538,10 +538,10 @@ fun EventDialog(
                                 openDialog.value = false
                                 onEventDeletion.invoke()
                             },
-                            dialogTitle = "Event Deletion",
-                            mainText = "Are you sure you want to delete this event? This action cannot be undone.",
-                            acceptText = "Yes",
-                            refuseText = "Cancel"
+                            dialogTitle = AppContext.getContext()!!.getString(R.string.dialog_event_delete_title),
+                            mainText = AppContext.getContext()!!.getString(R.string.dialog_event_delete),
+                            acceptText = AppContext.getContext()!!.getString(R.string.btn_yes),
+                            refuseText = AppContext.getContext()!!.getString(R.string.btn_cancel)
                         )
                     }
                     DialogEntry(
@@ -553,14 +553,14 @@ fun EventDialog(
                                     navController.navigate(NavigationScreen.NewEvent.name + id)
                                 },
                                 modifier = Modifier.size(140.dp, 45.dp)) {
-                                Text(text = "Edit Event")
+                                Text(text = AppContext.getContext()!!.getString(R.string.btn_edit_event))
                             }
                         },
                         composable2 = {
                             Button(
                                 onClick = { isCancelEventDialogOpen.value = true },
                                 modifier = Modifier.size(140.dp, 45.dp)) {
-                                Text(text = "Delete Event")
+                                Text(text = AppContext.getContext()!!.getString(R.string.btn_delete_event))
                             }
                         }
                     )
@@ -625,7 +625,7 @@ fun SingleChoiceDialog(
                             openDialog.value = false
                             confirmChoice.invoke()
                         }) {
-                            Text(text = "OK")
+                            Text(text = AppContext.getContext()!!.getString(R.string.btn_ok))
                         }
                     }
                 }
@@ -646,14 +646,14 @@ fun TakePhotoButton(
     }
     val permissionCameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
         if (!it) {
-            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, AppContext.getContext()!!.getString(R.string.error_permission_denied), Toast.LENGTH_SHORT).show()
         }
     }
     val permissionWriteLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
         if (it) {
             cameraOrGalleryLauncher.launch(Unit)
         } else {
-            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, AppContext.getContext()!!.getString(R.string.error_permission_denied), Toast.LENGTH_SHORT).show()
         }
     }
     if (capturedImageUri.value.path?.isNotEmpty() == true) {
@@ -709,7 +709,7 @@ class TakePictureFromCameraOrGalley: ActivityResultContract<Unit, Uri?>() {
             finalIntent.component = ComponentName(it.activityInfo.packageName, it.activityInfo.name)
             yourIntentsList.add(finalIntent)
         }
-        val chooser = Intent.createChooser(gallIntent, "Select source:")
+        val chooser = Intent.createChooser(gallIntent, AppContext.getContext()!!.getString(R.string.select_source))
         chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, yourIntentsList.toTypedArray())
         return chooser
     }

@@ -37,7 +37,7 @@ fun RelationshipsScreen(
             topBar = {
                 NavigationAppBar(
                     currentScreenName = AppContext.getContext()
-                        ?.getString(R.string.relationships)!!,
+                        ?.getString(R.string.title_relationships)!!,
                     hasSearchBar = true,
                     onSearch = {
                         navController.popBackStack()
@@ -65,7 +65,7 @@ fun RelationshipsScreen(
         }
     } else {
         SearchBar(
-            searchBarPlaceholder = "Search any user of this app",
+            searchBarPlaceholder = AppContext.getContext()!!.getString(R.string.search_hint_user),
             currentScreen = NavigationScreen.Relationships.name,
             onGoBack = {
                 navController.popBackStack()
@@ -109,11 +109,16 @@ fun RelationshipListItem(
     query: String? = null
 ) {
     val isDialogOpen = remember { mutableStateOf(false) }
-    val relationshipTypes = listOf("Friend", "Family", "Partner", "Colleague", "None")
+    val relationshipTypes = listOf(
+        AppContext.getContext()!!.getString(R.string.relationship_type_friend),
+        AppContext.getContext()!!.getString(R.string.relationship_type_family),
+        AppContext.getContext()!!.getString(R.string.relationship_type_partner),
+        AppContext.getContext()!!.getString(R.string.relationship_type_colleague),
+        AppContext.getContext()!!.getString(R.string.relationship_type_none))
     val (selected, onSelected) = remember { mutableStateOf(relationshipType) }
     if (isDialogOpen.value) {
         SingleChoiceDialog(
-            title = "Select the relationship:",
+            title = AppContext.getContext()!!.getString(R.string.dialog_relationship_select),
             relationshipTypes,
             selected,
             onSelected,
@@ -154,7 +159,7 @@ fun RelationshipListItem(
                     } else {
                         ImageBitmap.imageResource(id = R.drawable.placeholder)
                     },
-                    contentDescription = "Wishlist item image",
+                    contentDescription = AppContext.getContext()!!.getString(R.string.description_item_image),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxHeight(.85f)
