@@ -666,12 +666,7 @@ fun TakePhotoButton(
         }
     }
     if (capturedImageUri.value.path?.isNotEmpty() == true) {
-        val workerBuilder = OneTimeWorkRequest.Builder(SaveImageWorker::class.java)
-        val data = Data.Builder()
-        data.putString("image_uri", capturedImageUri.value.toString())
-        workerBuilder.setInputData(data.build())
-        WorkManager.getInstance(AppContext.getContext()!!).enqueue(workerBuilder.build())
-        //saveImage(context.applicationContext.contentResolver, capturedImageUri.value)
+        saveImage(capturedImageUri.value)
     }
     FilledTonalButton(
         modifier = modifier,
@@ -732,15 +727,12 @@ class TakePictureFromCameraOrGalley: ActivityResultContract<Unit, Uri?>() {
     }
 }
 
-fun saveImage(contentResolver: ContentResolver, capturedImageUri: Uri) {
-    val bitmap = getBitmap(contentResolver, capturedImageUri)
-    val values = ContentValues()
-    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-    values.put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_${SystemClock.uptimeMillis()}")
-    val imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-    val outputStream = imageUri?.let { contentResolver.openOutputStream(it) }
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream!!)
-    outputStream.close()
+fun saveImage(capturedImageUri: Uri) {
+    val workerBuilder = OneTimeWorkRequest.Builder(SaveImageWorker::class.java)
+    val data = Data.Builder()
+    data.putString("image_uri", capturedImageUri.toString())
+    workerBuilder.setInputData(data.build())
+    WorkManager.getInstance(AppContext.getContext()!!).enqueue(workerBuilder.build())
 }
 
 class SaveImageWorker(appContext: Context, workerParams: WorkerParameters): Worker(appContext, workerParams) {
