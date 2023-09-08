@@ -58,8 +58,8 @@
     <string name="label_description">Descrizione</string>
     <string name="label_invite">Invita</string>
     <string name="label_price_range">Range di prezzo:</string>
-    <string name="label_price_lower">Minimo</string>
-    <string name="label_price_upper">Massimo</string>
+    <string name="label_price_lower">Min</string>
+    <string name="label_price_upper">Max</string>
     <string name="label_first_name">Nome</string>
     <string name="label_surname">Cognome</string>
     <string name="label_registered_since">Registrato dal</string>

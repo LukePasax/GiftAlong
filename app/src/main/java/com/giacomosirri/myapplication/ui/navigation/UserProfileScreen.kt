@@ -90,8 +90,7 @@ fun UserProfileScreen(
                     contentDescription = AppContext.getContext()!!.getString(R.string.description_profile_picture),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .fillMaxHeight(.85f)
-                        .fillMaxWidth(.2f)
+                        .requiredSize(width = 350.dp, height = 350.dp)
                         .clip(RoundedCornerShape(5.dp))
                 )
             }

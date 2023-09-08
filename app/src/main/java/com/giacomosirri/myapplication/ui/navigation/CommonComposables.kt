@@ -173,9 +173,8 @@ fun DialogImage(
             contentDescription = imageDescription,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .fillMaxHeight(.85f)
-                .fillMaxWidth(.2f)
-                .clip(RoundedCornerShape(5.dp))
+                .fillMaxHeight(.35f)
+                .fillMaxWidth()
         )
     } else {
         Image(
@@ -183,9 +182,8 @@ fun DialogImage(
             contentDescription = imageDescription,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .fillMaxHeight(.85f)
-                .fillMaxWidth(.2f)
-                .clip(RoundedCornerShape(5.dp))
+                .fillMaxHeight(.35f)
+                .fillMaxWidth()
         )
     }
 }
@@ -218,8 +216,7 @@ fun PhotoSelector(capturedImageUri: MutableState<Uri>) {
                 contentDescription = AppContext.getContext()!!.getString(R.string.description_item_image),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .fillMaxHeight(.85f)
-                    .fillMaxWidth(.2f)
+                    .requiredSize(width = 165.dp, height = 140.dp)
                     .clip(RoundedCornerShape(5.dp))
             )
         } else {
@@ -228,8 +225,7 @@ fun PhotoSelector(capturedImageUri: MutableState<Uri>) {
                 contentDescription = AppContext.getContext()!!.getString(R.string.description_item_image),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .fillMaxHeight(.85f)
-                    .fillMaxWidth(.2f)
+                    .requiredSize(width = 165.dp, height = 140.dp)
                     .clip(RoundedCornerShape(5.dp))
             )
         }
