@@ -116,7 +116,7 @@ fun RelationshipListItem(
     val (selected, onSelected) = remember { mutableStateOf(relationshipType) }
     if (isDialogOpen.value) {
         SingleChoiceDialog(
-            title = AppContext.getContext()!!.getString(R.string.dialog_relationship_select),
+            title = AppContext.getContext()!!.getString(R.string.dialog_relationship_select_title),
             relationshipTypes,
             selected,
             onSelected,

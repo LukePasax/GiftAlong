@@ -65,8 +65,7 @@
     <string name="dialog_logout">Are you sure you want to logout?</string>
     <string name="dialog_account_delete_title">Delete Account</string>
     <string name="dialog_account_delete">Are you really sure you want to delete your account? This action cannot be undone.</string>
-    <string name="dialog_relationship_select_title">Select the Relationship</string>
-    <string name="dialog_relationship_select">Select the Relationship:</string>
+    <string name="dialog_relationship_select_title">Select the Relationship:</string>
 
     <!-- form labels -->
     <string name="label_title">Title</string>
@@ -147,6 +146,5 @@
     <string name="error_invalid_url">The link you provided is not a valid URL. Please input another one or remove it altogether.</string>
     <string name="error_username_taken">The username you provided is already taken. Please choose another one.</string>
 
-    <string name="select_source">Select Source: </string>
-    <string name="open_with">Open With: </string>
+    <string name="select_source">Open With: </string>
 </resources>

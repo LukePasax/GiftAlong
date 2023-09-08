@@ -318,10 +318,10 @@ private fun CommonErrorDialog(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp)
+                .padding(horizontal = 17.dp)
                 .heightIn(130.dp, 400.dp),
         ) {
-            Column(modifier = Modifier.padding(start = 20.dp, top = 20.dp, end = 10.dp, bottom = 10.dp)) {
+            Column(modifier = Modifier.padding(start = 15.dp, top = 20.dp, end = 12.dp, bottom = 10.dp)) {
                 if (!dialogTitle.isNullOrEmpty()) {
                     Text(dialogTitle, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(16.dp))
