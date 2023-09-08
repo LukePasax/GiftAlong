@@ -47,6 +47,8 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.giacomosirri.myapplication.R
@@ -54,7 +56,9 @@ import com.giacomosirri.myapplication.data.entity.Event
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.*
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
+import java.io.BufferedOutputStream
 import java.io.File
+import java.io.OutputStream
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -658,15 +662,10 @@ fun TakePhotoButton(
         capturedImageUri.value = it ?: capturedImageUri.value
     }
     val permissionCameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
-        if (!it) {
-            Toast.makeText(context, AppContext.getContext()!!.getString(R.string.error_permission_denied), Toast.LENGTH_SHORT).show()
-        }
-    }
-    val permissionWriteLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
         if (it) {
             cameraOrGalleryLauncher.launch(Unit)
         } else {
-            //Toast.makeText(context, AppContext.getContext()!!.getString(R.string.error_permission_denied), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, AppContext.getContext()!!.getString(R.string.error_permission_denied), Toast.LENGTH_SHORT).show()
         }
     }
     if (capturedImageUri.value.path?.isNotEmpty() == true) {
@@ -676,13 +675,10 @@ fun TakePhotoButton(
         modifier = modifier,
         onClick = {
             val permissionCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
-            val permissionWriteCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            if (permissionCheckResult == PackageManager.PERMISSION_GRANTED &&
-                permissionWriteCheckResult == PackageManager.PERMISSION_GRANTED) {
+            if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
                 cameraOrGalleryLauncher.launch(Unit)
             } else {
                 permissionCameraLauncher.launch(Manifest.permission.CAMERA)
-                permissionWriteLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             }
         },
         content = content
@@ -707,7 +703,6 @@ class TakePictureFromCameraOrGalley: ActivityResultContract<Unit, Uri?>() {
         // Write the captured image to a file.
         camIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
         val gallIntent = Intent(Intent.ACTION_GET_CONTENT)
-        gallIntent.action = Intent.ACTION_GET_CONTENT
         gallIntent.type = "image/*"
         // Look for available intents.
         val yourIntentsList = ArrayList<Intent>()
@@ -742,8 +737,24 @@ fun saveImage(contentResolver: ContentResolver, capturedImageUri: Uri) {
     values.put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_${SystemClock.uptimeMillis()}")
     val imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
     val outputStream = imageUri?.let { contentResolver.openOutputStream(it) }
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream!!)
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream!!)
     outputStream.close()
+}
+
+class SaveImageWorker(appContext: Context, workerParams: WorkerParameters): Worker(appContext, workerParams) {
+    override fun doWork(): Result {
+        val uri = inputData.getString("image_uri")
+        val contentResolver = AppContext.getContext()!!.applicationContext.contentResolver
+        val bitmap = getBitmap(AppContext.getContext()!!.applicationContext.contentResolver, Uri.parse(uri))
+        val values = ContentValues()
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_${SystemClock.uptimeMillis()}")
+        val imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        val outputStream = imageUri?.let { contentResolver.openOutputStream(it) }
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream!!)
+        outputStream.close()
+        return Result.success()
+    }
 }
 
 fun getBitmap(contentResolver: ContentResolver, capturedImageUri: Uri): Bitmap {
