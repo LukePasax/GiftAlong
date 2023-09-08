@@ -47,8 +47,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
-import androidx.work.Worker
-import androidx.work.WorkerParameters
+import androidx.work.*
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.giacomosirri.myapplication.R
@@ -56,9 +55,7 @@ import com.giacomosirri.myapplication.data.entity.Event
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.theme.*
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
-import java.io.BufferedOutputStream
 import java.io.File
-import java.io.OutputStream
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -669,7 +666,12 @@ fun TakePhotoButton(
         }
     }
     if (capturedImageUri.value.path?.isNotEmpty() == true) {
-        saveImage(context.applicationContext.contentResolver, capturedImageUri.value)
+        val workerBuilder = OneTimeWorkRequest.Builder(SaveImageWorker::class.java)
+        val data = Data.Builder()
+        data.putString("image_uri", capturedImageUri.value.toString())
+        workerBuilder.setInputData(data.build())
+        WorkManager.getInstance(AppContext.getContext()!!).enqueue(workerBuilder.build())
+        //saveImage(context.applicationContext.contentResolver, capturedImageUri.value)
     }
     FilledTonalButton(
         modifier = modifier,
@@ -745,7 +747,7 @@ class SaveImageWorker(appContext: Context, workerParams: WorkerParameters): Work
     override fun doWork(): Result {
         val uri = inputData.getString("image_uri")
         val contentResolver = AppContext.getContext()!!.applicationContext.contentResolver
-        val bitmap = getBitmap(AppContext.getContext()!!.applicationContext.contentResolver, Uri.parse(uri))
+        val bitmap = getBitmap(contentResolver, Uri.parse(uri))
         val values = ContentValues()
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
         values.put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_${SystemClock.uptimeMillis()}")
