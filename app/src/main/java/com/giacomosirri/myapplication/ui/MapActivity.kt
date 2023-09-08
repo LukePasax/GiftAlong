@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.giacomosirri.myapplication.BuildConfig
+import com.giacomosirri.myapplication.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
@@ -17,13 +18,12 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.net.PlacesClient
+
 
 /**
  * An activity that displays a map showing the place at the device's current location.
  */
 class MapActivity: AppCompatActivity(), OnMapReadyCallback {
-    private val mapView: MapView = MapView(AppContext.getContext()!!)
     private var map: GoogleMap? = null
     private var cameraPosition: CameraPosition? = null
 
@@ -52,11 +52,10 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
         //placesClient = Places.createClient(this)
         // Construct a FusedLocationProviderClient.
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        MapsInitializer.initialize(AppContext.getContext()!!, MapsInitializer.Renderer.LATEST) { }
-        // Initialise the MapView.
-        mapView.onCreate(savedInstanceState)
-        // Set the map ready callback to receive the GoogleMap object.
-        mapView.getMapAsync(this)
+        setContentView(R.layout.activity_maps)
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        mapFragment!!.getMapAsync(this)
     }
 
     /**
@@ -74,17 +73,20 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
      * Manipulates the map when it's available.
      * This callback is triggered when the map is ready to be used.
      */
-    override fun onMapReady(map: GoogleMap) {
-        mapView.onResume()
-        this.map = map
-        map.uiSettings.isMapToolbarEnabled = false
-        map.mapType = GoogleMap.MAP_TYPE_NORMAL
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
+        //map.uiSettings.isMapToolbarEnabled = false
+        //map.mapType = GoogleMap.MAP_TYPE_NORMAL
         // Prompt the user for permission.
-        getLocationPermission()
+        //getLocationPermission()
         // Turn on the My Location layer and the related control on the map.
-        updateLocationUI()
+        //updateLocationUI()
         // Get the current location of the device and set the position of the map.
-        getDeviceLocation()
+        //getDeviceLocation()
+        // Add a marker in Sydney and move the camera
+        val sydney = LatLng(-34.0, 151.0)
+        map!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+        map!!.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
     /**
