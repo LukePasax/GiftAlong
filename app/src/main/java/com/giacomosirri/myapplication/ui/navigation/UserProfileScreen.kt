@@ -12,12 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
@@ -73,18 +77,27 @@ fun UserProfileScreen(
                 Text(text = AppContext.getContext()!!.getString(R.string.btn_view_wishlist))
             }
             // Profile pic
-            Image(
-                bitmap = if (profilePic != null) {
-                    getBitmap(AppContext.getContext()!!.applicationContext.contentResolver, Uri.parse(profilePic)).asImageBitmap()
-                } else {
-                    ImageBitmap.imageResource(id = R.drawable.placeholder)
-                },
-                contentDescription = AppContext.getContext()!!.getString(R.string.description_profile_picture),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .requiredSize(width = 350.dp, height = 350.dp)
-                    .clip(RoundedCornerShape(5.dp))
-            )
+            if (profilePic != null) {
+                AsyncImage(
+                    model = ImageRequest.Builder(AppContext.getContext()!!).data(Uri.parse(profilePic)).crossfade(true).build(),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxHeight(.85f)
+                        .fillMaxWidth(.2f)
+                        .clip(RoundedCornerShape(5.dp))
+                )
+            } else {
+                Image(
+                    bitmap = ImageBitmap.imageResource(id = R.drawable.placeholder),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxHeight(.85f)
+                        .fillMaxWidth(.2f)
+                        .clip(RoundedCornerShape(5.dp))
+                )
+            }
             // Registration date
             Text(
                 text = AppContext.getContext()!!.getString(R.string.label_registered_since) + " ${subscriptionDate?.let { profileDateFormat.format(it) }}",

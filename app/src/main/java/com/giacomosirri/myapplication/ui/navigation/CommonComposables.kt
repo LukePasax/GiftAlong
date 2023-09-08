@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -47,7 +48,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.net.toFile
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.data.entity.Event
 import com.giacomosirri.myapplication.ui.AppContext
@@ -166,18 +171,27 @@ fun DialogImage(
     imageDescription: String,
     imageUri: String?
 ) {
-    Image(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(.35f),
-        bitmap = if (imageUri != null) {
-            getBitmap(AppContext.getContext()!!.applicationContext.contentResolver, Uri.parse(imageUri)).asImageBitmap()
-        } else {
-            ImageBitmap.imageResource(id = R.drawable.placeholder)
-        },
-        contentDescription = imageDescription,
-        contentScale = ContentScale.Crop,
-    )
+    if (imageUri != null) {
+        AsyncImage(
+            model = ImageRequest.Builder(AppContext.getContext()!!).data(Uri.parse(imageUri)).crossfade(true).build(),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxHeight(.85f)
+                .fillMaxWidth(.2f)
+                .clip(RoundedCornerShape(5.dp))
+        )
+    } else {
+        Image(
+            bitmap = ImageBitmap.imageResource(id = R.drawable.placeholder),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxHeight(.85f)
+                .fillMaxWidth(.2f)
+                .clip(RoundedCornerShape(5.dp))
+        )
+    }
 }
 
 @Composable
@@ -196,26 +210,33 @@ fun DialogTitle(
 }
 
 @Composable
-fun PhotoSelector(
-    capturedImageUri: MutableState<Uri>
-) {
+fun PhotoSelector(capturedImageUri: MutableState<Uri>) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            bitmap = (if (capturedImageUri.value.path?.isNotEmpty() == true) {
-                getBitmap(AppContext.getContext()!!.applicationContext.contentResolver, capturedImageUri.value).asImageBitmap()
-            } else {
-                ImageBitmap.imageResource(id = R.drawable.placeholder)
-            }),
-            contentDescription = AppContext.getContext()!!.getString(R.string.description_item_image),
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .requiredSize(width = 165.dp, height = 140.dp)
-                .clip(RoundedCornerShape(5.dp))
-        )
+        if (capturedImageUri.value.path?.isNotEmpty() == true) {
+            AsyncImage(
+                model = ImageRequest.Builder(AppContext.getContext()!!).data(capturedImageUri.value).crossfade(true).build(),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxHeight(.85f)
+                    .fillMaxWidth(.2f)
+                    .clip(RoundedCornerShape(5.dp))
+            )
+        } else {
+            Image(
+                bitmap = ImageBitmap.imageResource(id = R.drawable.placeholder),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxHeight(.85f)
+                    .fillMaxWidth(.2f)
+                    .clip(RoundedCornerShape(5.dp))
+            )
+        }
         TakePhotoButton(
             modifier = Modifier.padding(start = 10.dp),
             capturedImageUri = capturedImageUri

@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -30,6 +31,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.giacomosirri.myapplication.data.entity.Item
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
@@ -216,19 +219,27 @@ fun WishlistItem(
                 }
             },
             leadingContent = {
-                Image(
-                    bitmap = if (image != null) {
-                        getBitmap(AppContext.getContext()!!.applicationContext.contentResolver, Uri.parse(image)).asImageBitmap()
-                    } else {
-                        ImageBitmap.imageResource(id = R.drawable.placeholder)
-                    },
-                    contentDescription = AppContext.getContext()!!.getString(R.string.description_item_image),
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxHeight(.85f)
-                        .fillMaxWidth(.2f)
-                        .clip(RoundedCornerShape(5.dp))
-                )
+                if (image != null) {
+                    AsyncImage(
+                        model = ImageRequest.Builder(AppContext.getContext()!!).data(Uri.parse(image)).crossfade(true).build(),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxHeight(.85f)
+                            .fillMaxWidth(.2f)
+                            .clip(RoundedCornerShape(5.dp))
+                    )
+                } else {
+                    Image(
+                        bitmap = ImageBitmap.imageResource(id = R.drawable.placeholder),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxHeight(.85f)
+                            .fillMaxWidth(.2f)
+                            .clip(RoundedCornerShape(5.dp))
+                    )
+                }
             }
         )
         ListItemDivider()
