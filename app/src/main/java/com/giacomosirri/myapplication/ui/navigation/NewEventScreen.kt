@@ -1,6 +1,6 @@
 package com.giacomosirri.myapplication.ui.navigation
 
-import android.content.Context
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.MapActivity
@@ -50,6 +49,7 @@ fun NewEventScreen(
             name = appViewModel.getEventNameFromId(id!!)
             dressCode = appViewModel.getEventDressCodeFromId(id)
             date = appViewModel.getEventDateFromId(id)
+            location = appViewModel.getEventLocationFromId(id)
             friends = appViewModel.getFriendsParticipationToEventFromId(id)
             partners = appViewModel.getPartnersParticipationToEventFromId(id)
             family = appViewModel.getFamilyParticipationToEventFromId(id)
@@ -116,11 +116,14 @@ fun NewEventScreen(
                 val mapActivityLauncher = rememberLauncherForActivityResult(
                     contract = ActivityResultContracts.StartActivityForResult()
                 ) {
+                    if (it.resultCode == RESULT_OK) {
+                        location = it.data?.getStringExtra("location")
+                    }
                 }
-                FilledTonalButton(
-                    enabled = canShowMap(),
-                    onClick = { mapActivityLauncher.launch(Intent(AppContext.getContext()!!, MapActivity::class.java)) }
-                ) {
+                val intent = Intent(AppContext.getContext()!!, MapActivity::class.java).apply {
+                    data = if (location != null) Uri.parse(location) else null
+                }
+                FilledTonalButton(onClick = { mapActivityLauncher.launch(intent) }) {
                     Icon(
                         modifier = Modifier.padding(end = 2.dp),
                         imageVector = Icons.Rounded.LocationOn,
@@ -207,7 +210,7 @@ fun NewEventScreen(
                             // The code below accounts for time zones when setting the date.
                             date = Date(datePickerState.selectedDateMillis!! + 1000 * ZoneId.systemDefault().rules.getOffset(
                                 Instant.ofEpochMilli(datePickerState.selectedDateMillis!!)).totalSeconds),
-                            location = null,
+                            location = location,
                             organizer = AppContext.getCurrentUser(),
                             dressCode = eventDressCode.value.trim().ifEmpty { null },
                             friendsAllowed = friendsAllowed.value,
@@ -222,22 +225,4 @@ fun NewEventScreen(
             )
         }
     }
-}
-
-fun canShowMap(): Boolean {
-    val intent = Intent(Intent.ACTION_VIEW)
-    val context: Context = AppContext.getContext()!!
-    return intent.resolveActivity(context.packageManager) != null
-}
-
-fun showMap() {
-    val geoLocation = Uri.parse("geo:44.1391, 12.24315")
-    val intent = Intent(Intent.ACTION_VIEW).apply {
-        data = geoLocation
-    }
-    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    val chooserIntent = Intent.createChooser(intent, AppContext.getContext()!!.getString(R.string.open_with))
-    chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    val context: Context = AppContext.getContext()!!
-    startActivity(context, chooserIntent, null)
 }

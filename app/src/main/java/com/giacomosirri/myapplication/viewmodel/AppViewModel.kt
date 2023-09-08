@@ -198,6 +198,10 @@ class AppViewModel(
         return eventRepository.getEventFromId(id).date
     }
 
+    suspend fun getEventLocationFromId(id: Int): String? {
+        return eventRepository.getEventFromId(id).location
+    }
+
     suspend fun getFriendsParticipationToEventFromId(id: Int): Boolean {
         return eventRepository.getEventFromId(id).friendsAllowed
     }
