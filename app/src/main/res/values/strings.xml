@@ -29,14 +29,14 @@
 
     <!-- button names -->
     <string name="btn_login">Login</string>
-    <string name="btn_register">Don\'t have an account yet? Register now!</string>
-    <string name="btn_register_now">Register Now</string>
+    <string name="btn_register_now">Don\'t have an account yet? Register now!</string>
+    <string name="btn_register">Register</string>
     <string name="btn_logout">Logout</string>
     <string name="btn_delete_account">Delete Account</string>
     <string name="btn_dont_logout">Don\'t Logout</string>
     <string name="btn_dont_delete">Don\'t Delete</string>
     <string name="btn_photo_select">Select a Photo</string>
-    <string name="btn_ok">OK</string>
+    <string name="btn_ok" translatable="false">OK</string>
     <string name="btn_done">Done</string>
     <string name="btn_yes">Yes</string>
     <string name="btn_cancel">Cancel</string>
@@ -71,16 +71,16 @@
     <!-- form labels -->
     <string name="label_title">Title</string>
     <string name="label_description">Description</string>
-    <string name="label_dress_code">Dress Code</string>
+    <string name="label_dress_code" translatable="false">Dress Code</string>
     <string name="label_invite">Invite</string>
-    <string name="label_link">Link</string>
+    <string name="label_link" translatable="false">Link</string>
     <string name="label_price_range">Price Range:</string>
     <string name="label_price_lower">Lower</string>
     <string name="label_price_upper">Upper</string>
     <string name="label_first_name">First Name</string>
     <string name="label_surname">Surname</string>
-    <string name="label_username">Username</string>
-    <string name="label_password">Password</string>
+    <string name="label_username" translatable="false">Username</string>
+    <string name="label_password" translatable="false">Password</string>
 
     <!-- user profile labels -->
     <string name="label_registered_since">Registered Since</string>
@@ -95,27 +95,27 @@
     <string name="relationship_type_family">Family</string>
     <string name="relationship_type_friend">Friend</string>
     <string name="relationship_type_colleague">Colleague</string>
-    <string name="relationship_type_partner">Partner</string>
+    <string name="relationship_type_partner" translatable="false">Partner</string>
     <string name="relationship_type_none">None</string>
 
     <!-- special events -->
     <string name="christmas">Christmas</string>
     <string name="new_year">New Year\'s eve</string>
-    <string name="halloween">Halloween</string>
+    <string name="halloween" translatable="false">Halloween</string>
     <string name="valentines">Valentine\'s Day</string>
 
     <!-- event descriptions -->
     <string name="event_position">Event Position</string>
     <string name="event_organizer">Organizer: </string>
     <string name="event_date">Date: </string>
-    <string name="event_dress_code">Dress Code: </string>
+    <string name="event_dress_code" translatable="false">Dress Code: </string>
     <string name="event_no_dress_code">No dress code</string>
 
     <!-- item descriptions -->
     <string name="item_no_price">No price</string>
     <string name="item_price_range">Price Range: </string>
     <string name="item_description">Description: </string>
-    <string name="item_link">Link: </string>
+    <string name="item_link" translatable="false">Link: </string>
     <string name="item_no_link">No Link</string>
     <string name="item_no_description">No Description</string>
     <string name="item_status_reserved">Reserved</string>

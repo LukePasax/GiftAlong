@@ -62,7 +62,7 @@ fun LoginScreen(
         } else {
             Box(modifier = Modifier.fillMaxSize()) {
                 ClickableText(
-                    text = AnnotatedString(AppContext.getContext()!!.getString(R.string.btn_register)),
+                    text = AnnotatedString(AppContext.getContext()!!.getString(R.string.btn_register_now)),
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 60.dp),
