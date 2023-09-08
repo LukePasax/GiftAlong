@@ -93,8 +93,11 @@
 
     <!-- relationship types -->
     <string name="relationship_type_family">Family</string>
+    <string name="relationship_type_family_plural">Family</string>
     <string name="relationship_type_friend">Friend</string>
+    <string name="relationship_type_friend_plural">Friends</string>
     <string name="relationship_type_colleague">Colleague</string>
+    <string name="relationship_type_colleague_plural">Colleagues</string>
     <string name="relationship_type_partner" translatable="false">Partner</string>
     <string name="relationship_type_none">None</string>
 

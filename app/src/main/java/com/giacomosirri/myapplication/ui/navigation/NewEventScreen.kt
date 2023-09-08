@@ -170,14 +170,14 @@ fun NewEventScreen(
                     Column(
                         modifier = Modifier.requiredWidth(150.dp),
                     ) {
-                        CheckboxItem(AppContext.getContext()!!.getString(R.string.relationship_type_friend) + "s", pv, friendsAllowed)
+                        CheckboxItem(AppContext.getContext()!!.getString(R.string.relationship_type_friend_plural), pv, friendsAllowed)
                         CheckboxItem(AppContext.getContext()!!.getString(R.string.relationship_type_partner), pv, partnersAllowed)
                     }
                     Column(
                         modifier = Modifier.requiredWidth(150.dp),
                     ) {
-                        CheckboxItem(AppContext.getContext()!!.getString(R.string.relationship_type_family), pv, familyAllowed)
-                        CheckboxItem(AppContext.getContext()!!.getString(R.string.relationship_type_colleague) + "s", pv, colleaguesAllowed)
+                        CheckboxItem(AppContext.getContext()!!.getString(R.string.relationship_type_family_plural), pv, familyAllowed)
+                        CheckboxItem(AppContext.getContext()!!.getString(R.string.relationship_type_colleague_plural), pv, colleaguesAllowed)
                     }
                 }
             }

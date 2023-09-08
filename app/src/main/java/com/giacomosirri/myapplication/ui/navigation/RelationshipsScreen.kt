@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.giacomosirri.myapplication.R
+import com.giacomosirri.myapplication.data.entity.Relationship
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
 import kotlinx.coroutines.runBlocking
@@ -149,7 +150,7 @@ fun RelationshipListItem(
             },
             trailingContent = {
                 OutlinedButton(onClick = { isDialogOpen.value = true }) {
-                    Text(text = relationshipType, color = Color.Blue)
+                    Text(text = Relationship.RelationshipType.stringOf(Relationship.RelationshipType.aliasOf(relationshipType)), color = Color.Blue)
                 }
             },
             leadingContent = {

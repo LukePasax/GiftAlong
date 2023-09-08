@@ -107,6 +107,7 @@ class AppViewModel(
             Relationship.RelationshipType.Family -> event.familyAllowed
             Relationship.RelationshipType.Partner -> event.partnersAllowed
             Relationship.RelationshipType.Colleague -> event.colleaguesAllowed
+            Relationship.RelationshipType.None -> false
         }
     }
 
@@ -223,7 +224,7 @@ class AppViewModel(
     fun getUsersMatchingPattern(query: String): Flow<List<User>> = userRepository.getAllUsers(query)
 
     fun updateRelationship(follower: String, followed: String, relationship: String) {
-        if (relationship == "None") {
+        if (relationship == Relationship.RelationshipType.stringOf(Relationship.RelationshipType.None)) {
             viewModelScope.launch { userRepository.deleteRelationship(follower, followed) }
         } else {
             viewModelScope.launch { userRepository.updateRelationship(follower, followed, relationship) }

@@ -49,7 +49,7 @@ class UserRepository(private val userDAO: UserDAO, private val relationshipDAO: 
 
     suspend fun updateRelationship(follower: String, followed: String, newRelationship: String) {
         // Updating a relationships means either adding it or updating if it already existed.
-        relationshipDAO.insertRelationship(Relationship(follower, followed, enumValueOf(newRelationship)))
+        relationshipDAO.insertRelationship(Relationship(follower, followed, Relationship.RelationshipType.aliasOf(newRelationship)))
     }
 
     suspend fun deleteRelationship(follower: String, followed: String) {

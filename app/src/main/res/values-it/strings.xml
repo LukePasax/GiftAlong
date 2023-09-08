@@ -32,8 +32,8 @@
     <string name="btn_cancel">Annulla</string>
     <string name="btn_quit">Indietro</string>
     <string name="btn_quit_anyway">Conferma</string>
-    <string name="btn_edit_event">Modifica Evento</string>
-    <string name="btn_delete_event">Elimina Evento</string>
+    <string name="btn_edit_event">Modifica</string>
+    <string name="btn_delete_event">Elimina</string>
     <string name="btn_dark_mode">Modalità Notte</string>
     <string name="btn_add_location">Aggiungi Luogo</string>
     <string name="btn_select_date">Seleziona una Data</string>
@@ -108,4 +108,7 @@
     <string name="open_with">Apri Con:</string>
     <string name="btn_register_now">Ancora non hai un account? Registrati Ora!</string>
     <string name="btn_register">Registrati</string>
+    <string name="relationship_type_family_plural">Familiari</string>
+    <string name="relationship_type_friend_plural">Amici</string>
+    <string name="relationship_type_colleague_plural">Colleghi</string>
 </resources>
