@@ -49,7 +49,7 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
             cameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION)
         }
         Places.initialize(applicationContext, BuildConfig.MAPS_API_KEY)
-        //placesClient = Places.createClient(this)
+        // placesClient = Places.createClient(this)
         // Construct a FusedLocationProviderClient.
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         setContentView(R.layout.activity_maps)
@@ -73,20 +73,24 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
      * Manipulates the map when it's available.
      * This callback is triggered when the map is ready to be used.
      */
+    @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        //map.uiSettings.isMapToolbarEnabled = false
-        //map.mapType = GoogleMap.MAP_TYPE_NORMAL
-        // Prompt the user for permission.
-        //getLocationPermission()
-        // Turn on the My Location layer and the related control on the map.
-        //updateLocationUI()
-        // Get the current location of the device and set the position of the map.
-        //getDeviceLocation()
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        map!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        map!!.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        map!!.uiSettings.isMapToolbarEnabled = false
+        map?.uiSettings?.isMyLocationButtonEnabled = false
+        map!!.mapType = GoogleMap.MAP_TYPE_NORMAL
+        // Prompt the user for permission to get the actual device's current location.
+        getLocationPermission()
+        if (locationPermissionGranted) {
+            // Turn on the My Location layer and the related control on the map.
+            map?.isMyLocationEnabled = true
+            map?.uiSettings?.isMyLocationButtonEnabled = true
+            // Get the current location of the device and set the position of the map.
+            getDeviceLocation()
+        } else {
+            // Set the map's camera position to a default location.
+            map?.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM.toFloat()))
+        }
     }
 
     /**
@@ -118,24 +122,6 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
             }
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
-        updateLocationUI()
-    }
-
-    /**
-     * Updates the map's UI settings based on whether the user has granted location permission.
-     */
-    @SuppressLint("MissingPermission")
-    private fun updateLocationUI() {
-        if (map == null) return
-        if (locationPermissionGranted) {
-            map?.isMyLocationEnabled = true
-            map?.uiSettings?.isMyLocationButtonEnabled = true
-        } else {
-            map?.isMyLocationEnabled = false
-            map?.uiSettings?.isMyLocationButtonEnabled = false
-            lastKnownLocation = null
-            //getLocationPermission()
-        }
     }
 
     /**
@@ -157,10 +143,6 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
                     map?.addMarker(MarkerOptions().position(newLocation))
                     map?.moveCamera(cameraUpdate)
                 }
-            } else {
-                // Set the map's camera position to a default location.
-                map?.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM.toFloat()))
-                map?.uiSettings?.isMyLocationButtonEnabled = false
             }
         }
     }
