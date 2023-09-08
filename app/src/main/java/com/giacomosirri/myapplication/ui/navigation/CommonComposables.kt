@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -32,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -48,10 +46,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.core.net.toFile
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.data.entity.Event
@@ -174,7 +170,7 @@ fun DialogImage(
     if (imageUri != null) {
         AsyncImage(
             model = ImageRequest.Builder(AppContext.getContext()!!).data(Uri.parse(imageUri)).crossfade(true).build(),
-            contentDescription = null,
+            contentDescription = imageDescription,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxHeight(.85f)
@@ -184,7 +180,7 @@ fun DialogImage(
     } else {
         Image(
             bitmap = ImageBitmap.imageResource(id = R.drawable.placeholder),
-            contentDescription = null,
+            contentDescription = imageDescription,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxHeight(.85f)
@@ -219,7 +215,7 @@ fun PhotoSelector(capturedImageUri: MutableState<Uri>) {
         if (capturedImageUri.value.path?.isNotEmpty() == true) {
             AsyncImage(
                 model = ImageRequest.Builder(AppContext.getContext()!!).data(capturedImageUri.value).crossfade(true).build(),
-                contentDescription = null,
+                contentDescription = AppContext.getContext()!!.getString(R.string.description_item_image),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxHeight(.85f)
@@ -229,7 +225,7 @@ fun PhotoSelector(capturedImageUri: MutableState<Uri>) {
         } else {
             Image(
                 bitmap = ImageBitmap.imageResource(id = R.drawable.placeholder),
-                contentDescription = null,
+                contentDescription = AppContext.getContext()!!.getString(R.string.description_item_image),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxHeight(.85f)
@@ -674,7 +670,7 @@ fun TakePhotoButton(
         if (it) {
             cameraOrGalleryLauncher.launch(Unit)
         } else {
-            Toast.makeText(context, AppContext.getContext()!!.getString(R.string.error_permission_denied), Toast.LENGTH_SHORT).show()
+            //Toast.makeText(context, AppContext.getContext()!!.getString(R.string.error_permission_denied), Toast.LENGTH_SHORT).show()
         }
     }
     if (capturedImageUri.value.path?.isNotEmpty() == true) {

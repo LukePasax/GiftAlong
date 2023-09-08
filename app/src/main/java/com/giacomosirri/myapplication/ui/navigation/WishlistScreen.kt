@@ -19,11 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -222,7 +220,7 @@ fun WishlistItem(
                 if (image != null) {
                     AsyncImage(
                         model = ImageRequest.Builder(AppContext.getContext()!!).data(Uri.parse(image)).crossfade(true).build(),
-                        contentDescription = null,
+                        contentDescription = AppContext.getContext()!!.getString(R.string.description_item_image),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .fillMaxHeight(.85f)
@@ -232,7 +230,7 @@ fun WishlistItem(
                 } else {
                     Image(
                         bitmap = ImageBitmap.imageResource(id = R.drawable.placeholder),
-                        contentDescription = null,
+                        contentDescription = AppContext.getContext()!!.getString(R.string.description_item_image),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .fillMaxHeight(.85f)
