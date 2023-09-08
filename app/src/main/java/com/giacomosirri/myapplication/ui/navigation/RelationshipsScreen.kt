@@ -21,9 +21,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.data.entity.Relationship
+import com.giacomosirri.myapplication.data.entity.User
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.viewmodel.AppViewModel
-import kotlinx.coroutines.runBlocking
 
 @Composable
 fun RelationshipsScreen(
@@ -50,7 +50,6 @@ fun RelationshipsScreen(
             // Show only the users the current user has a relationship with.
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 for (relationship in relationships.value) {
-                    var imageUri: String?
                     item {
                         RelationshipListItem(
                             relationship.key.username,
@@ -78,19 +77,18 @@ fun RelationshipsScreen(
         ) {
             // Show all the users of the app that match the pattern with the right relationship with the current user.
             val allUsers = viewModel.getUsersMatchingPattern(query).collectAsState(initial = emptyList())
-            val resultMap = mutableMapOf<String, String>()
+            val resultMap = mutableMapOf<User, String>()
             for (user in allUsers.value) {
                 // The current user must not appear in the research.
                 if (user.username != AppContext.getCurrentUser()) {
-                    resultMap[user.username] = relationships.value[user]?.name ?: Relationship.RelationshipType.stringOf(Relationship.RelationshipType.None)
+                    resultMap[user] = relationships.value[user]?.name ?:
+                        Relationship.RelationshipType.stringOf(Relationship.RelationshipType.None)
                 }
             }
             LazyColumn {
                 item {
                     for (elem in resultMap) {
-                        var imageUri: String?
-                        runBlocking { imageUri = viewModel.getProfilePicOfUser(elem.key) }
-                        RelationshipListItem(elem.key, elem.value, imageUri, navController, viewModel, query)
+                        RelationshipListItem(elem.key.username, elem.value, elem.key.imageUri, navController, viewModel, query)
                     }
                 }
             }

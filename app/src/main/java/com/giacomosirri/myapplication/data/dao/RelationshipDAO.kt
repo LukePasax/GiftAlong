@@ -7,7 +7,14 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RelationshipDAO {
-    @Query("SELECT followed, type FROM relationships WHERE follower = :username")
+    @MapInfo(
+        keyColumn = "username",
+        keyTable = "users",
+        valueColumn = "type",
+        valueTable = "relationships"
+    )
+    @Query("SELECT users.*, relationships.type FROM users JOIN relationships ON " +
+            "users.username = relationships.followed WHERE follower = :username")
     fun getRelationshipsOfUser(username: String): Flow<Map<User, Relationship.RelationshipType>>
 
     @Query("SELECT * FROM relationships WHERE follower = :follower AND followed = :followed")
