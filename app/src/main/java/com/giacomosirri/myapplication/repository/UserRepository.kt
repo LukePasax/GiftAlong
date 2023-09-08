@@ -39,7 +39,7 @@ class UserRepository(private val userDAO: UserDAO, private val relationshipDAO: 
         userDAO.deleteUser(userDAO.getUser(username)!!)
     }
 
-    fun getRelationshipsOfUser(username: String): Flow<List<Relationship>> =
+    fun getRelationshipsOfUser(username: String): Flow<Map<User, Relationship.RelationshipType>> =
         relationshipDAO.getRelationshipsOfUser(username)
 
     private suspend fun getRelationshipsBetweenUsers(follower: String, followed: String): Relationship? =

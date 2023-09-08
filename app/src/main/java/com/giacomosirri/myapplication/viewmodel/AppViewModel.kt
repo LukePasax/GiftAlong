@@ -219,7 +219,7 @@ class AppViewModel(
         return eventRepository.getEventFromId(id).colleaguesAllowed
     }
 
-    fun getRelationshipsOfUser(username: String): Flow<List<Relationship>> = userRepository.getRelationshipsOfUser(username)
+    fun getRelationshipsOfUser(username: String): Flow<Map<User, Relationship.RelationshipType>> = userRepository.getRelationshipsOfUser(username)
 
     fun getUsersMatchingPattern(query: String): Flow<List<User>> = userRepository.getAllUsers(query)
 

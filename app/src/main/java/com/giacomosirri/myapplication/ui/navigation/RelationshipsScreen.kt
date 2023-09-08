@@ -32,7 +32,7 @@ fun RelationshipsScreen(
     viewModel: AppViewModel,
     query: String?
 ) {
-    val relationships = viewModel.getRelationshipsOfUser(AppContext.getCurrentUser()).collectAsState(initial = emptyList())
+    val relationships = viewModel.getRelationshipsOfUser(AppContext.getCurrentUser()).collectAsState(initial = emptyMap())
     if (query == null) {
         Scaffold(
             topBar = {
@@ -51,12 +51,11 @@ fun RelationshipsScreen(
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 for (relationship in relationships.value) {
                     var imageUri: String?
-                    runBlocking { imageUri = viewModel.getProfilePicOfUser(relationship.followed) }
                     item {
                         RelationshipListItem(
-                            relationship.followed,
-                            relationship.type.name,
-                            imageUri,
+                            relationship.key.username,
+                            relationship.value.name,
+                            relationship.key.imageUri,
                             navController,
                             viewModel
                         )
@@ -81,10 +80,9 @@ fun RelationshipsScreen(
             val allUsers = viewModel.getUsersMatchingPattern(query).collectAsState(initial = emptyList())
             val resultMap = mutableMapOf<String, String>()
             for (user in allUsers.value) {
-                val relationship = relationships.value.find { it.followed == user.username }
                 // The current user must not appear in the research.
                 if (user.username != AppContext.getCurrentUser()) {
-                    resultMap[user.username] = relationship?.type?.name ?: "None"
+                    resultMap[user.username] = relationships.value[user]?.name ?: Relationship.RelationshipType.stringOf(Relationship.RelationshipType.None)
                 }
             }
             LazyColumn {
