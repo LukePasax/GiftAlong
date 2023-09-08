@@ -197,7 +197,8 @@ fun NewEventScreen(
                             name = eventTitle.value.trim(),
                             // The code below accounts for time zones when setting the date.
                             date = Date(datePickerState.selectedDateMillis!! + 1000 * ZoneId.systemDefault().rules.getOffset(
-                                Instant.ofEpochMilli(datePickerState.selectedDateMillis!!)).totalSeconds),                            location = null,
+                                Instant.ofEpochMilli(datePickerState.selectedDateMillis!!)).totalSeconds),
+                            location = location,
                             dressCode = eventDressCode.value.trim().ifEmpty { "" },
                             friendsAllowed = friendsAllowed.value,
                             partnersAllowed = partnersAllowed.value,
