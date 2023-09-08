@@ -54,6 +54,7 @@
     <string name="btn_bought">Bought</string>
     <string name="btn_unreserve">Unreserve</string>
     <string name="btn_open_link">Open</string>
+    <string name="btn_map_activity">Choose this location</string>
 
     <!-- Dialog text -->
     <string name="dialog_quit">Are you sure you want to quit? All your inputs will be lost.</string>

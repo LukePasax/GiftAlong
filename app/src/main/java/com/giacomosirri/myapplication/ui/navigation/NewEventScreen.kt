@@ -2,7 +2,6 @@ package com.giacomosirri.myapplication.ui.navigation
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
@@ -120,9 +119,8 @@ fun NewEventScreen(
                         location = it.data?.getStringExtra("location")
                     }
                 }
-                val intent = Intent(AppContext.getContext()!!, MapActivity::class.java).apply {
-                    data = if (location != null) Uri.parse(location) else null
-                }
+                val intent = Intent(AppContext.getContext()!!, MapActivity::class.java)
+                intent.putExtra("location", location)
                 FilledTonalButton(onClick = { mapActivityLauncher.launch(intent) }) {
                     Icon(
                         modifier = Modifier.padding(end = 2.dp),

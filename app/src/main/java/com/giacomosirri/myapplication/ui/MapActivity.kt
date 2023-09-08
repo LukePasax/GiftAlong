@@ -2,14 +2,16 @@ package com.giacomosirri.myapplication.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.giacomosirri.myapplication.BuildConfig
 import com.giacomosirri.myapplication.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -17,7 +19,6 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.libraries.places.api.Places
 
 
 /**
@@ -27,9 +28,6 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
     private var map: GoogleMap? = null
     private var cameraPosition: CameraPosition? = null
 
-    // The entry point to the Places API.
-    //private lateinit var placesClient: PlacesClient
-
     // The entry point to the Fused Location Provider.
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
@@ -37,24 +35,39 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
     private val defaultLocation = LatLng(0.0, 0.0)
     private var locationPermissionGranted = false
 
+    // The current location of the event for which this activity is launched. This activity
+    // has the faculty of updating this value, in particular after the user clicks on the map.
+    private var currentEventLocation: LatLng? = null
+
     // The geographical location where the device is currently located. That is, the last-known
     // location retrieved by the Fused Location Provider.
-    private var lastKnownLocation: Location? = null
+    private var lastDeviceLocation: LatLng? = null
+
+    private var markerPosition: LatLng? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Retrieve location and camera position from saved instance state.
         if (savedInstanceState != null) {
-            lastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION)
+            lastDeviceLocation = savedInstanceState.getParcelable(KEY_LOCATION)
             cameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION)
         }
-        Places.initialize(applicationContext, BuildConfig.MAPS_API_KEY)
-        // placesClient = Places.createClient(this)
-        // Construct a FusedLocationProviderClient.
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         setContentView(R.layout.activity_maps)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        /*
+        val button = findViewById<View>(R.id.button) as Button
+        button.setOnClickListener {
+            if (markerPosition != null) {
+                val locationString = "${markerPosition!!.latitude},${markerPosition!!.longitude}"
+                val data = Intent()
+                data.putExtra("location", locationString)
+                setResult(Activity.RESULT_OK, data)
+                finish()
+            }
+        }
+        */
         mapFragment!!.getMapAsync(this)
     }
 
@@ -64,7 +77,7 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
     override fun onSaveInstanceState(outState: Bundle) {
         map?.let { map ->
             outState.putParcelable(KEY_CAMERA_POSITION, map.cameraPosition)
-            outState.putParcelable(KEY_LOCATION, lastKnownLocation)
+            outState.putParcelable(KEY_LOCATION, lastDeviceLocation)
         }
         super.onSaveInstanceState(outState)
     }
@@ -79,17 +92,25 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
         map!!.uiSettings.isMapToolbarEnabled = false
         map?.uiSettings?.isMyLocationButtonEnabled = false
         map!!.mapType = GoogleMap.MAP_TYPE_NORMAL
-        // Prompt the user for permission to get the actual device's current location.
-        getLocationPermission()
-        if (locationPermissionGranted) {
-            // Turn on the My Location layer and the related control on the map.
-            map?.isMyLocationEnabled = true
-            map?.uiSettings?.isMyLocationButtonEnabled = true
-            // Get the current location of the device and set the position of the map.
-            getDeviceLocation()
+        // Get the current location of the event as provided by the intent that launched this activity.
+        // It's null if and only if the user has yet to select a location for the event.
+        val eventCoordinates = intent.getStringExtra("location")
+        if (eventCoordinates != null) {
+            val latitude = eventCoordinates.split(",")[0].toDouble()
+            val longitude = eventCoordinates.split(",")[1].toDouble()
+            currentEventLocation = LatLng(latitude, longitude)
+            markerPosition = currentEventLocation
+            updateMapFocus()
         } else {
-            // Set the map's camera position to a default location.
-            map?.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM.toFloat()))
+            // Prompt the user for permission to get the actual device's current location.
+            getLocationPermission()
+            if (locationPermissionGranted) {
+                // Update the current location of the device.
+                getDeviceLocation()
+                // Turn on the My Location layer and the related control on the map.
+                map?.isMyLocationEnabled = true
+                map?.uiSettings?.isMyLocationButtonEnabled = true
+            }
         }
     }
 
@@ -120,8 +141,31 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
                     locationPermissionGranted = true
                 }
             }
-            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            else -> {
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+                updateMapFocus()
+            }
         }
+    }
+
+    /*
+     * Moves the map to the proper position and potentially adds a marker on it.
+     * If markerPosition is set, then this is the position and there needs to be a marker.
+     * Otherwise, the map is moved to lastDeviceLocation and there must be no marker on it.
+     * If even this location is not set due to the user not granting location permissions, then
+     * the map focuses on a default location, with no marker on it.
+     */
+    private fun updateMapFocus() {
+        val newPosition = if (markerPosition != null) markerPosition else if (lastDeviceLocation != null)
+                            lastDeviceLocation else defaultLocation
+        // The marker must be set only on certain conditions.
+        if (markerPosition != null) {
+            map?.addMarker(MarkerOptions().position(markerPosition!!))
+        }
+        // The camera must always be updated.
+        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(newPosition!!, DEFAULT_ZOOM.toFloat())
+        map?.moveCamera(cameraUpdate)
+        map?.addMarker(MarkerOptions().position(newPosition))
     }
 
     /**
@@ -135,14 +179,9 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
         val locationResult = fusedLocationProviderClient.lastLocation
         locationResult.addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
-                // Set the map's camera position to the current location of the device.
-                lastKnownLocation = task.result
-                if (lastKnownLocation != null) {
-                    val newLocation = LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude)
-                    val cameraUpdate = CameraUpdateFactory.newLatLngZoom(newLocation, DEFAULT_ZOOM.toFloat())
-                    map?.addMarker(MarkerOptions().position(newLocation))
-                    map?.moveCamera(cameraUpdate)
-                }
+                val location = task.result
+                lastDeviceLocation = LatLng(location.latitude, location.longitude)
+                updateMapFocus()
             }
         }
     }

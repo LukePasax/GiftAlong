@@ -109,4 +109,5 @@
     <string name="relationship_type_family_plural">Familiari</string>
     <string name="relationship_type_friend_plural">Amici</string>
     <string name="relationship_type_colleague_plural">Colleghi</string>
+    <string name="btn_map_activity">Usa come luogo dell\'evento</string>
 </resources>
