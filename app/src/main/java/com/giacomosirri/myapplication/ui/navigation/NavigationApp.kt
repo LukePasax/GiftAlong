@@ -1,6 +1,5 @@
 package com.giacomosirri.myapplication.ui.navigation
 
-import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -362,15 +361,10 @@ fun NavigationGraph(
             )
         }
         composable(NavigationScreen.NewProfilePic.name) {
-            val capturedImageUri: MutableState<Uri> = remember { mutableStateOf(Uri.EMPTY) }
             ChangeProfilePicScreen(
-                capturedImageUri = capturedImageUri
+                paddingValues = paddingValues,
+                viewModel = appViewModel
             )
-            if (capturedImageUri.value.path?.isNotEmpty() == true) {
-                saveImage(AppContext.getContext()!!.applicationContext.contentResolver, capturedImageUri.value)
-                appViewModel.updateProfilePic(AppContext.getCurrentUser(), capturedImageUri.value.toString())
-                navController.navigateUp()
-            }
         }
     }
 }

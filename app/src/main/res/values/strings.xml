@@ -12,7 +12,7 @@
     <string name="title_relationships">Manage Relationships</string>
     <string name="title_login">Login</string>
     <string name="title_registration">Register Now</string>
-    <string name="title_new_profile_pic">New Profile Pic</string>
+    <string name="title_new_profile_pic">Choose New Profile Pic</string>
     <string name="title_user_wishlist">Your Wishlist</string>
     <string name="title_other_user_wishlist">%s\'s Wishlist</string>
 
