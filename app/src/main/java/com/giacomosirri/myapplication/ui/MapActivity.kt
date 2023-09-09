@@ -6,6 +6,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
 
@@ -44,6 +46,8 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
     private var lastDeviceLocation: LatLng? = null
 
     private var markerPosition: LatLng? = null
+
+    private var currentMarker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,6 +96,10 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
         map!!.uiSettings.isMapToolbarEnabled = false
         map?.uiSettings?.isMyLocationButtonEnabled = false
         map!!.mapType = GoogleMap.MAP_TYPE_NORMAL
+        map!!.setOnMapClickListener {
+            markerPosition = it
+            updateMapFocus()
+        }
         // Get the current location of the event as provided by the intent that launched this activity.
         // It's null if and only if the user has yet to select a location for the event.
         val eventCoordinates = intent.getStringExtra("location")
@@ -160,12 +168,15 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
                             lastDeviceLocation else defaultLocation
         // The marker must be set only on certain conditions.
         if (markerPosition != null) {
-            map?.addMarker(MarkerOptions().position(markerPosition!!))
+            // If there already was a marker, it needs to be removed before adding the new one.
+            if (currentMarker != null) {
+                currentMarker!!.remove()
+            }
+            currentMarker = map?.addMarker(MarkerOptions().position(markerPosition!!))
         }
         // The camera must always be updated.
         val cameraUpdate = CameraUpdateFactory.newLatLngZoom(newPosition!!, DEFAULT_ZOOM.toFloat())
         map?.moveCamera(cameraUpdate)
-        map?.addMarker(MarkerOptions().position(newPosition))
     }
 
     /**
