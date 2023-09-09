@@ -46,6 +46,8 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
 
     private var currentMarker: Marker? = null
 
+    private lateinit var button: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Retrieve location and camera position from saved instance state.
@@ -57,7 +59,7 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
         setContentView(R.layout.activity_maps)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        val button = findViewById<View>(R.id.button) as Button
+        button = findViewById<View>(R.id.button) as Button
         button.setOnClickListener {
             if (markerPosition != null) {
                 val locationString = "${markerPosition!!.latitude},${markerPosition!!.longitude}"
@@ -171,6 +173,8 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
         // The camera must always be updated.
         val cameraUpdate = CameraUpdateFactory.newLatLngZoom(newPosition!!, DEFAULT_ZOOM.toFloat())
         map?.moveCamera(cameraUpdate)
+        // The button is clickable only if the user has already selected a location.
+        button.isEnabled = currentMarker != null
     }
 
     /**

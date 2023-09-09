@@ -16,8 +16,10 @@
         android:text="@string/btn_map_activity"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:textAllCaps = "false"
+        android:layout_gravity="bottom"
         android:orientation="horizontal"
-        android:background="#80000000"
+        android:background="#00D498"
         android:padding="4dp" />
 
 </FrameLayout>

@@ -126,7 +126,6 @@
     <string name="item_reserved_by">Reserved by: </string>
     <string name="item_you_reserved">You</string>
 
-
     <!-- image and icon descriptions -->
     <string name="description_item_image">Item Image</string>
     <string name="description_profile_picture">Profile Picture</string>
