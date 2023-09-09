@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -135,7 +136,7 @@ fun NewEventScreen(
                         Icon(
                             modifier = Modifier.padding(end = 2.dp),
                             imageVector = Icons.Rounded.LocationOn,
-                            contentDescription = null
+                            contentDescription = AppContext.getContext()!!.getString(R.string.event_position)
                         )
                         Text(AppContext.getContext()!!.getString(R.string.btn_add_location))
                     }
@@ -143,12 +144,13 @@ fun NewEventScreen(
                     val url = "https://maps.googleapis.com/maps/api/staticmap?center=${eventLocation.value!!.split(",")[0]}," +
                             "${eventLocation.value!!.split(",")[1]}&zoom=14&size=1200x800&key=${BuildConfig.MAPS_API_KEY}"
                     Image(
+                        painter = rememberAsyncImagePainter(url),
+                        contentDescription = AppContext.getContext()!!.getString(R.string.event_position),
+                        contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .fillMaxSize()
                             .clip(RoundedCornerShape(5.dp))
                             .clickable { mapActivityLauncher.launch(intent) },
-                        painter = rememberAsyncImagePainter(url),
-                        contentDescription = null
                     )
                 }
             }

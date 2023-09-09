@@ -49,7 +49,9 @@ import androidx.core.content.FileProvider
 import androidx.navigation.NavController
 import androidx.work.*
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.giacomosirri.myapplication.BuildConfig
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.data.entity.Event
 import com.giacomosirri.myapplication.ui.AppContext
@@ -171,6 +173,32 @@ fun DialogImage(
     if (imageUri != null) {
         AsyncImage(
             model = ImageRequest.Builder(AppContext.getContext()!!).data(Uri.parse(imageUri)).crossfade(true).build(),
+            contentDescription = imageDescription,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxHeight(.35f)
+                .fillMaxWidth()
+        )
+    } else {
+        Image(
+            bitmap = ImageBitmap.imageResource(id = R.drawable.placeholder),
+            contentDescription = imageDescription,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxHeight(.35f)
+                .fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+fun DialogImageFromNetwork(
+    imageDescription: String,
+    imageUri: String?
+) {
+    if (imageUri != null) {
+        Image(
+            painter = rememberAsyncImagePainter(imageUri),
             contentDescription = imageDescription,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -491,6 +519,7 @@ fun EventCard(event: Event, navController: NavController, viewModel: AppViewMode
             event.id!!,
             event.organizer,
             event.name,
+            event.location,
             profileDateFormat.format(event.date),
             event.dressCode ?: AppContext.getContext()!!.getString(R.string.event_no_dress_code),
             openDialog,
@@ -504,6 +533,7 @@ fun EventDialog(
     id: Int,
     organizer: String,
     eventName: String,
+    location: String?,
     date: String,
     dressCode: String,
     openDialog: MutableState<Boolean>,
@@ -523,7 +553,9 @@ fun EventDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 val entryPaddingValues = PaddingValues(horizontal = 15.dp, vertical = 10.dp)
-                DialogImage(imageDescription = AppContext.getContext()!!.getString(R.string.event_position), imageUri = null)
+                val url = "https://maps.googleapis.com/maps/api/staticmap?center=${location!!.split(",")[0]}," +
+                        "${location.split(",")[1]}&zoom=20&size=1200x800&key=${BuildConfig.MAPS_API_KEY}"
+                DialogImageFromNetwork(imageDescription = AppContext.getContext()!!.getString(R.string.event_position), imageUri = url)
                 DialogTitle(paddingValues = entryPaddingValues, text = eventName)
                 if (organizer != AppContext.getCurrentUser()) {
                     DialogEntry(
