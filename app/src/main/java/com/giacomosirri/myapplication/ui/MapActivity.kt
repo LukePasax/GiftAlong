@@ -6,7 +6,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -37,14 +36,12 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
     private val defaultLocation = LatLng(0.0, 0.0)
     private var locationPermissionGranted = false
 
-    // The current location of the event for which this activity is launched. This activity
-    // has the faculty of updating this value, in particular after the user clicks on the map.
-    private var currentEventLocation: LatLng? = null
-
     // The geographical location where the device is currently located. That is, the last-known
     // location retrieved by the Fused Location Provider.
     private var lastDeviceLocation: LatLng? = null
 
+    // The current location of the event for which this activity is launched. This activity
+    // has the faculty of updating this value, in particular after the user clicks on the map.
     private var markerPosition: LatLng? = null
 
     private var currentMarker: Marker? = null
@@ -60,7 +57,6 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
         setContentView(R.layout.activity_maps)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        /*
         val button = findViewById<View>(R.id.button) as Button
         button.setOnClickListener {
             if (markerPosition != null) {
@@ -71,7 +67,6 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
                 finish()
             }
         }
-        */
         mapFragment!!.getMapAsync(this)
     }
 
@@ -106,8 +101,7 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
         if (eventCoordinates != null) {
             val latitude = eventCoordinates.split(",")[0].toDouble()
             val longitude = eventCoordinates.split(",")[1].toDouble()
-            currentEventLocation = LatLng(latitude, longitude)
-            markerPosition = currentEventLocation
+            markerPosition = LatLng(latitude, longitude)
             updateMapFocus()
         } else {
             // Prompt the user for permission to get the actual device's current location.
