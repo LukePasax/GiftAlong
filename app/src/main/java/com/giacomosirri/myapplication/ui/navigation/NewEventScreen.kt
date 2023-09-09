@@ -4,17 +4,23 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
+import com.giacomosirri.myapplication.BuildConfig
 import com.giacomosirri.myapplication.R
 import com.giacomosirri.myapplication.ui.AppContext
 import com.giacomosirri.myapplication.ui.MapActivity
@@ -23,6 +29,7 @@ import kotlinx.coroutines.runBlocking
 import java.time.Instant
 import java.time.ZoneId
 import java.util.*
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,6 +87,7 @@ fun NewEventScreen(
         ) {
             val eventTitle = remember { mutableStateOf(name ?: "") }
             val eventDressCode = remember { mutableStateOf(dressCode ?: "") }
+            val eventLocation = remember { mutableStateOf(location) }
             val datePickerState = rememberDatePickerState(
                 initialSelectedDateMillis = date?.time?.plus(3600*2000) ?: Date().time,
                 // An event can only be scheduled for the future.
@@ -105,29 +113,43 @@ fun NewEventScreen(
             )
             // Location
             Box(modifier = Modifier
-                .requiredHeight(170.dp)
-                .requiredWidth(260.dp)
-                .border(width = 1.dp, shape = ShapeDefaults.Small, color = Color.Gray)
-                .padding(lateralPadding)
-                .padding(top = 4.dp),
+                    .requiredHeight(170.dp)
+                    .requiredWidth(260.dp)
+                    .border(width = 1.dp, shape = ShapeDefaults.Small, color = Color.Gray),
                 contentAlignment = Alignment.Center
             ) {
                 val mapActivityLauncher = rememberLauncherForActivityResult(
                     contract = ActivityResultContracts.StartActivityForResult()
                 ) {
                     if (it.resultCode == RESULT_OK) {
-                        location = it.data?.getStringExtra("location")
+                        eventLocation.value = it.data?.getStringExtra("location")
                     }
                 }
                 val intent = Intent(AppContext.getContext()!!, MapActivity::class.java)
-                intent.putExtra("location", location)
-                FilledTonalButton(onClick = { mapActivityLauncher.launch(intent) }) {
-                    Icon(
-                        modifier = Modifier.padding(end = 2.dp),
-                        imageVector = Icons.Rounded.LocationOn,
+                intent.putExtra("location", eventLocation.value)
+                if (eventLocation.value == null) {
+                    FilledTonalButton(
+                        modifier = Modifier.fillMaxWidth(.7f),
+                        onClick = { mapActivityLauncher.launch(intent) }
+                    ) {
+                        Icon(
+                            modifier = Modifier.padding(end = 2.dp),
+                            imageVector = Icons.Rounded.LocationOn,
+                            contentDescription = null
+                        )
+                        Text(AppContext.getContext()!!.getString(R.string.btn_add_location))
+                    }
+                } else {
+                    val url = "https://maps.googleapis.com/maps/api/staticmap?center=${eventLocation.value!!.split(",")[0]}," +
+                            "${eventLocation.value!!.split(",")[1]}&zoom=14&size=1200x800&key=${BuildConfig.MAPS_API_KEY}"
+                    Image(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(5.dp))
+                            .clickable { mapActivityLauncher.launch(intent) },
+                        painter = rememberAsyncImagePainter(url),
                         contentDescription = null
                     )
-                    Text(AppContext.getContext()!!.getString(R.string.btn_add_location))
                 }
             }
             // Date dialog
@@ -196,7 +218,7 @@ fun NewEventScreen(
                             // The code below accounts for time zones when setting the date.
                             date = Date(datePickerState.selectedDateMillis!! + 1000 * ZoneId.systemDefault().rules.getOffset(
                                 Instant.ofEpochMilli(datePickerState.selectedDateMillis!!)).totalSeconds),
-                            location = location,
+                            location = eventLocation.value,
                             dressCode = eventDressCode.value.trim().ifEmpty { "" },
                             friendsAllowed = friendsAllowed.value,
                             partnersAllowed = partnersAllowed.value,
@@ -209,7 +231,7 @@ fun NewEventScreen(
                             // The code below accounts for time zones when setting the date.
                             date = Date(datePickerState.selectedDateMillis!! + 1000 * ZoneId.systemDefault().rules.getOffset(
                                 Instant.ofEpochMilli(datePickerState.selectedDateMillis!!)).totalSeconds),
-                            location = location,
+                            location = eventLocation.value,
                             organizer = AppContext.getCurrentUser(),
                             dressCode = eventDressCode.value.trim().ifEmpty { null },
                             friendsAllowed = friendsAllowed.value,
