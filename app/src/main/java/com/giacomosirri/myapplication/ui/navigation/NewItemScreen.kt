@@ -33,6 +33,7 @@ fun NewItemScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     var name: String? = null
     var description: String? = null
+    var image: String? = null
     var link: String? = null
     var upperBound: Int? = null
     var lowerBound: Int? = null
@@ -41,6 +42,7 @@ fun NewItemScreen(
         runBlocking {
             name = appViewModel.getItemNameFromId(id!!)
             description = appViewModel.getItemDescriptionFromId(id)
+            image = appViewModel.getItemImageFromId(id)
             link = appViewModel.getItemLinkFromId(id)
             upperBound = appViewModel.getItemUpperBoundPriceFromId(id)
             lowerBound = appViewModel.getItemLowerBoundPriceFromId(id)
@@ -87,7 +89,7 @@ fun NewItemScreen(
             )
             // Photo
             val capturedImageUri: MutableState<Uri> = remember { mutableStateOf(Uri.EMPTY) }
-            PhotoSelector(capturedImageUri)
+            PhotoSelector(capturedImageUri, image)
             // Link
             OutlinedTextField(
                 modifier = Modifier

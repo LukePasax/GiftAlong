@@ -55,8 +55,6 @@ class AppViewModel(
     }
 
     // Event functions
-    fun getAllEvents(): Flow<List<Event>> = eventRepository.allItems
-
     fun getEventsOrganizedByUser(username : String) : Flow<List<Event>> {
         return eventRepository.getEventsOrganizedByUser(username)
     }
@@ -173,6 +171,10 @@ class AppViewModel(
 
     suspend fun getItemDescriptionFromId(id: Int): String? {
         return itemRepository.getItemFromId(id).description
+    }
+
+    suspend fun getItemImageFromId(id: Int): String? {
+        return itemRepository.getItemFromId(id).imageUri
     }
 
     suspend fun getItemLinkFromId(id: Int): String? {
