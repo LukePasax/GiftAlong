@@ -89,7 +89,7 @@ fun RegistrationScreen(
             )
             // Photo
             val capturedImageUri: MutableState<Uri> = remember { mutableStateOf(Uri.EMPTY) }
-            PhotoSelector(capturedImageUri)
+            PhotoSelector(capturedImageUri, previousImage = null)
             // Username
             OutlinedTextField(
                 modifier = Modifier

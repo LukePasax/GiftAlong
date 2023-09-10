@@ -59,10 +59,10 @@ fun UserProfileScreen(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(bottom = 50.dp)
+                .padding(top = 4.dp, bottom = 20.dp)
                 .fillMaxHeight(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // Wishlist button
             Button(
@@ -80,8 +80,7 @@ fun UserProfileScreen(
                     contentDescription = AppContext.getContext()!!.getString(R.string.description_profile_picture),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .fillMaxHeight(.85f)
-                        .fillMaxWidth(.2f)
+                        .requiredSize(width = 350.dp, height = 350.dp)
                         .clip(RoundedCornerShape(5.dp))
                 )
             } else {
@@ -118,22 +117,26 @@ fun UserProfileScreen(
                 }
             }
             // Upcoming events
-            Column {
-                Row(
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    Text(
-                        text = AppContext.getContext()!!.getString(R.string.label_common_upcoming_events),
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold)
-                }
-                LazyColumn(modifier = Modifier.padding(10.dp)) {
-                    for (event in commonEvents.value) {
-                        item {
-                            EventCard(event, navController, viewModel)
+            if (commonEvents.value.isNotEmpty()) {
+                Column {
+                    Row(
+                        modifier = Modifier
+                            .padding(horizontal = 15.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Text(
+                            text = AppContext.getContext()!!
+                                .getString(R.string.label_common_upcoming_events),
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    LazyColumn(modifier = Modifier.padding(10.dp)) {
+                        for (event in commonEvents.value) {
+                            item {
+                                EventCard(event, navController, viewModel)
+                            }
                         }
                     }
                 }
