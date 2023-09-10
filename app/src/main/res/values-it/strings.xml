@@ -19,8 +19,8 @@
     <string name="menu_item_users">Trova utenti</string>
     <string name="menu_item_change_profile_pic">Cambia foto profilo</string>
     <string name="search_hint_event">Cerca un evento per titolo</string>
-    <string name="search_hint_item">Cerca un desiderio inserendone il nome</string>
-    <string name="search_hint_user">Cerca un utente inserendone l\'username</string>
+    <string name="search_hint_item">Cerca un desiderio</string>
+    <string name="search_hint_user">Cerca un utente per username</string>
     <string name="btn_login">Accedi</string>
     <string name="btn_logout">Esci</string>
     <string name="btn_delete_account">Elimina account</string>
@@ -77,12 +77,12 @@
     <string name="event_position">Luogo dell\'evento</string>
     <string name="event_organizer">Organizzatore:</string>
     <string name="event_date">Data:</string>
-    <string name="event_no_dress_code">Nessun dress code</string>
-    <string name="item_no_price">Nessun prezzo</string>
+    <string name="event_no_dress_code">Nessuno</string>
+    <string name="item_no_price">Nessuno</string>
     <string name="item_price_range">Range di prezzo:</string>
     <string name="item_description">Descrizione:</string>
-    <string name="item_no_link">Nessun link</string>
-    <string name="item_no_description">Nessuna descrizione</string>
+    <string name="item_no_link">Nessuno</string>
+    <string name="item_no_description">Nessuna</string>
     <string name="item_status_reserved">Riservato</string>
     <string name="item_status_bought">Comprato</string>
     <string name="item_reserved_by">Riservato da:</string>
@@ -110,4 +110,6 @@
     <string name="relationship_type_friend_plural">Amici</string>
     <string name="relationship_type_colleague_plural">Colleghi</string>
     <string name="btn_map_activity">Usa come luogo dell\'evento</string>
+    <string name="event_dress_code">Dress code:</string>
+    <string name="label_dress_code">Dress code</string>
 </resources>

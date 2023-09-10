@@ -71,7 +71,7 @@
     <!-- form labels -->
     <string name="label_title">Title</string>
     <string name="label_description">Description</string>
-    <string name="label_dress_code" translatable="false">Dress Code</string>
+    <string name="label_dress_code">Dress Code</string>
     <string name="label_invite">Invite</string>
     <string name="label_link" translatable="false">Link</string>
     <string name="label_price_range">Price Range:</string>
@@ -111,16 +111,16 @@
     <string name="event_position">Event Position</string>
     <string name="event_organizer">Organizer: </string>
     <string name="event_date">Date: </string>
-    <string name="event_dress_code" translatable="false">Dress Code: </string>
-    <string name="event_no_dress_code">No dress code</string>
+    <string name="event_dress_code">Dress Code: </string>
+    <string name="event_no_dress_code">None</string>
 
     <!-- item descriptions -->
-    <string name="item_no_price">No price</string>
+    <string name="item_no_price">None</string>
     <string name="item_price_range">Price Range: </string>
     <string name="item_description">Description: </string>
     <string name="item_link" translatable="false">Link: </string>
-    <string name="item_no_link">No Link</string>
-    <string name="item_no_description">No Description</string>
+    <string name="item_no_link">None</string>
+    <string name="item_no_description">None</string>
     <string name="item_status_reserved">Reserved</string>
     <string name="item_status_bought">Bought</string>
     <string name="item_reserved_by">Reserved by: </string>
