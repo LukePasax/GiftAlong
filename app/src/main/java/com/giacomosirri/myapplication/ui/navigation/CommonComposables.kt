@@ -567,7 +567,8 @@ fun EventDialog(
                 val entryPaddingValues = PaddingValues(horizontal = 15.dp, vertical = 10.dp)
                 val url = if (location != null) {
                     "https://maps.googleapis.com/maps/api/staticmap?center=${location.split(",")[0]}," +
-                            "${location.split(",")[1]}&zoom=20&size=1200x800&key=${BuildConfig.MAPS_API_KEY}"
+                    "${location.split(",")[1]}&markers=${location.split(",")[0]}," +
+                    "${location.split(",")[1]}&zoom=15&size=1200x800&key=${BuildConfig.MAPS_API_KEY}"
                 } else null
                 DialogImageFromNetwork(imageDescription = AppContext.getContext()!!.getString(R.string.event_position), imageUri = url)
                 DialogTitle(paddingValues = entryPaddingValues, text = eventName)

@@ -142,7 +142,8 @@ fun NewEventScreen(
                     }
                 } else {
                     val url = "https://maps.googleapis.com/maps/api/staticmap?center=${eventLocation.value!!.split(",")[0]}," +
-                            "${eventLocation.value!!.split(",")[1]}&zoom=14&size=1200x800&key=${BuildConfig.MAPS_API_KEY}"
+                            "${eventLocation.value!!.split(",")[1]}&markers=${eventLocation.value!!.split(",")[0]}," +
+                            "${eventLocation.value!!.split(",")[1]}&zoom=17&size=1200x800&key=${BuildConfig.MAPS_API_KEY}"
                     Image(
                         painter = rememberAsyncImagePainter(url),
                         contentDescription = AppContext.getContext()!!.getString(R.string.event_position),
