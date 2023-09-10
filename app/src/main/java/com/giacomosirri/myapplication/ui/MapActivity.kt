@@ -21,7 +21,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
-
 /**
  * An activity that displays a map showing the place at the device's current location.
  */
@@ -32,7 +31,7 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
     // The entry point to the Fused Location Provider.
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
-    // A default location (Cesena, Italy) and default zoom to use when location permission is not granted.
+    // A default location (Null Island) to use when location permission is not granted.
     private val defaultLocation = LatLng(0.0, 0.0)
     private var locationPermissionGranted = false
 
