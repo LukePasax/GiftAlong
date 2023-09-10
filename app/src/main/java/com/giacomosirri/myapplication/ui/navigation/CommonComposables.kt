@@ -233,13 +233,14 @@ fun DialogTitle(
 }
 
 @Composable
-fun PhotoSelector(capturedImageUri: MutableState<Uri>) {
+fun PhotoSelector(capturedImageUri: MutableState<Uri>, previousImage: String?) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (capturedImageUri.value.path?.isNotEmpty() == true) {
+            // If the user has selected a photo while on the screen where this selector is, then show it.
             AsyncImage(
                 model = ImageRequest.Builder(AppContext.getContext()!!).data(capturedImageUri.value).crossfade(true).build(),
                 contentDescription = AppContext.getContext()!!.getString(R.string.description_item_image),
@@ -248,7 +249,18 @@ fun PhotoSelector(capturedImageUri: MutableState<Uri>) {
                     .requiredSize(width = 165.dp, height = 140.dp)
                     .clip(RoundedCornerShape(5.dp))
             )
+        } else if (previousImage != null) {
+            // Else, if the user had previously selected an image, then show that.
+            AsyncImage(
+                model = ImageRequest.Builder(AppContext.getContext()!!).data(previousImage).crossfade(true).build(),
+                contentDescription = AppContext.getContext()!!.getString(R.string.description_item_image),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .requiredSize(width = 165.dp, height = 140.dp)
+                    .clip(RoundedCornerShape(5.dp))
+            )
         } else {
+            // If the user has never selected any image, then show a placeholder.
             Image(
                 bitmap = ImageBitmap.imageResource(id = R.drawable.placeholder),
                 contentDescription = AppContext.getContext()!!.getString(R.string.description_item_image),
@@ -553,8 +565,10 @@ fun EventDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 val entryPaddingValues = PaddingValues(horizontal = 15.dp, vertical = 10.dp)
-                val url = "https://maps.googleapis.com/maps/api/staticmap?center=${location!!.split(",")[0]}," +
-                        "${location.split(",")[1]}&zoom=20&size=1200x800&key=${BuildConfig.MAPS_API_KEY}"
+                val url = if (location != null) {
+                    "https://maps.googleapis.com/maps/api/staticmap?center=${location.split(",")[0]}," +
+                            "${location.split(",")[1]}&zoom=20&size=1200x800&key=${BuildConfig.MAPS_API_KEY}"
+                } else null
                 DialogImageFromNetwork(imageDescription = AppContext.getContext()!!.getString(R.string.event_position), imageUri = url)
                 DialogTitle(paddingValues = entryPaddingValues, text = eventName)
                 if (organizer != AppContext.getCurrentUser()) {
