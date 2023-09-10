@@ -520,7 +520,7 @@ fun EventCard(event: Event, navController: NavController, viewModel: AppViewMode
             .padding(top = 5.dp)
             .height(50.dp)
             .clickable { openDialog.value = true },
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+        border = BorderStroke(1.dp, if (event.organizer == AppContext.getCurrentUser()) Color.Red else MaterialTheme.colorScheme.outline),
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Text(event.name, Modifier.align(Alignment.Center))
