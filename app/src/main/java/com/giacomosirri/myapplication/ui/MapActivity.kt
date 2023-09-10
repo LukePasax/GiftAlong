@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -31,8 +32,8 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
     // The entry point to the Fused Location Provider.
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
-    // A default location (Null Island) to use when location permission is not granted.
-    private val defaultLocation = LatLng(0.0, 0.0)
+    // A default location (Google Headquarters) to use when location permission is not granted.
+    private val defaultLocation = LatLng(37.422053, -122.084442)
     private var locationPermissionGranted = false
 
     // The geographical location where the device is currently located. That is, the last-known
@@ -107,12 +108,16 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
         } else {
             // Prompt the user for permission to get the actual device's current location.
             getLocationPermission()
-            if (locationPermissionGranted) {
+            val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+            if (locationPermissionGranted && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 // Update the current location of the device.
                 getDeviceLocation()
                 // Turn on the My Location layer and the related control on the map.
                 map?.isMyLocationEnabled = true
                 map?.uiSettings?.isMyLocationButtonEnabled = true
+            } else {
+                // The device GPS is not active.
+                updateMapFocus()
             }
         }
     }
@@ -188,7 +193,9 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
         locationResult.addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
                 val location = task.result
-                lastDeviceLocation = LatLng(location.latitude, location.longitude)
+                if (location != null) {
+                    lastDeviceLocation = LatLng(location.latitude, location.longitude)
+                }
                 updateMapFocus()
             }
         }
